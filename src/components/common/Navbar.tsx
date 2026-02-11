@@ -94,27 +94,42 @@ export default function Navbar() {
 
                                     {/* Smooth Dropdown */}
                                     <div
-                                        className={`absolute left-1/2 top-full mt-4 w-120 -translate-x-1/2 rounded-2xl border bg-white p-6 shadow-2xl transition-all duration-300 ${activeDropdown === item.label
+                                        className={`absolute left-1/2 top-full mt-4 w-120 -translate-x-1/2 rounded-2xl border bg-white p-6 shadow-2xl transition-all duration-300  ${activeDropdown === item.label
                                             ? "opacity-100 translate-y-0 visible"
                                             : "opacity-0 translate-y-3 invisible"
                                             }`}
                                     >
-                                        <div className="grid gap-4">
+                                        <div className="grid gap-3">
                                             {item.children.map((child) => (
                                                 <Link
                                                     key={child.label}
                                                     href={child.href}
-                                                    className="rounded-xl p-4 hover:bg-gray-50 transition"
+                                                    className="group relative rounded-xl p-4 transition-all duration-300 
+                 hover:bg-slate-100 dark:hover:bg-white/5"
                                                 >
-                                                    <p className="font-semibold text-sm">
-                                                        {child.label}
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground mt-1">
-                                                        {child.desc}
-                                                    </p>
+                                                    {/* Content */}
+                                                    <div>
+                                                        <p className="font-semibold text-sm text-slate-800 dark:text-white 
+                      group-hover:text-blue-600 dark:group-hover:text-blue-400 
+                      transition-colors">
+                                                            {child.label}
+                                                        </p>
+
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                                            {child.desc}
+                                                        </p>
+                                                    </div>
+
+                                                    {/* Animated Bottom Gradient Border */}
+                                                    <span className="absolute left-0 bottom-0 h-[2px] w-0 
+                       bg-gradient-to-r from-blue-600 to-indigo-600 
+                       dark:from-blue-500 dark:to-indigo-500
+                       transition-all duration-300 
+                       group-hover:w-full rounded-full" />
                                                 </Link>
                                             ))}
                                         </div>
+
                                     </div>
                                 </div>
                             ) : (
