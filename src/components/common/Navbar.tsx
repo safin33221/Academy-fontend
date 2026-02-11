@@ -121,11 +121,7 @@ export default function Navbar() {
                                                     </div>
 
                                                     {/* Animated Bottom Gradient Border */}
-                                                    <span className="absolute left-0 bottom-0 h-[2px] w-0 
-                       bg-gradient-to-r from-blue-600 to-indigo-600 
-                       dark:from-blue-500 dark:to-indigo-500
-                       transition-all duration-300 
-                       group-hover:w-full rounded-full" />
+                                                    <span className="absolute left-0 bottom-0 h-0.5 w-0  bg-linear-to-r from-blue-600 to-indigo-600  dark:from-blue-500 dark:to-indigo-500 transition-all duration-300 group-hover:w-full rounded-full" />
                                                 </Link>
                                             ))}
                                         </div>
