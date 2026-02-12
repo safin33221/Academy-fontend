@@ -1,5 +1,12 @@
 "use client";
-
+import {
+    Code2,
+    Cpu,
+    Database,
+    Braces,
+    Terminal,
+    Layers,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion, Variants } from "framer-motion";
@@ -31,6 +38,36 @@ export default function HeroSection() {
         <section className="relative max-md:py-20 max-md:pt-52 md:min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-slate-50 via-white to-slate-100
          dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
 
+            {/* Floating Tech Badges */}
+            <div className="absolute inset-0 pointer-events-none ">
+                {[
+                    { Icon: Code2, top: "15%", left: "10%" },
+                    { Icon: Cpu, top: "25%", right: "12%" },
+                    { Icon: Database, bottom: "20%", left: "15%" },
+                    { Icon: Terminal, bottom: "25%", right: "18%" },
+                    { Icon: Braces, top: "45%", left: "5%" },
+                    { Icon: Layers, top: "60%", right: "5%" },
+                ].map((item, i) => (
+                    <motion.div
+                        key={i}
+                        animate={{ y: [0, -20, 0] }}
+                        transition={{
+                            duration: 6 + i * 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                        }}
+                        className="absolute backdrop-blur-md bg-white/5 border border-white/10 p-4 rounded-2xl"
+                        style={{
+                            top: item.top,
+                            left: item.left,
+                            right: item.right,
+                            bottom: item.bottom,
+                        }}
+                    >
+                        <item.Icon size={32} className="text-black/10" />
+                    </motion.div>
+                ))}
+            </div>
             {/* Content */}
             <motion.div
                 variants={containerVariants}
