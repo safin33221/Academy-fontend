@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
+import Btn from "../shared/Btn";
 
 interface NavItem {
     label: string;
@@ -43,7 +44,7 @@ export default function Navbar() {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const isAuthenticated = true;
+    const isAuthenticated = false;
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -110,7 +111,7 @@ export default function Navbar() {
                                                     {/* Content */}
                                                     <div>
                                                         <p className="font-semibold text-sm text-slate-800 dark:text-white 
-                      group-hover:text-blue-600 dark:group-hover:text-blue-400 
+                      group-hover:text-primary dark:group-hover:text-blue-400 
                       transition-colors">
                                                             {child.label}
                                                         </p>
@@ -121,7 +122,7 @@ export default function Navbar() {
                                                     </div>
 
                                                     {/* Animated Bottom Gradient Border */}
-                                                    <span className="absolute left-0 bottom-0 h-0.5 w-0  bg-linear-to-r from-blue-600 to-indigo-600  dark:from-blue-500 dark:to-indigo-500 transition-all duration-300 group-hover:w-full rounded-full" />
+                                                    <span className="absolute left-0 bottom-0 h-0.5 w-0  bg-linear-to-r from-primary to-blue-600 hover:opacity-90   dark:from-blue-500 dark:to-indigo-500 transition-all duration-300 group-hover:w-full rounded-full" />
                                                 </Link>
                                             ))}
                                         </div>
@@ -152,12 +153,10 @@ export default function Navbar() {
                         ) : (
                             <>
                                 <Link href="/login">
-                                    <Button variant="ghost">Login</Button>
+                                    <Button variant="outline">Login</Button>
                                 </Link>
                                 <Link href="/register">
-                                    <Button className="bg-linear-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:scale-105 transition-transform">
-                                        Enroll Now
-                                    </Button>
+                                    <Btn title="Join Us" size="sm" />
                                 </Link>
                             </>
                         )}

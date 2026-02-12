@@ -14,7 +14,7 @@ interface CourseCardProps {
 
 export function CourseCard({ course }: CourseCardProps) {
     return (
-        <Card className="group flex flex-col overflow-hidden rounded-xl border border-border/50 bg-background transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <Card className="group flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-background transition-all duration-500 hover:shadow-xl hover:-translate-y-1 gap-3 ">
 
             {/* Thumbnail */}
             <div className="relative aspect-video w-full overflow-hidden bg-muted">
@@ -23,8 +23,8 @@ export function CourseCard({ course }: CourseCardProps) {
                         src={course.thumbnail}
                         alt={course.title}
                         fill
-                        sizes="(max-width:768px) 100vw, 33vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center text-muted-foreground">
@@ -33,29 +33,29 @@ export function CourseCard({ course }: CourseCardProps) {
                 )}
 
                 {/* Category */}
-                <div className="absolute top-3 left-3">
-                    <Badge variant="secondary" className="text-xs">
+                <div className="absolute top-2 left-2">
+                    <Badge variant="secondary" className="text-[10px] sm:text-xs px-2 py-1">
                         {course.category}
                     </Badge>
                 </div>
             </div>
 
             {/* Content */}
-            <CardContent className="p-4">
-                <h3 className="font-semibold text-base line-clamp-2 group-hover:text-primary transition-colors">
+            <CardContent className=" md:p-4">
+                <h3 className="font-semibold text-sm sm:text-lg md:text-base line-clamp-2 group-hover:text-primary transition-colors duration-300">
                     {course.title}
                 </h3>
             </CardContent>
 
             {/* Footer */}
-            <CardFooter className="p-4 pt-0 flex items-center justify-between mt-auto">
-                <span className="text-lg font-bold text-primary">
+            <CardFooter className=" sm:p-4 pt-0 flex items-center justify-between mt-auto">
+                <span className="text-sm sm:text-base md:text-lg font-bold text-primary">
                     ${course.discountPrice ?? course.price}
                 </span>
 
                 <Link href={`/course/${course.slug}`}>
-                    <Button size="sm" variant="outline">
-                        View
+                    <Button size="sm" variant="outline" className="text-xs sm:text-sm">
+                        Details
                     </Button>
                 </Link>
             </CardFooter>

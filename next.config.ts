@@ -31,6 +31,7 @@ const nextConfig: NextConfig = {
   // Development origins
   allowedDevOrigins: [
     "192.168.56.1",
+    "http://192.168.56.1:3000",
     "http://192.168.56.1",
     "http://192.168.56.1:3000",
     "*.local-origin.dev",
