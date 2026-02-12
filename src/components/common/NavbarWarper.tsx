@@ -5,7 +5,7 @@ export default async function NavbarWarper() {
     const user = await getMe()
     console.log({ user });
     return (
-        <div>
+        <div className="sticky top-5 z-50  ">
             <Navbar user={user} />
         </div>
     );

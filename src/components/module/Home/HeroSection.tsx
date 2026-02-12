@@ -70,12 +70,13 @@ export default function HeroSection() {
                         className="flex flex-col sm:flex-row gap-4 justify-center"
                     >
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                            <Button
+                            <a href="#courses"> <Button
                                 size="lg"
                                 className="h-12 px-8 text-base shadow-xl shadow-primary/30 bg-linear-to-r from-primary to-blue-600 hover:opacity-90 transition"
                             >
                                 Browse Courses
                             </Button>
+                            </a>
                         </motion.div>
 
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
@@ -90,11 +91,12 @@ export default function HeroSection() {
                     </motion.div>
 
                 </div>
-            </motion.div>
+            </motion.div >
 
             {/* Large Soft Background Glow (Slower & Bigger) */}
-            <motion.div
-                animate={{ y: [0, -40, 0] }}
+            < motion.div
+                animate={{ y: [0, -40, 0] }
+                }
                 transition={{
                     duration: 20, // slower
                     repeat: Infinity,
@@ -112,6 +114,6 @@ export default function HeroSection() {
                 }}
                 className="absolute -bottom-40 -right-40 w-175 h-175 rounded-full bg-blue-500/15 blur-3xl"
             />
-        </section>
+        </section >
     );
 }

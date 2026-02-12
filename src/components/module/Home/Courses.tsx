@@ -6,7 +6,7 @@ import { CourseCard } from "../course/CourseCard";
 export default function Courses() {
     const popularCourses = courses
     return (
-        <section className="py-20 bg-slate-50 dark:bg-slate-950">
+        <section id="courses" className="py-20 bg-slate-50 dark:bg-slate-950">
             <div className="container px-4 md:px-6 mx-auto space-y-12">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="space-y-2 text-center md:text-left">

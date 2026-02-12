@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -64,7 +65,7 @@ export default function Navbar({ user }: { user: any }) {
     }, []);
 
     return (
-        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
+        <nav className=" z-50 bg-white/70 backdrop-blur-md border-b container mx-auto rounded-2xl shadow-lg absolute left-1/2 -translate-x-1/2">
             <div className="container mx-auto px-4">
                 <div className="flex h-16 items-center justify-between">
 

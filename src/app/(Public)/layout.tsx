@@ -12,7 +12,7 @@ export default function Layout({
             <NavbarWarper />
 
             {/* Main Content Area */}
-            <main className="flex-1">
+            <main className="flex-1 pt-12">
                 {children}
             </main>
 
