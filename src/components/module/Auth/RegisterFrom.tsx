@@ -5,11 +5,13 @@ import { Input } from "@/components/ui/input";
 import Btn from "@/components/shared/Btn";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { register } from "@/services/auth/register";
 export default function RegisterFrom() {
     const [showPassword, setShowPassword] = useState(false);
+    const [state, formAction, isPending] = useActionState(register, null)
     return (
-
         <div className="container mx-auto grid lg:grid-cols-2 gap-10 items-center">
 
             {/* Left Hero Section */}
@@ -27,10 +29,6 @@ export default function RegisterFrom() {
                     successful careers with industry-focused courses.
                 </p>
             </motion.div>
-
-
-
-
 
             < motion.div
                 initial={{ opacity: 0, y: 40 }
@@ -54,51 +52,83 @@ export default function RegisterFrom() {
                         </Link>
                     </div>
 
-                    <form className="space-y-5">
+                    <form action={formAction} className="space-y-5">
 
                         {/* Name */}
-                        <Input
-                            type="text"
-                            placeholder="Full name"
-                            className="h-11 rounded-lg"
-                        />
+                        <Field>
+                            <FieldLabel className="sr-only" htmlFor="name">
+                                Full name
+                            </FieldLabel>
+                            <Input
+                                id="name"
+                                name="name"              // ✅ REQUIRED
+                                autoComplete="off"
+                                placeholder="Full Name"
+                            />
+                        </Field>
 
                         {/* Email */}
-                        <Input
-                            type="email"
-                            placeholder="Email address"
-                            className="h-11 rounded-lg"
-                        />
-                        <Input
-                            type="text"
-                            placeholder="Phone number"
-                            className="h-11 rounded-lg"
-                        />
+                        <Field>
+                            <FieldLabel className="sr-only" htmlFor="email">
+                                Email address
+                            </FieldLabel>
+                            <Input
+                                id="email"
+                                name="email"             // ✅ REQUIRED
+                                type="email"
+                                autoComplete="off"
+                                placeholder="Email address"
+                            />
+                        </Field>
+
+                        {/* Phone */}
+                        <Field>
+                            <FieldLabel className="sr-only" htmlFor="phone">
+                                Phone number
+                            </FieldLabel>
+                            <Input
+                                id="phone"
+                                name="phone"             // ✅ REQUIRED
+                                autoComplete="off"
+                                placeholder="Phone number"
+                            />
+                        </Field>
 
                         {/* Password */}
-                        <div className="relative">
-                            <Input
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Password"
-                                className="h-11 rounded-lg pr-10"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                            >
-                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                            </button>
-                        </div>
+                        <Field>
+                            <FieldLabel className="sr-only" htmlFor="password">
+                                Password
+                            </FieldLabel>
+
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    name="password"        // ✅ REQUIRED
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Enter password"
+                                    autoComplete="new-password"
+                                    className="h-12 pr-12"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
+                        </Field>
 
 
-
-
-
-                        <Btn title="Create Account"
+                        <Btn
+                            type="submit"
+                            title={isPending ? "creating..." : "Register"}
                             size="lg"
                             className="w-full"
+                            disabled={isPending}
                         />
+
                     </form>
 
                     <p className="mt-6 text-sm text-center text-muted-foreground">
@@ -107,13 +137,13 @@ export default function RegisterFrom() {
                             href="/login"
                             className="text-primary font-medium hover:underline"
                         >
-                            Sign In
+
                         </Link>
                     </p>
 
                 </div>
             </motion.div >
-        </div>
+        </div >
 
     );
 };
