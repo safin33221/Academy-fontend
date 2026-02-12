@@ -5,12 +5,24 @@ import { Input } from "@/components/ui/input";
 import Btn from "@/components/shared/Btn";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { register } from "@/services/auth/register";
+import toast from "react-hot-toast";
 export default function RegisterFrom() {
     const [showPassword, setShowPassword] = useState(false);
-    const [state, formAction, isPending] = useActionState(register, null)
+    const [state, formAction, isPending] = useActionState(register, null);
+
+    useEffect(() => {
+        if (!state) return;
+
+        if (state.success) {
+            toast.success(state.message);
+        } else {
+            toast.error(state.message);
+        }
+    }, [state]);
+
     return (
         <div className="container mx-auto grid lg:grid-cols-2 gap-10 items-center">
 
