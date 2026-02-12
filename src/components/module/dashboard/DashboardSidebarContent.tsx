@@ -1,15 +1,10 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { INavSection } from "@/types/dashboard/NavItem";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { IUser } from "@/types/user/user";
-
-
-
-
 
 
 interface DashboardSideBarContentProps {

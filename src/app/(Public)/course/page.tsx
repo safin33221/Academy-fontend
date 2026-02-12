@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import { courses } from "../../../../public/data/courses";
 import { CourseCard } from "@/components/module/course/CourseCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
@@ -8,7 +6,7 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 export default function page() {
     const allCourses = courses
     return (
-        <section className="py-20 bg-slate-50 dark:bg-slate-950">
+        <section className="py-20 bg-slate-50 dark:bg-slate-950 pt-28">
             <div className="container px-4 md:px-6 mx-auto space-y-12">
                 <Breadcrumb />
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -20,13 +18,7 @@ export default function page() {
                             Explore our highest-rated courses chosen by students like you.
                         </p>
                     </div>
-                    <Button
-                        variant="ghost"
-                    >
 
-                        View All Courses{' '}
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Button>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">

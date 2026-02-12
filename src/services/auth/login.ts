@@ -5,6 +5,8 @@ import { parse } from 'cookie';
 import { setCookie } from "./tokenHandler";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { redirect } from "next/navigation";
+import { getDefaultDashboard } from "@/lib/auth-utils";
+import { IUserRole } from "@/types/user/user";
 export const login = async (
     _prevState: unknown,
     formData: FormData
@@ -105,7 +107,9 @@ export const login = async (
             throw new Error("Invalid token format");
         }
 
-        redirect('/')
+        const defaultDashboard = getDefaultDashboard(decodedToken.role as IUserRole)
+
+        redirect(defaultDashboard)
 
 
 

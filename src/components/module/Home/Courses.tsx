@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { courses } from "../../../../public/data/courses";
 import { CourseCard } from "../course/CourseCard";
+import Link from "next/link";
 
 export default function Courses() {
     const popularCourses = courses
@@ -17,13 +18,15 @@ export default function Courses() {
                             Explore our highest-rated courses chosen by students like you.
                         </p>
                     </div>
-                    <Button
-                        variant="ghost"
-                    >
+                    <Link href={`/course`}>
+                        <Button
+                            variant="ghost"
+                        >
 
-                        View All Courses{' '}
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Button>
+                            View All Courses{' '}
+                            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </Button>
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">

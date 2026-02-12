@@ -2,10 +2,12 @@ import { getMe } from "@/services/auth/getMe";
 import Navbar from "./Navbar";
 
 export default async function NavbarWarper() {
-    const user = await getMe()
-    console.log({ user });
+    const res = await getMe()
+    const user = res?.data
+
+
     return (
-        <div className="sticky top-5 z-50  ">
+        <div className="absolute ">
             <Navbar user={user} />
         </div>
     );

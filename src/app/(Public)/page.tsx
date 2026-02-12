@@ -4,7 +4,7 @@ import HeroSection from "@/components/module/Home/HeroSection";
 
 export default function Home() {
   return (
-    <div className="">
+    <div >
       <HeroSection />
       <FeaturesSection />
       <Courses />

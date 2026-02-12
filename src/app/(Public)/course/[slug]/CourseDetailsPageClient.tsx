@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Star, CheckCircle, Globe, Calendar } from "lucide-react";
 import { courses } from "../../../../../public/data/courses";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Accordion } from "@/components/ui/accordion";
 import { CoursePreviewCard } from "@/components/common/CoursePreviewCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
@@ -32,7 +31,7 @@ export default function CourseDetailsPageClient({
   }
 
   return (
-    <div className="min-h-screen bg-background ">
+    <div className="min-h-screen bg-background pt-14 ">
       {/* ================= HERO ================= */}
       <div className="bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b">
         <div className="container mx-auto px-4 md:px-6 py-14 space-y-6">
