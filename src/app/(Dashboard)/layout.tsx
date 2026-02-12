@@ -1,6 +1,4 @@
-export const dynamic = 'force-dynamic';
-
-
+import DashboardSidebar from "@/components/module/dashboard/DashboardSidebar";
 import { getCookies } from "@/services/auth/tokenHandler";
 import { redirect } from "next/navigation";
 
@@ -16,8 +14,8 @@ export default async function layout({ children }: { children: React.ReactNode }
         <div className="h-screen flex overflow-hidden">
             {/* Sidebar */}
             <aside className="w-64 h-full overflow-y-auto border-r max-md:hidden">
-                <h1>Side bar</h1>
-                {/* <DashboardSidebar /> */}
+
+                <DashboardSidebar />
             </aside>
 
             {/* Main Area */}
