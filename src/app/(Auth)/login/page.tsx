@@ -3,9 +3,10 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { AlignLeft, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Btn from "@/components/shared/Btn";
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -38,10 +39,19 @@ export default function LoginPage() {
                     className="w-full max-w-md mx-auto"
                 >
                     <div className="rounded-2xl border border-border bg-white shadow-xl p-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-3xl font-semibold text-gray-900">
+                                Sign In
+                            </h2>
 
-                        <h2 className="text-3xl font-semibold text-gray-900 mb-6">
-                            Sign In
-                        </h2>
+                            <Link href="/">
+                                <Button variant="outline" className="flex items-center " >
+                                    <ArrowLeft className="mr-1" />
+                                    <span> Home</span>
+                                </Button>
+                            </Link>
+                        </div>
+
 
                         <form className="space-y-5">
 
@@ -78,10 +88,11 @@ export default function LoginPage() {
                                 </Link>
                             </div>
 
-                            {/* Button */}
-                            <Button className="w-full h-11 rounded-lg">
-                                Sign In
-                            </Button>
+
+                            <Btn title="Sign In"
+                                size="lg"
+                                className="w-full"
+                            />
                         </form>
 
                         <p className="mt-6 text-sm text-center text-muted-foreground">
