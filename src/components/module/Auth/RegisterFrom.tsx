@@ -149,7 +149,7 @@ export default function RegisterFrom() {
                             href="/login"
                             className="text-primary font-medium hover:underline"
                         >
-
+                            login
                         </Link>
                     </p>
 

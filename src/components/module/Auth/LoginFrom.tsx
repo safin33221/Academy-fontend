@@ -1,0 +1,145 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useActionState, useEffect, useState } from "react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Btn from "@/components/shared/Btn";
+import { Field, FieldLabel } from "@/components/ui/field";
+import toast from "react-hot-toast";
+import { login } from "@/services/auth/login";
+export default function LoginFrom() {
+    const [showPassword, setShowPassword] = useState(false);
+    const [state, formAction, isPending] = useActionState(login, null);
+
+    useEffect(() => {
+        if (!state) return;
+
+        if (state.success) {
+            toast.success(state.message);
+        } else {
+            toast.error(state.message);
+        }
+    }, [state]);
+    return (
+        <div className="min-h-screen bg-white flex items-center justify-center px-4">
+            <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center">
+
+                {/* Left Hero Section */}
+                <motion.div
+                    initial={{ opacity: 0, x: -60 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="hidden lg:block"
+                >
+                    <h1 className="text-5xl font-bold leading-tight text-gray-900">
+                        Welcome Back to <span className="text-primary">Your Learning</span>
+                    </h1>
+                    <p className="mt-6 text-lg text-muted-foreground max-w-md">
+                        Continue your journey, explore new skills, and grow your career
+                        with premium courses designed for real-world success.
+                    </p>
+                </motion.div>
+
+                {/* Right Login Form */}
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-full max-w-md mx-auto"
+                >
+                    <div className="rounded-2xl border border-border bg-white shadow-xl p-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-3xl font-semibold text-gray-900">
+                                Sign In
+                            </h2>
+
+                            <Link href="/">
+                                <Button variant="outline" className="flex items-center " >
+                                    <ArrowLeft className="mr-1" />
+                                    <span> Home</span>
+                                </Button>
+                            </Link>
+                        </div>
+
+
+                        <form action={formAction} className="space-y-5">
+
+                            {/* Email */}
+                            <Field>
+                                <FieldLabel className="sr-only" htmlFor="email">
+                                    Email address
+                                </FieldLabel>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="text"
+                                    autoComplete="on"
+                                    placeholder="Email address"
+                                />
+                            </Field>
+
+                            {/* Password */}
+                            <Field>
+                                <FieldLabel className="sr-only" htmlFor="password">
+                                    Password
+                                </FieldLabel>
+
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        name="password"        // ✅ REQUIRED
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Enter password"
+                                        autoComplete="new-password"
+                                        className="h-12 pr-12"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((prev) => !prev)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+                                    >
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
+                            </Field>
+
+                            {/* Forgot Password */}
+                            <div className="text-right text-sm">
+                                <Link
+                                    href="#"
+                                    className="text-primary hover:underline"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
+
+
+                            <Btn
+                                type="submit"
+                                title={isPending ? "Logging in..." : "Login"}
+                                size="lg"
+                                className="w-full"
+                                disabled={isPending}
+                            />
+                        </form>
+
+                        <p className="mt-6 text-sm text-center text-muted-foreground">
+                            Don’t have an account?
+                            <Link
+                                href="/register"
+                                className="text-primary font-medium hover:underline"
+                            >
+                                Register
+                            </Link>
+                        </p>
+
+                    </div>
+                </motion.div>
+            </div>
+        </div>
+    );
+};
