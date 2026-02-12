@@ -61,7 +61,7 @@ const cardVariants: Variants = {
 
 export default function FeaturesSection() {
     return (
-        <section className="relative py-24 bg-linear-to-b from-white via-slate-50 to-white overflow-hidden">
+        <section className="relative py-12 md:py-24 bg-linear-to-b from-white via-slate-50 to-white overflow-hidden">
 
             {/* Soft Background Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-150 bg-blue-500/10 blur-[120px] rounded-full" />
@@ -100,24 +100,25 @@ export default function FeaturesSection() {
                             transition={{ type: "spring", stiffness: 200 }}
                         >
                             <Card className="group relative overflow-hidden border-none bg-white/80 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl">
-                                <CardContent className="p-8 text-center space-y-5">
+                                <CardContent className="p-5 md:p-8 text-center space-y-3 md:space-y-5">
 
                                     {/* Icon */}
                                     <div
-                                        className={`mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-r ${feature.gradient} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}
+                                        className={`mx-auto flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-xl bg-linear-to-r ${feature.gradient} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}
                                     >
-                                        <feature.icon className="h-6 w-6" />
+                                        <feature.icon className="h-4 w-4 md:h-6 md:w-6" />
                                     </div>
 
                                     {/* Title */}
-                                    <h3 className="font-semibold text-lg">
+                                    <h3 className="font-semibold text-sm md:text-lg">
                                         {feature.title}
                                     </h3>
 
                                     {/* Description */}
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                    <p className="text-xs md:text-sm max-md:hidden text-muted-foreground leading-snug md:leading-relaxed">
                                         {feature.desc}
                                     </p>
+
                                 </CardContent>
 
                                 {/* Premium Hover Glow */}
