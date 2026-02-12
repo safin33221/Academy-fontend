@@ -4,6 +4,7 @@ import { serverFetch } from "@/lib/serverFetch";
 import { parse } from 'cookie';
 import { setCookie } from "./tokenHandler";
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { redirect } from "next/navigation";
 export const login = async (
     _prevState: unknown,
     formData: FormData
@@ -104,6 +105,7 @@ export const login = async (
             throw new Error("Invalid token format");
         }
 
+        redirect('/')
 
 
 
@@ -111,10 +113,7 @@ export const login = async (
 
 
 
-        return {
-            success: true,
-            message: "Login successful",
-        };
+
 
     } catch (error: any) {
         if (error?.digest?.startsWith('NEXT_REDIRECT')) {

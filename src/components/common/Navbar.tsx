@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import Btn from "../shared/Btn";
+import LogoutBtn from "../shared/LogoutBtn";
 
 interface NavItem {
     label: string;
@@ -39,12 +40,12 @@ const NAV_ITEMS: NavItem[] = [
     { label: "Contact", href: "/contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ user }: { user: any }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const isAuthenticated = false;
+
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -143,12 +144,20 @@ export default function Navbar() {
 
                     {/* Right Side */}
                     <div className="flex items-center gap-3">
-                        {isAuthenticated ? (
+                        {user?.success ? (
                             <>
-                                <Link href="/">
+                                {/* <Link href="/">
                                     <Button variant="outline">Dashboard</Button>
-                                </Link>
-                                <Button variant="destructive">Logout</Button>
+                                </Link> */}
+                                <div>
+                                    <p className="text-sm font-medium text-slate-800 dark:text-white">
+                                        {user.data.name}
+                                    </p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                                        {user.data.email}
+                                    </p>
+                                </div>
+                                <LogoutBtn />
                             </>
                         ) : (
                             <>
@@ -171,6 +180,6 @@ export default function Navbar() {
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav >
     );
 }

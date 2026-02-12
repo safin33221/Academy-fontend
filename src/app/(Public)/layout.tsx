@@ -1,5 +1,5 @@
 import Footer from "@/components/common/Footer";
-import Navbar from "@/components/common/Navbar";
+import NavbarWarper from "@/components/common/NavbarWarper";
 import React from "react";
 
 export default function Layout({
@@ -9,7 +9,7 @@ export default function Layout({
 }) {
     return (
         <div className="flex min-h-screen flex-col">
-            <Navbar />
+            <NavbarWarper />
 
             {/* Main Content Area */}
             <main className="flex-1">
