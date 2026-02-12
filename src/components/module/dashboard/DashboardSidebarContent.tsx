@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { IUser } from "@/types/user/user";
+import { Separator } from "@/components/ui/separator";
 
 
 interface DashboardSideBarContentProps {
@@ -35,6 +36,7 @@ export default function DashboardSidebarContent({
                                 </h4>
                             )}
 
+                            <Separator />
                             <div className="flex flex-col gap-1">
                                 {section.items.map((item, itemId) => {
                                     const isActive = pathname === item.href;
@@ -44,9 +46,9 @@ export default function DashboardSidebarContent({
                                             key={itemId}
                                             href={item.href}
                                             className={cn(
-                                                "px-3 py-2 rounded-md text-sm transition-colors",
+                                                "px-3 py-2 rounded-md text-lg text-primary",
                                                 isActive
-                                                    ? "bg-primary text-primary-foreground"
+                                                    ? " text-indigo-600  font-bold bg-slate-200 transition"
                                                     : "hover:bg-muted"
                                             )}
                                         >

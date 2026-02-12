@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Course } from "../../../public/data/courses";
+import Btn from "../shared/Btn";
 
 
 interface CoursePreviewCardProps {
@@ -80,12 +81,12 @@ export function CoursePreviewCard({
                     </div>
 
                     {/* Enroll Button */}
-                    <Button
+                    <Btn
                         onClick={onEnroll}
                         className="w-full h-12 text-base font-semibold"
                     >
                         Enroll Now
-                    </Button>
+                    </Btn>
 
                     <p className="text-xs text-center text-muted-foreground">
                         30-Day Money-Back Guarantee
@@ -131,6 +132,6 @@ export function CoursePreviewCard({
                     </Button>
                 </CardContent>
             </Card>
-        </div>
+        </div >
     );
 }
