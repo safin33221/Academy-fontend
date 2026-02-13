@@ -1,4 +1,4 @@
-import { Edit, Eye, Loader2, MoreHorizontal, Trash } from "lucide-react";
+import { Blocks, Edit, Eye, Loader2, MoreHorizontal, Trash } from "lucide-react";
 import {
     Table,
     TableBody, TableCell, TableHead,
@@ -20,6 +20,9 @@ interface ManagementTableProps<T> {
     onView?: (row: T) => void;
     onEdit?: (row: T) => void;
     onDelete?: (row: T) => void;
+    onToggleBlock?: (row: T) => void,
+    isRowBlocked?: (row: T) => boolean,
+    updateRole?: (row: T) => void;
     getRowKey: (row: T) => string
     EmptyMessage?: string;
     isRefreshing?: boolean;
@@ -35,6 +38,8 @@ export default function ManagementTable<T>(
         onView,
         onEdit,
         onDelete,
+        onToggleBlock,
+        isRowBlocked,
         EmptyMessage = "No Records Founds",
         getRowKey,
         isRefreshing = false
@@ -42,7 +47,8 @@ export default function ManagementTable<T>(
 
 ) {
 
-    const hasAction = onEdit || onView || onDelete
+    const hasAction =
+        onEdit || onView || onDelete || onToggleBlock;
 
     return (
 
@@ -95,36 +101,50 @@ export default function ManagementTable<T>(
                                 ))}
 
                                 {hasAction && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            {onView && (
-                                                <DropdownMenuItem onClick={() => onView(item)}>
-                                                    <Eye className="mr-2 h-4 w-4" />
-                                                    View
-                                                </DropdownMenuItem>
-                                            )}
-                                            {onEdit && (
-                                                <DropdownMenuItem onClick={() => onEdit(item)}>
-                                                    <Edit className="mr-2 h-4 w-4" />
-                                                    Edit
-                                                </DropdownMenuItem>
-                                            )}
-                                            {onDelete && (
-                                                <DropdownMenuItem
-                                                    onClick={() => onDelete(item)}
-                                                    className="text-destructive flex items-center cursor-pointer"
-                                                >
-                                                    <Trash className="mr-2 h-4 w-4" />
-                                                    Delete
-                                                </DropdownMenuItem>
-                                            )}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <TableCell>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon">
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+
+                                            <DropdownMenuContent align="end">
+                                                {onView && (
+                                                    <DropdownMenuItem onClick={() => onView(item)}>
+                                                        <Eye className="mr-2 h-4 w-4" />
+                                                        View
+                                                    </DropdownMenuItem>
+                                                )}
+
+                                                {onEdit && (
+                                                    <DropdownMenuItem onClick={() => onEdit(item)}>
+                                                        <Edit className="mr-2 h-4 w-4" />
+                                                        Edit
+                                                    </DropdownMenuItem>
+                                                )}
+
+                                                {onDelete && (
+                                                    <DropdownMenuItem
+                                                        onClick={() => onDelete(item)}
+                                                        className="text-destructive"
+                                                    >
+                                                        <Trash className="mr-2 h-4 w-4" />
+                                                        Delete
+                                                    </DropdownMenuItem>
+                                                )}
+
+                                                {onToggleBlock && isRowBlocked && (
+                                                    <DropdownMenuItem
+                                                        onClick={() => onToggleBlock(item)}
+                                                    >
+                                                        <Blocks className="mr-2 h-4 w-4" />
+                                                        {isRowBlocked(item) ? "Unblock" : "Block"}
+                                                    </DropdownMenuItem>
+                                                )}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
                                 )}
                             </TableRow>
                         ))
