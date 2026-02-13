@@ -10,7 +10,7 @@ export default function LogoutBtn() {
 
     return (
         <div>
-            <Button variant={`destructive`} className="w-full " onClick={handleLogout}>Logout</Button>
+            <Button variant={`destructive`} className="w-full block " onClick={handleLogout}>Logout</Button>
         </div>
     );
 };

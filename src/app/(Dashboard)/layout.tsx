@@ -1,3 +1,4 @@
+import DashboardNavbar from "@/components/module/dashboard/DashboardNavbar";
 import DashboardSidebar from "@/components/module/dashboard/DashboardSidebar";
 import { getCookies } from "@/services/auth/tokenHandler";
 import { redirect } from "next/navigation";
@@ -22,8 +23,8 @@ export default async function layout({ children }: { children: React.ReactNode }
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* Navbar */}
                 <div className="shrink-0">
-                    {/* <DashboardNavbar /> */}
-                    <h1>Dashboard navbar</h1>
+                    <DashboardNavbar />
+                    {/* <h1>Dashboard navbar</h1> */}
                 </div>
 
                 {/* Page Content */}
