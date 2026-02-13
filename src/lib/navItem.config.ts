@@ -16,13 +16,25 @@ export const getCommonNavItems = (role: IUserRole): INavSection[] => {
                     title: "My Dashboard",
                     href: defaultDashboard,
                     icon: "LayoutDashboard",
-                    role: ["ADMIN", "INSTRUCTOR", "STUDENT", "SUPER_ADMIN", "USER"],
+                    role: [
+                        IUserRole.ADMIN,
+                        IUserRole.INSTRUCTOR,
+                        IUserRole.STUDENT,
+                        IUserRole.SUPER_ADMIN,
+                        IUserRole.USER,
+                    ],
                 },
                 {
                     title: "My Profile",
                     href: "/my-profile",
                     icon: "User",
-                    role: ["ADMIN", "INSTRUCTOR", "STUDENT", "SUPER_ADMIN", "USER"],
+                    role: [
+                        IUserRole.ADMIN,
+                        IUserRole.INSTRUCTOR,
+                        IUserRole.STUDENT,
+                        IUserRole.SUPER_ADMIN,
+                        IUserRole.USER,
+                    ],
                 },
             ],
         },
@@ -40,13 +52,13 @@ export const superAdminNavItems: INavSection[] = [
                 title: "Manage Admins",
                 href: "/dashboard/super-admin/admins",
                 icon: "Shield",
-                role: ["SUPER_ADMIN"],
+                role: [IUserRole.SUPER_ADMIN],
             },
             {
                 title: "All Users",
                 href: "/dashboard/super-admin/users",
                 icon: "Users",
-                role: ["SUPER_ADMIN"],
+                role: [IUserRole.SUPER_ADMIN],
             },
         ],
     },
@@ -63,19 +75,19 @@ export const adminNavItems: INavSection[] = [
                 title: "All Users",
                 href: "/admin/dashboard/users",
                 icon: "Users",
-                role: ["ADMIN", "SUPER_ADMIN"],
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
             {
                 title: "Instructors",
                 href: "/admin/dashboard/instructors",
                 icon: "GraduationCap",
-                role: ["ADMIN", "SUPER_ADMIN"],
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
             {
                 title: "Students",
                 href: "/admin/dashboard/students",
                 icon: "UserCheck",
-                role: ["ADMIN", "SUPER_ADMIN"],
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
         ],
     },
@@ -86,19 +98,19 @@ export const adminNavItems: INavSection[] = [
                 title: "All Courses",
                 href: "/admin/dashboard/courses",
                 icon: "BookOpen",
-                role: ["ADMIN", "SUPER_ADMIN"],
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
             {
                 title: "Categories",
                 href: "/admin/dashboard/categories",
                 icon: "Layers",
-                role: ["ADMIN", "SUPER_ADMIN"],
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
             {
                 title: "Batch",
                 href: "/admin/dashboard/batch",
                 icon: "Layers",
-                role: ["ADMIN", "SUPER_ADMIN"],
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
         ],
     },
@@ -115,13 +127,13 @@ export const instructorNavItems: INavSection[] = [
                 title: "My Courses",
                 href: "/dashboard/instructor/courses",
                 icon: "BookOpen",
-                role: ["INSTRUCTOR"],
+                role: [IUserRole.INSTRUCTOR],
             },
             {
                 title: "Create Course",
                 href: "/dashboard/instructor/courses/create",
                 icon: "PlusCircle",
-                role: ["INSTRUCTOR"],
+                role: [IUserRole.INSTRUCTOR],
             },
         ],
     },
@@ -138,13 +150,13 @@ export const studentNavItems: INavSection[] = [
                 title: "My Courses",
                 href: "/dashboard/student/courses",
                 icon: "BookOpen",
-                role: ["STUDENT"],
+                role: [IUserRole.STUDENT],
             },
             {
                 title: "Payments",
                 href: "/dashboard/student/payments",
                 icon: "CreditCard",
-                role: ["STUDENT"],
+                role: [IUserRole.STUDENT],
             },
         ],
     },
@@ -157,16 +169,16 @@ export const getNavItemByRole = (role: IUserRole): INavSection[] => {
     const commonNavItems = getCommonNavItems(role);
 
     switch (role) {
-        case "SUPER_ADMIN":
+        case IUserRole.SUPER_ADMIN:
             return [...commonNavItems, ...superAdminNavItems];
 
-        case "ADMIN":
+        case IUserRole.ADMIN:
             return [...commonNavItems, ...adminNavItems];
 
-        case "INSTRUCTOR":
+        case IUserRole.INSTRUCTOR:
             return [...commonNavItems, ...instructorNavItems];
 
-        case "STUDENT":
+        case IUserRole.STUDENT:
             return [...commonNavItems, ...studentNavItems];
 
         default:
