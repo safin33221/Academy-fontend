@@ -1,4 +1,4 @@
-import { Blocks, Edit, Eye, Loader2, MoreHorizontal, Trash } from "lucide-react";
+import { Blocks, Edit, Eye, Loader2, MoreHorizontal, Shield, Trash } from "lucide-react";
 import {
     Table,
     TableBody, TableCell, TableHead,
@@ -40,6 +40,7 @@ export default function ManagementTable<T>(
         onDelete,
         onToggleBlock,
         isRowBlocked,
+        updateRole,
         EmptyMessage = "No Records Founds",
         getRowKey,
         isRefreshing = false
@@ -48,7 +49,7 @@ export default function ManagementTable<T>(
 ) {
 
     const hasAction =
-        onEdit || onView || onDelete || onToggleBlock;
+        onEdit || onView || onDelete || onToggleBlock || updateRole
 
     return (
 
@@ -124,6 +125,13 @@ export default function ManagementTable<T>(
                                                     </DropdownMenuItem>
                                                 )}
 
+                                                {updateRole && (
+                                                    <DropdownMenuItem onClick={() => updateRole(item)}>
+                                                        <Shield className="mr-2 h-4 w-4" />
+                                                        Update Role
+                                                    </DropdownMenuItem>
+                                                )}
+
                                                 {onDelete && (
                                                     <DropdownMenuItem
                                                         onClick={() => onDelete(item)}
@@ -138,8 +146,17 @@ export default function ManagementTable<T>(
                                                     <DropdownMenuItem
                                                         onClick={() => onToggleBlock(item)}
                                                     >
-                                                        <Blocks className="mr-2 h-4 w-4" />
-                                                        {isRowBlocked(item) ? "Unblock" : "Block"}
+                                                        <span
+                                                            className={` flex 
+                                                                  ${isRowBlocked(item) ? "text-green-500" : "text-destructive"}`}
+                                                        >
+
+                                                            <Blocks
+                                                                className={`mr-2 h-4 w-4 
+                                                                    ${isRowBlocked(item) ? "text-green-500" : "text-destructive"} `}
+                                                            />
+                                                            {isRowBlocked(item) ? "Unblock" : "Block"}
+                                                        </span>
                                                     </DropdownMenuItem>
                                                 )}
                                             </DropdownMenuContent>
@@ -151,7 +168,7 @@ export default function ManagementTable<T>(
                     )}
                 </TableBody>
             </Table>
-        </div>
+        </div >
     );
 
 }

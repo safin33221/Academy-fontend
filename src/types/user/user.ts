@@ -5,6 +5,11 @@ export enum IUserRole {
     STUDENT = "STUDENT",
     USER = "USER",
 }
+export enum IUserRoleUpdate {
+    ADMIN = "ADMIN",
+    INSTRUCTOR = "INSTRUCTOR",
+    USER = "USER",
+}
 
 export interface IUser {
     id: string;

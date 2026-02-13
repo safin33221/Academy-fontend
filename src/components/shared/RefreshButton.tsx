@@ -4,17 +4,16 @@ import { RefreshCcw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { Button } from "../ui/button";
-import Btn from "./Btn";
 
 interface RefreshButtonProps {
-
+  size?: "sm" | "default" | "lg";
   variant?: "default" | "outline" | "ghost";
   showLabel?: boolean;
 }
 
 const RefreshButton = ({
-
-  variant = "default",
+  size = "default",
+  variant = "outline",
   showLabel = true,
 }: RefreshButtonProps) => {
   const router = useRouter();
@@ -34,18 +33,18 @@ const RefreshButton = ({
   };
 
   return (
-    <Btn
-      size="lg"
+    <Button
+      size={size}
+      variant={variant}
       onClick={handleRefresh}
       disabled={isPending}
     >
-      < RefreshCcw
-        className={`h-4 w-4 ${isPending ? "animate-spin" : ""} ${showLabel ? "mr - 2" : ""
-          }`
-        }
+      <RefreshCcw
+        className={`h-4 w-4 ${isPending ? "animate-spin" : ""} ${showLabel ? "mr-2" : ""
+          }`}
       />
       {showLabel && "Refresh"}
-    </Btn >
+    </Button>
   );
 };
 

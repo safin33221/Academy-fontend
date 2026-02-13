@@ -3,7 +3,6 @@ import UserManagementHeader from "@/components/module/admin/userManagement/UserM
 import UserTable from "@/components/module/admin/userManagement/UserTable";
 import { queryStringFormatter } from "@/lib/formatters";
 import { getAllUsers } from "@/services/user/getAllUser";
-import { IUserRole } from "@/types/user/user";
 
 export default async function page({
     searchParams,
@@ -12,14 +11,13 @@ export default async function page({
 }) {
     const searchParamsObj = await searchParams;
     const finalParams = {
-        ...searchParamsObj,
-        role: IUserRole.USER,
+        ...searchParamsObj
     };
     const queryString = queryStringFormatter(finalParams);
     const res = await getAllUsers(queryString);
     const users = res?.data
     return (
-        <div>
+        <div className="space-y-2">
             <UserManagementHeader />
             <UserFilter />
             <UserTable users={users} />

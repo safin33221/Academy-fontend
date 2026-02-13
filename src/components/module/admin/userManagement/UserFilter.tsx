@@ -1,5 +1,6 @@
 import ClearFiltersButton from "@/components/shared/ClearFiltersButton";
 import RefreshButton from "@/components/shared/RefreshButton";
+import RoleFilter from "@/components/shared/RoleFilter";
 import SearchFilter from "@/components/shared/SearchFilter";
 
 export default function UserFilter() {
@@ -17,16 +18,7 @@ export default function UserFilter() {
             {/* Additional filters - Collapsible on mobile */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
                 <div className="hidden md:flex items-center gap-2">
-                    <SearchFilter
-                        paramName="email"
-                        placeholder="Email"
-
-                    />
-                    <SearchFilter
-                        paramName="contactNumber"
-                        placeholder="Contact"
-
-                    />
+                    <RoleFilter />
 
                 </div>
 
