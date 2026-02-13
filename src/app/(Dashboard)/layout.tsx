@@ -1,5 +1,6 @@
 import DashboardNavbar from "@/components/module/dashboard/DashboardNavbar";
 import DashboardSidebar from "@/components/module/dashboard/DashboardSidebar";
+import { getMe } from "@/services/auth/getMe";
 import { getCookies } from "@/services/auth/tokenHandler";
 import { redirect } from "next/navigation";
 
@@ -7,6 +8,7 @@ export default async function layout({ children }: { children: React.ReactNode }
 
 
     const accessToken = await getCookies("accessToken")
+    const user = await getMe()
     if (!accessToken) {
         redirect("/")
 
@@ -23,7 +25,7 @@ export default async function layout({ children }: { children: React.ReactNode }
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* Navbar */}
                 <div className="shrink-0">
-                    <DashboardNavbar />
+                    <DashboardNavbar user={user?.data} />
                     {/* <h1>Dashboard navbar</h1> */}
                 </div>
 

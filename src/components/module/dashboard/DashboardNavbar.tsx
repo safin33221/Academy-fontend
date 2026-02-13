@@ -13,13 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoutBtn from "@/components/shared/LogoutBtn";
+import { IUser } from "@/types/user/user";
 
 interface DashboardNavbarProps {
     onMenuClick?: () => void;
+    user: IUser
 }
 
 export default function DashboardNavbar({
     onMenuClick,
+    user
 }: DashboardNavbarProps) {
     return (
         <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -63,7 +66,7 @@ export default function DashboardNavbar({
                             >
                                 <Avatar className="h-9 w-9">
                                     <AvatarImage src="/avatar.png" />
-                                    <AvatarFallback>SA</AvatarFallback>
+                                    <AvatarFallback>{user?.name?.slice(0, 1)}</AvatarFallback>
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
@@ -73,6 +76,8 @@ export default function DashboardNavbar({
                             className="w-56"
                         >
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                            <DropdownMenuLabel className="text-indigo-600">{user.role}</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Profile</DropdownMenuItem>
                             <DropdownMenuItem>Settings</DropdownMenuItem>

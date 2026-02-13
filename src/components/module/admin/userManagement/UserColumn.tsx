@@ -27,6 +27,14 @@ export const UserColumn: columns<IUser>[] = [
         ),
     },
     {
+        header: "Phone",
+        accessor: (user) => (
+            <span className="text-sm text-muted-foreground">
+                {user.phone}
+            </span>
+        ),
+    },
+    {
         header: "Role",
         accessor: (user) => (
             <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700 uppercase">

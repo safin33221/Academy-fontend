@@ -1,9 +1,10 @@
-export type IUserRole =
-    | "SUPER_ADMIN"
-    | "ADMIN"
-    | "INSTRUCTOR"
-    | "STUDENT"
-    | "USER";
+export enum IUserRole {
+    SUPER_ADMIN = "SUPER_ADMIN",
+    ADMIN = "ADMIN",
+    INSTRUCTOR = "INSTRUCTOR",
+    STUDENT = "STUDENT",
+    USER = "USER",
+}
 
 export interface IUser {
     id: string;
