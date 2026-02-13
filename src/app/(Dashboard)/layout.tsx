@@ -28,7 +28,7 @@ export default async function layout({ children }: { children: React.ReactNode }
                 </div>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto p-6 mt-16">
+                <main className="flex-1 overflow-y-auto p-6 ">
                     {children}
                 </main>
             </div>
