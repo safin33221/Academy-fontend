@@ -14,7 +14,7 @@ export default async function layout({ children }: { children: React.ReactNode }
 
     }
     return (
-        <div className="h-screen flex overflow-hidden">
+        <div className="h-screen flex overflow-hidden ">
             {/* Sidebar */}
             <aside className="w-64 h-full overflow-y-auto border-r max-md:hidden">
 
@@ -30,7 +30,7 @@ export default async function layout({ children }: { children: React.ReactNode }
                 </div>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto p-6 ">
+                <main className="flex-1 overflow-y-auto p-6 h-screen overflow-hidden ">
                     {children}
                 </main>
             </div>

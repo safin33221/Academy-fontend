@@ -21,18 +21,17 @@ export default function CourseCreateForm() {
     const [certificateEnabled, setCertificateEnabled] = useState(false);
 
     return (
-        <div className="p-6 lg:py-10  space-y-8 ">
-
+        <div className="space-y-8 overflow-auto">
             {/* Page Header */}
             <div className="flex items-center justify-between">
-                <div>
+                < div >
                     <h1 className="text-2xl font-semibold text-gray-900">
                         Create Course
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
                         Fill in the details below to publish a new course.
                     </p>
-                </div>
+                </div >
 
                 <Link href="/dashboard/courses">
                     <Button variant="outline" size="sm">
@@ -40,7 +39,7 @@ export default function CourseCreateForm() {
                         Back
                     </Button>
                 </Link>
-            </div>
+            </div >
 
             <motion.form
                 initial={{ opacity: 0, y: 15 }}
@@ -214,6 +213,6 @@ export default function CourseCreateForm() {
                 </div>
 
             </motion.form>
-        </div>
+        </div >
     );
 }

@@ -124,13 +124,9 @@
 
   html {
     scroll-behavior: smooth;
-
-
-
     height: 100%;
     margin: 0;
-    overflow: hidden;
-    /* পুরো পেজে স্ক্রল বন্ধ */
+
 
   }
 
@@ -139,7 +135,6 @@
 
     height: 100%;
     margin: 0;
-    overflow: hidden;
-    /* পুরো পেজে স্ক্রল বন্ধ */
+
   }
 }
