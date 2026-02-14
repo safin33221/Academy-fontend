@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
-import { Course } from "../../../../public/data/courses";
+import { Course } from "../../../../../public/data/courses";
 
 interface CourseCardProps {
     course: Course;

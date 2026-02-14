@@ -1,5 +1,5 @@
 import { courses } from "../../../../public/data/courses";
-import { CourseCard } from "@/components/module/course/CourseCard";
+import { CourseCard } from "@/components/module/admin/course/CourseCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";

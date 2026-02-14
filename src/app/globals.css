@@ -124,10 +124,22 @@
 
   html {
     scroll-behavior: smooth;
+
+
+
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    /* পুরো পেজে স্ক্রল বন্ধ */
+
   }
 
   body {
     @apply bg-background text-foreground;
 
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    /* পুরো পেজে স্ক্রল বন্ধ */
   }
 }

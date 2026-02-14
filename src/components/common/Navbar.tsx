@@ -1,203 +1,172 @@
-
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Btn from "../shared/Btn";
 import LogoutBtn from "../shared/LogoutBtn";
-import { IUser } from "@/types/user/user";
+import { IUser, IUserRole } from "@/types/user/user";
 import { getDefaultDashboard } from "@/lib/auth-utils";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface NavItem {
     label: string;
-    href?: string;
-    children?: { label: string; href: string; desc?: string }[];
+    href: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
     { label: "Home", href: "/" },
-    // {
-    //     label: "Courses",
-    //     children: [
-    //         {
-    //             label: "Web Development",
-    //             href: "/courses/web",
-    //             desc: "Frontend, Backend & Fullstack",
-    //         },
-    //         {
-    //             label: "Graphic Design",
-    //             href: "/courses/graphic",
-    //             desc: "Creative Design Mastery",
-    //         },
-    //         {
-    //             label: "Digital Marketing",
-    //             href: "/courses/marketing",
-    //             desc: "SEO, Ads & Social Media",
-    //         },
-    //     ],
-    // },
     { label: "Our Course", href: "/course" },
     { label: "Success Stories", href: "/success" },
     { label: "Events", href: "/events" },
     { label: "Contact", href: "/contact" },
 ];
 
-export default function Navbar({ user }: { user: IUser }) {
+export default function Navbar({ user }: { user: IUser | null }) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-    const dashboard = getDefaultDashboard(user?.role)
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    // Close desktop dropdown on outside click
-    useEffect(() => {
-        function handleClickOutside(e: MouseEvent) {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(e.target as Node)
-            ) {
-                setActiveDropdown(null);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () =>
-            document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    const pathname = usePathname();
+    const dashboard = getDefaultDashboard(user?.role as IUserRole);
 
     return (
-        <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[98%] max-w-7xl bg-white/80 backdrop-blur-md border rounded-2xl shadow-lg">
-            <div className="px-4">
-                <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
-                    <h1 className="text-xl font-bold tracking-wide">Academy</h1>
+        <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-6">
+            <div className="flex h-16 items-center justify-between rounded-2xl border border-white/20 bg-white/70 backdrop-blur-xl shadow-lg px-6">
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-8">
-                        {NAV_ITEMS.map((item) =>
-                            item.children ? (
-                                <div
-                                    key={item.label}
-                                    className="relative"
-                                    ref={dropdownRef}
-                                    onMouseEnter={() => setActiveDropdown(item.label)}
-                                    onMouseLeave={() => setActiveDropdown(null)}
-                                >
-                                    <button className="flex items-center gap-1 text-sm font-medium hover:text-blue-600 transition">
-                                        {item.label}
-                                        <ChevronDown
-                                            className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === item.label ? "rotate-180" : ""
-                                                }`}
-                                        />
-                                    </button>
+                {/* Logo */}
+                <Link href="/">
+                    <h1 className="text-xl font-semibold tracking-tight bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        Academy
+                    </h1>
+                </Link>
 
-                                    {/* Desktop Dropdown */}
-                                    <div
-                                        className={`absolute left-1/2 top-full mt-4 w-100 -translate-x-1/2 rounded-2xl border bg-white p-6 shadow-2xl transition-all duration-300 ${activeDropdown === item.label
-                                            ? "opacity-100 translate-y-0 visible"
-                                            : "opacity-0 translate-y-3 invisible"
-                                            }`}
-                                    >
-                                        <div className="grid gap-3">
-                                            {item.children.map((child) => (
-                                                <Link
-                                                    key={child.label}
-                                                    href={child.href}
-                                                    className="group relative rounded-xl p-4 hover:bg-slate-100 transition"
-                                                >
-                                                    <p className="font-semibold text-sm text-slate-800 group-hover:text-blue-600 transition">
-                                                        {child.label}
-                                                    </p>
-                                                    <p className="text-xs text-slate-500 mt-1">
-                                                        {child.desc}
-                                                    </p>
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <Link
-                                    key={item.label}
-                                    href={item.href!}
-                                    className="text-lg font-medium hover:text-blue-600 transition"
-                                >
-                                    {item.label}
-                                </Link>
-                            )
-                        )}
-                    </div>
-
-                    {/* Right Side */}
-                    <div className="flex items-center gap-3">
-                        {user ? (
-                            <>
-                                <Link href={dashboard}>
-                                    <Button
-                                        variant={`outline`}
-                                    >
-                                        Dashboard
-                                    </Button>
-                                </Link>
-                                <LogoutBtn />
-                            </>
-                        ) : (
-                            <>
-                                <Link href="/login">
-                                    <Button variant="outline">Login</Button>
-                                </Link>
-                                <Link href="/register">
-                                    <Btn title="Join Us" size="sm" />
-                                </Link>
-                            </>
-                        )}
-
-                        {/* Mobile Toggle */}
-                        <button
-                            className="md:hidden p-2"
-                            onClick={() => setMobileOpen(!mobileOpen)}
+                {/* Desktop Menu */}
+                <div className="hidden md:flex items-center gap-8">
+                    {NAV_ITEMS.map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            className={`text-sm font-medium transition-colors ${pathname === item.href
+                                ? "text-blue-600"
+                                : "text-slate-700 hover:text-blue-600"
+                                }`}
                         >
-                            {mobileOpen ? <X /> : <Menu />}
-                        </button>
-                    </div>
+                            {item.label}
+                        </Link>
+                    ))}
                 </div>
 
-                {/* Mobile Menu */}
-                <div
-                    className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-150 opacity-100 py-4" : "max-h-0 opacity-0"
-                        }`}
-                >
-                    <div className="space-y-4 border-t pt-4">
-                        {NAV_ITEMS.map((item) =>
-                            item.children ? (
-                                <div key={item.label} className="space-y-2">
-                                    <p className="font-medium text-sm">{item.label}</p>
-                                    <div className="pl-3 space-y-2">
-                                        {item.children.map((child) => (
-                                            <Link
-                                                key={child.label}
-                                                href={child.href}
-                                                onClick={() => setMobileOpen(false)}
-                                                className="block text-sm text-slate-600 hover:text-blue-600"
-                                            >
-                                                {child.label}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
+                {/* Right Side */}
+                <div className="flex items-center gap-4">
+
+                    {user ? (
+                        <>
+                            {user.role !== IUserRole.USER ? (
+                                <>
+                                    <Link href={dashboard}>
+                                        <Button variant="outline">Dashboard</Button>
+                                    </Link>
+                                    <LogoutBtn />
+                                </>
                             ) : (
-                                <Link
-                                    key={item.label}
-                                    href={item.href!}
-                                    onClick={() => setMobileOpen(false)}
-                                    className="block text-sm font-medium hover:text-blue-600"
-                                >
-                                    {item.label}
-                                </Link>
-                            )
-                        )}
-                    </div>
+                                <DropdownMenu modal={false}>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="relative">
+                                            <Avatar className="h-10 w-10 ring-2 ring-blue-500/30 hover:ring-blue-500 transition">
+                                                <AvatarImage src={user.profileImage || ""} />
+                                                <AvatarFallback>
+                                                    {user.name?.charAt(0).toUpperCase()}
+                                                </AvatarFallback>
+                                            </Avatar>
+
+                                            {/* Online Indicator */}
+                                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+                                        </button>
+                                    </DropdownMenuTrigger>
+
+                                    <DropdownMenuContent
+                                        align="end"
+                                        sideOffset={10}
+                                        className="w-64 rounded-xl border bg-white shadow-xl"
+                                    >
+                                        <DropdownMenuLabel>
+                                            <div className="flex flex-col">
+                                                <span className="font-medium text-slate-800">
+                                                    {user.name}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                    {user.email}
+                                                </span>
+                                            </div>
+                                        </DropdownMenuLabel>
+
+                                        <DropdownMenuSeparator />
+
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/profile">My Profile</Link>
+                                        </DropdownMenuItem>
+
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/course">Browse Courses</Link>
+                                        </DropdownMenuItem>
+
+                                        <DropdownMenuSeparator />
+
+                                        <DropdownMenuItem asChild>
+                                            <LogoutBtn />
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/login">
+                                <Button variant="outline">Login</Button>
+                            </Link>
+                            <Link href="/register">
+                                <Btn title="Join Us" size="sm" />
+                            </Link>
+                        </>
+                    )}
+
+                    {/* Mobile Toggle */}
+                    <button
+                        className="md:hidden p-2"
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                    >
+                        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+            <div
+                className={`md:hidden overflow-hidden transition-all duration-500 ${mobileOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+                    }`}
+            >
+                <div className="rounded-2xl border bg-white shadow-lg p-6 space-y-4">
+                    {NAV_ITEMS.map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={() => setMobileOpen(false)}
+                            className={`block text-sm font-medium transition ${pathname === item.href
+                                ? "text-blue-600"
+                                : "text-slate-700 hover:text-blue-600"
+                                }`}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
                 </div>
             </div>
         </nav>

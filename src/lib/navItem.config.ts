@@ -36,6 +36,18 @@ export const getCommonNavItems = (role: IUserRole): INavSection[] => {
                         IUserRole.USER,
                     ],
                 },
+                {
+                    title: "View Site",
+                    href: "/",
+                    icon: "global",
+                    role: [
+                        IUserRole.ADMIN,
+                        IUserRole.INSTRUCTOR,
+                        IUserRole.STUDENT,
+                        IUserRole.SUPER_ADMIN,
+                        IUserRole.USER,
+                    ],
+                },
             ],
         },
     ];

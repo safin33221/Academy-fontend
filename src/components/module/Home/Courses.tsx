@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { courses } from "../../../../public/data/courses";
-import { CourseCard } from "../course/CourseCard";
+import { CourseCard } from "../admin/course/CourseCard";
 import Link from "next/link";
 
 export default function Courses() {
