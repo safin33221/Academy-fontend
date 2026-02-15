@@ -7,11 +7,11 @@ export default function Layout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen ">
 
 
             {/* Main Content Area */}
-            <main className="flex-1">
+            <main className="">
                 {children}
             </main>
 

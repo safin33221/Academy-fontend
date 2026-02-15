@@ -129,10 +129,8 @@ export default function Navbar({ user }: { user: IUser | null }) {
                         </>
                     ) : (
                         <>
-                            <Link href="/login">
-                                <Button variant="outline">Login</Button>
-                            </Link>
-                            <Link href="/register">
+
+                            <Link href="/join-us">
                                 <Btn title="Join Us" size="sm" />
                             </Link>
                         </>

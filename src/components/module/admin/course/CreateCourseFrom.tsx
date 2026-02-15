@@ -15,40 +15,51 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import { createCourse } from "@/services/course/createCourse";
 
 export default function CourseCreateForm() {
     const [certificateEnabled, setCertificateEnabled] = useState(false);
 
+    const [type, setType] = useState("");
+    const [access, setAccess] = useState("");
+    const [level, setLevel] = useState("");
+    const [status, setStatus] = useState("");
+
+    const [_state, formAction, isPending] = useActionState(
+        createCourse,
+        null
+    );
+
     return (
-        <div className="space-y-8 overflow-auto">
+        <div className="space-y-8">
             {/* Page Header */}
             <div className="flex items-center justify-between">
-                < div >
+                <div>
                     <h1 className="text-2xl font-semibold text-gray-900">
                         Create Course
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
                         Fill in the details below to publish a new course.
                     </p>
-                </div >
+                </div>
 
-                <Link href="/dashboard/courses">
+                <Link href="/admin/dashboard/courses">
                     <Button variant="outline" size="sm">
                         <ArrowLeft size={16} className="mr-2" />
                         Back
                     </Button>
                 </Link>
-            </div >
+            </div>
 
             <motion.form
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
                 className="space-y-8"
+                action={formAction}
             >
-
-                {/* Basic Info */}
+                {/* ================= Basic Info ================= */}
                 <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
                     <h2 className="text-lg font-medium">Basic Information</h2>
 
@@ -84,14 +95,15 @@ export default function CourseCreateForm() {
                     </Field>
                 </div>
 
-                {/* Classification */}
+                {/* ================= Classification ================= */}
                 <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
                     <h2 className="text-lg font-medium">Classification</h2>
 
                     <div className="grid md:grid-cols-2 gap-6">
+                        {/* Type */}
                         <Field>
                             <FieldLabel>Type</FieldLabel>
-                            <Select>
+                            <Select onValueChange={setType}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select type" />
                                 </SelectTrigger>
@@ -100,11 +112,13 @@ export default function CourseCreateForm() {
                                     <SelectItem value="OFFLINE">Offline</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <input type="hidden" name="type" value={type} />
                         </Field>
 
+                        {/* Access */}
                         <Field>
                             <FieldLabel>Access</FieldLabel>
-                            <Select>
+                            <Select onValueChange={setAccess}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select access" />
                                 </SelectTrigger>
@@ -113,11 +127,13 @@ export default function CourseCreateForm() {
                                     <SelectItem value="PAID">Paid</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <input type="hidden" name="access" value={access} />
                         </Field>
 
+                        {/* Level */}
                         <Field>
                             <FieldLabel>Level</FieldLabel>
-                            <Select>
+                            <Select onValueChange={setLevel}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select level" />
                                 </SelectTrigger>
@@ -127,11 +143,13 @@ export default function CourseCreateForm() {
                                     <SelectItem value="ADVANCED">Advanced</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <input type="hidden" name="level" value={level} />
                         </Field>
 
+                        {/* Status */}
                         <Field>
                             <FieldLabel>Status</FieldLabel>
-                            <Select>
+                            <Select onValueChange={setStatus}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
@@ -140,11 +158,12 @@ export default function CourseCreateForm() {
                                     <SelectItem value="PUBLISHED">Published</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <input type="hidden" name="status" value={status} />
                         </Field>
                     </div>
                 </div>
 
-                {/* Pricing & Settings */}
+                {/* ================= Pricing ================= */}
                 <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
                     <h2 className="text-lg font-medium">Pricing & Settings</h2>
 
@@ -180,14 +199,21 @@ export default function CourseCreateForm() {
                                 Allow students to receive certificate
                             </p>
                         </div>
+
                         <Switch
                             checked={certificateEnabled}
                             onCheckedChange={setCertificateEnabled}
                         />
                     </div>
+
+                    <input
+                        type="hidden"
+                        name="certificateEnabled"
+                        value={certificateEnabled ? "on" : "off"}
+                    />
                 </div>
 
-                {/* SEO */}
+                {/* ================= SEO ================= */}
                 <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
                     <h2 className="text-lg font-medium">SEO Settings</h2>
 
@@ -206,13 +232,17 @@ export default function CourseCreateForm() {
                     </div>
                 </div>
 
-                {/* Sticky Footer Actions */}
+                {/* ================= Footer ================= */}
                 <div className="flex justify-end gap-4 pt-4 border-t">
-                    <Button variant="outline">Cancel</Button>
-                    <Button>Create Course</Button>
-                </div>
+                    <Button type="button" variant="outline">
+                        Cancel
+                    </Button>
 
+                    <Button type="submit" disabled={isPending}>
+                        {isPending ? "Creating..." : "Create Course"}
+                    </Button>
+                </div>
             </motion.form>
-        </div >
+        </div>
     );
 }
