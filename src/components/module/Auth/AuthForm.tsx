@@ -57,7 +57,7 @@ export default function AuthAnimation() {
                             }`}
                     >
                         <OverlayContent
-                            title={active ? "Welcome Back!" : "Hello, Welcome!"}
+                            title={active ? "Hello, Welcome!" : " Welcome Back!"}
                             text={
                                 active
                                     ? "Already have an account?"
@@ -72,12 +72,12 @@ export default function AuthAnimation() {
                 </div>
 
                 {/* ================= MOBILE VERSION ================= */}
-                <div className="md:hidden flex flex-col">
+                <div className="md:hidden flex flex-col min-h-screen">
 
                     {/* BLUE TOP SECTION */}
                     <div className="bg-linear-to-r from-primary to-blue-600 transition duration-300 text-white text-center py-12 px-6 rounded-b-[100px] ">
                         <h1 className="text-3xl font-bold mb-3">
-                            {active ? "Welcome Back!" : "Hello, Welcome!"}
+                            {active ? "Hello, Welcome!" : " Welcome Back!"}
                         </h1>
                         <p className="mb-4 text-sm">
                             {active
