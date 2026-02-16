@@ -1,11 +1,11 @@
 "use server"
 import { serverFetch } from "@/lib/serverFetch";
 
-export const getAllCourse = async (queryString?: string) => {
+export const getSingleCourse = async (slug?: string) => {
     try {
 
         const res = await serverFetch.get(
-            `/course?${queryString ?? ""}`);
+            `/course/${slug}`);
 
         const result = await res.json();
         return result;

@@ -1,3 +1,5 @@
+import CourseDetailsView from "@/components/module/admin/course/CourseDetailsView";
+import { getSingleCourse } from "@/services/course/getSingleCourse"
 
 export default async function Page({
     params,
@@ -5,9 +7,11 @@ export default async function Page({
     params: Promise<{ slug: string }>
 }) {
     const { slug } = await params
+    const res = await getSingleCourse(slug)
+
     return (
         <div>
-            <h1>{slug}</h1>
+            <CourseDetailsView course={res?.data} />
         </div>
     )
 }

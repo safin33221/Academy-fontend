@@ -19,16 +19,6 @@ export const CourseColumn: columns<ICourse>[] = [
     },
 
     {
-        header: "Category",
-        accessor: (course) => (
-            <span className="text-sm text-muted-foreground">
-                {course.category}
-            </span>
-        ),
-        className: "text-center",
-    },
-
-    {
         header: "Level",
         accessor: (course) => (
             <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700 uppercase">

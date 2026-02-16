@@ -113,12 +113,6 @@ export const adminNavItems: INavSection[] = [
                 role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
             {
-                title: "Categories",
-                href: "/admin/dashboard/categories",
-                icon: "Layers",
-                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
-            },
-            {
                 title: "Batch",
                 href: "/admin/dashboard/batch",
                 icon: "Layers",
