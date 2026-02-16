@@ -16,14 +16,7 @@ interface CourseTableProps {
 export default function CourseTable({ courses }: CourseTableProps) {
     const [viewingCourse, setViewingCourse] = useState<ICourse | null>(null);
 
-    // const [, startTransition] = useTransition();
-    // const router = useRouter();
 
-    // const handleRefresh = () => {
-    //     startTransition(() => {
-    //         router.refresh();
-    //     });
-    // };
 
     /* ================= View ================= */
     const handleView = (course: ICourse) => {
