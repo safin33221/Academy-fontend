@@ -1,56 +1,69 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export type CourseAccess = "FREE" | "PAID";
-export type CourseLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-export type CourseStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
-export type CourseType = "ONLINE" | "OFFLINE";
-
-export interface IModule {
+export interface ICurriculum {
     id: string;
     title: string;
+    content: string;
+    order: number;
+    courseId: string;
+}
+export type CourseLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+export interface ILearning {
+    id: string;
+    content: string;
+    courseId: string;
+}
+
+export interface IRequirement {
+    id: string;
+    content: string;
+    courseId: string;
+}
+
+export interface IReview {
+    id: string;
+    rating: number;
+    comment: string;
+    userId: string;
+    courseId: string;
+    createdAt: string;
+}
+
+export interface IFAQ {
+    id: string;
+    question: string;
+    answer: string;
     courseId: string;
 }
 
 export interface ICourse {
     id: string;
-    title: string;
     slug: string;
-    description: string;
+    title: string;
 
-    // SEO
-    metaTitle: string;
-    metaDescription: string;
+    shortDescription: string;
+    fullDescription: string;
 
-    // Media
-    thumbnail: string;
-
-    // Pricing
     price: number;
     discountPrice: number | null;
-    access: CourseAccess;
-    isPremium: boolean;
 
-    // Course Info
     level: CourseLevel;
-    type: CourseType;
-    durationInWeeks: number;
-    certificateEnabled: boolean;
+    category: string;
 
-    // Stats
-    totalEnrollments: number;
-    totalReviews: number;
-    averageRating: number;
+    duration: number;       // hours
+    totalClasses: number;
 
-    // Relations
-    modules: IModule[];
-    batches: any[];   // replace with IBatch[] if defined
-    coupons: any[];   // replace with ICoupon[] if defined
+    rating: number;
+    reviewCount: number;
 
-    // Moderation
-    status: CourseStatus;
-    approved: boolean;
-    isDeleted: boolean;
+    isPremium: boolean;
+    isFeatured: boolean;
 
-    // Timestamps
     createdAt: string;
     updatedAt: string;
+
+    // Relations
+    curriculum: ICurriculum[];
+    learnings: ILearning[];
+    requirements: IRequirement[];
+    reviews: IReview[];
+    faqs: IFAQ[];
 }

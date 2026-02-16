@@ -14,6 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoutBtn from "@/components/shared/LogoutBtn";
 import { IUser } from "@/types/user/user";
+import Breadcrumb from "@/components/shared/Breadcrumb";
 
 interface DashboardNavbarProps {
     onMenuClick?: () => void;
@@ -28,6 +29,9 @@ export default function DashboardNavbar({
         <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
             <div className="flex h-16 items-center justify-between px-4 md:px-6">
                 {/* Left Section */}
+                <div className="max-md:hidden items-center justify-center flex">
+                    <Breadcrumb />
+                </div>
                 <div className="flex items-center gap-4">
                     <Button
                         variant="ghost"
@@ -39,6 +43,7 @@ export default function DashboardNavbar({
                     </Button>
 
                 </div>
+
 
                 {/* Center Search */}
                 <div className="hidden md:flex w-full max-w-sm items-center relative">

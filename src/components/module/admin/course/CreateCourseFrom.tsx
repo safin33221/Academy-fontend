@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,12 +19,13 @@ import { useActionState, useState } from "react";
 import { createCourse } from "@/services/course/createCourse";
 
 export default function CourseCreateForm() {
-    const [certificateEnabled, setCertificateEnabled] = useState(false);
-
-    const [type, setType] = useState("");
-    const [access, setAccess] = useState("");
     const [level, setLevel] = useState("");
-    const [status, setStatus] = useState("");
+    const [isPremium, setIsPremium] = useState(false);
+    const [isFeatured, setIsFeatured] = useState(false);
+
+    const [curriculums, setCurriculums] = useState([{ title: "", content: "" }]);
+    const [learnings, setLearnings] = useState([""]);
+    const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
 
     const [_state, formAction, isPending] = useActionState(
         createCourse,
@@ -32,110 +33,202 @@ export default function CourseCreateForm() {
     );
 
     return (
-        <div className="space-y-8">
-            {/* Page Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">
-                        Create Course
-                    </h1>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        Fill in the details below to publish a new course.
-                    </p>
-                </div>
-
-                <Link href="/admin/dashboard/courses">
-                    <Button variant="outline" size="sm">
-                        <ArrowLeft size={16} className="mr-2" />
-                        Back
-                    </Button>
-                </Link>
-            </div>
-
-            <motion.form
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-8"
-                action={formAction}
-            >
-                {/* ================= Basic Info ================= */}
-                <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
-                    <h2 className="text-lg font-medium">Basic Information</h2>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <Field>
-                            <FieldLabel htmlFor="title">Title</FieldLabel>
-                            <Input id="title" name="title" placeholder="Course title" />
-                        </Field>
-
-                        <Field>
-                            <FieldLabel htmlFor="slug">Slug</FieldLabel>
-                            <Input id="slug" name="slug" placeholder="course-slug" />
-                        </Field>
+        <div className="min-h-screen bg-muted/40 p-6">
+            <div className="max-w-7xl mx-auto space-y-8">
+                {/* HEADER */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                            Create Course
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            Manage course information and curriculum
+                        </p>
                     </div>
 
-                    <Field>
-                        <FieldLabel htmlFor="description">Description</FieldLabel>
-                        <Textarea
-                            id="description"
-                            name="description"
-                            rows={4}
-                            placeholder="Write course description..."
-                        />
-                    </Field>
-
-                    <Field>
-                        <FieldLabel htmlFor="thumbnail">Thumbnail URL</FieldLabel>
-                        <Input
-                            id="thumbnail"
-                            name="thumbnail"
-                            placeholder="https://image-url.com"
-                        />
-                    </Field>
+                    <Link href="/admin/dashboard/courses">
+                        <Button variant="outline" size="sm">
+                            <ArrowLeft size={16} className="mr-2" />
+                            Back
+                        </Button>
+                    </Link>
                 </div>
 
-                {/* ================= Classification ================= */}
-                <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
-                    <h2 className="text-lg font-medium">Classification</h2>
+                <motion.form
+                    action={formAction}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+                >
+                    {/* LEFT SIDE */}
+                    <div className="lg:col-span-2 space-y-8">
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {/* Type */}
-                        <Field>
-                            <FieldLabel>Type</FieldLabel>
-                            <Select onValueChange={setType}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="ONLINE">Online</SelectItem>
-                                    <SelectItem value="OFFLINE">Offline</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <input type="hidden" name="type" value={type} />
-                        </Field>
+                        {/* BASIC INFO */}
+                        <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
+                            <h2 className="text-lg font-semibold">Basic Information</h2>
 
-                        {/* Access */}
-                        <Field>
-                            <FieldLabel>Access</FieldLabel>
-                            <Select onValueChange={setAccess}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select access" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="FREE">Free</SelectItem>
-                                    <SelectItem value="PAID">Paid</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <input type="hidden" name="access" value={access} />
-                        </Field>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <Field>
+                                    <FieldLabel>Title</FieldLabel>
+                                    <Input name="title" />
+                                </Field>
 
-                        {/* Level */}
-                        <Field>
-                            <FieldLabel>Level</FieldLabel>
+                                <Field>
+                                    <FieldLabel>Slug</FieldLabel>
+                                    <Input name="slug" />
+                                </Field>
+                            </div>
+
+                            <Field>
+                                <FieldLabel>Short Description</FieldLabel>
+                                <Textarea name="shortDescription" rows={2} />
+                            </Field>
+
+                            <Field>
+                                <FieldLabel>Full Description</FieldLabel>
+                                <Textarea name="fullDescription" rows={5} />
+                            </Field>
+                        </div>
+
+                        {/* CURRICULUM */}
+                        <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-lg font-semibold">Curriculum</h2>
+                                <Button type="button" size="sm" onClick={() =>
+                                    setCurriculums([...curriculums, { title: "", content: "" }])
+                                }>
+                                    <Plus size={14} className="mr-2" />
+                                    Add Module
+                                </Button>
+                            </div>
+
+                            {curriculums.map((_, index) => (
+                                <div key={index} className="border rounded-xl p-4 space-y-3 bg-muted/30">
+                                    <Input
+                                        name={`curriculum[${index}][title]`}
+                                        placeholder="Module title"
+                                    />
+                                    <Textarea
+                                        name={`curriculum[${index}][content]`}
+                                        placeholder="Module content"
+                                    />
+
+                                    {index > 0 && (
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="ghost"
+                                            className="text-destructive"
+                                            onClick={() =>
+                                                setCurriculums(curriculums.filter((_, i) => i !== index))
+                                            }
+                                        >
+                                            <Trash2 size={14} className="mr-2" />
+                                            Remove
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* LEARNINGS */}
+                        <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
+                            <h2 className="text-lg font-semibold">What You Will Learn</h2>
+
+                            {learnings.map((_, index) => (
+                                <div key={index} className="flex gap-3">
+                                    <Input name={`learnings[${index}]`} />
+                                    {index > 0 && (
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() =>
+                                                setLearnings(learnings.filter((_, i) => i !== index))
+                                            }
+                                        >
+                                            <Trash2 size={16} />
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+
+                            <Button
+                                type="button"
+                                size="sm"
+                                onClick={() => setLearnings([...learnings, ""])}
+                            >
+                                <Plus size={14} className="mr-2" />
+                                Add Learning
+                            </Button>
+                        </div>
+
+                        {/* FAQ */}
+                        <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
+                            <h2 className="text-lg font-semibold">FAQs</h2>
+
+                            {faqs.map((_, index) => (
+                                <div key={index} className="border rounded-xl p-4 space-y-3 bg-muted/30">
+                                    <Input
+                                        name={`faqs[${index}][question]`}
+                                        placeholder="Question"
+                                    />
+                                    <Textarea
+                                        name={`faqs[${index}][answer]`}
+                                        placeholder="Answer"
+                                    />
+
+                                    {index > 0 && (
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="ghost"
+                                            className="text-destructive"
+                                            onClick={() =>
+                                                setFaqs(faqs.filter((_, i) => i !== index))
+                                            }
+                                        >
+                                            <Trash2 size={14} className="mr-2" />
+                                            Remove
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+
+                            <Button
+                                type="button"
+                                size="sm"
+                                onClick={() =>
+                                    setFaqs([...faqs, { question: "", answer: "" }])
+                                }
+                            >
+                                <Plus size={14} className="mr-2" />
+                                Add FAQ
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* RIGHT SIDEBAR */}
+                    <div className="space-y-6">
+                        <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6 sticky top-6">
+                            <h2 className="text-lg font-semibold">Pricing & Status</h2>
+
+                            <Input name="price" type="number" placeholder="Price" />
+                            <Input
+                                name="discountPrice"
+                                type="number"
+                                placeholder="Discount Price"
+                            />
+                            <Input name="duration" type="number" placeholder="Duration (hrs)" />
+                            <Input
+                                name="totalClasses"
+                                type="number"
+                                placeholder="Total Classes"
+                            />
+
                             <Select onValueChange={setLevel}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select level" />
+                                    <SelectValue placeholder="Level" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="BEGINNER">Beginner</SelectItem>
@@ -144,105 +237,44 @@ export default function CourseCreateForm() {
                                 </SelectContent>
                             </Select>
                             <input type="hidden" name="level" value={level} />
-                        </Field>
 
-                        {/* Status */}
-                        <Field>
-                            <FieldLabel>Status</FieldLabel>
-                            <Select onValueChange={setStatus}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="DRAFT">Draft</SelectItem>
-                                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <input type="hidden" name="status" value={status} />
-                        </Field>
-                    </div>
-                </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm">Premium</span>
+                                <Switch
+                                    checked={isPremium}
+                                    onCheckedChange={setIsPremium}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="isPremium"
+                                    value={isPremium ? "true" : "false"}
+                                />
+                            </div>
 
-                {/* ================= Pricing ================= */}
-                <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
-                    <h2 className="text-lg font-medium">Pricing & Settings</h2>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm">Featured</span>
+                                <Switch
+                                    checked={isFeatured}
+                                    onCheckedChange={setIsFeatured}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="isFeatured"
+                                    value={isFeatured ? "true" : "false"}
+                                />
+                            </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
-                        <Field>
-                            <FieldLabel htmlFor="price">Price</FieldLabel>
-                            <Input type="number" id="price" name="price" />
-                        </Field>
-
-                        <Field>
-                            <FieldLabel htmlFor="discountPrice">
-                                Discount Price
-                            </FieldLabel>
-                            <Input type="number" id="discountPrice" name="discountPrice" />
-                        </Field>
-
-                        <Field>
-                            <FieldLabel htmlFor="duration">
-                                Duration (Hours)
-                            </FieldLabel>
-                            <Input
-                                type="number"
-                                id="duration"
-                                name="estimatedDurationHours"
-                            />
-                        </Field>
-                    </div>
-
-                    <div className="flex items-center justify-between border rounded-lg px-4 py-3">
-                        <div>
-                            <p className="text-sm font-medium">Enable Certificate</p>
-                            <p className="text-xs text-muted-foreground">
-                                Allow students to receive certificate
-                            </p>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isPending}
+                            >
+                                {isPending ? "Creating..." : "Create Course"}
+                            </Button>
                         </div>
-
-                        <Switch
-                            checked={certificateEnabled}
-                            onCheckedChange={setCertificateEnabled}
-                        />
                     </div>
-
-                    <input
-                        type="hidden"
-                        name="certificateEnabled"
-                        value={certificateEnabled ? "on" : "off"}
-                    />
-                </div>
-
-                {/* ================= SEO ================= */}
-                <div className="rounded-xl border bg-white p-6 space-y-6 shadow-sm">
-                    <h2 className="text-lg font-medium">SEO Settings</h2>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <Field>
-                            <FieldLabel htmlFor="metaTitle">Meta Title</FieldLabel>
-                            <Input id="metaTitle" name="metaTitle" />
-                        </Field>
-
-                        <Field>
-                            <FieldLabel htmlFor="metaDescription">
-                                Meta Description
-                            </FieldLabel>
-                            <Textarea id="metaDescription" name="metaDescription" />
-                        </Field>
-                    </div>
-                </div>
-
-                {/* ================= Footer ================= */}
-                <div className="flex justify-end gap-4 pt-4 border-t">
-                    <Button type="button" variant="outline">
-                        Cancel
-                    </Button>
-
-                    <Button type="submit" disabled={isPending}>
-                        {isPending ? "Creating..." : "Create Course"}
-                    </Button>
-                </div>
-            </motion.form>
+                </motion.form>
+            </div>
         </div>
     );
 }

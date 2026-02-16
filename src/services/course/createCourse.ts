@@ -13,31 +13,33 @@ export const createCourse = async (
     formData: FormData
 ): Promise<CreateCourseResponse> => {
     try {
-        const payload = {
+        // ================= BASIC FIELDS =================
+        const payload: any = {
             title: String(formData.get("title") || "").trim(),
             slug: String(formData.get("slug") || "").trim(),
-            description: String(formData.get("description") || "").trim(),
-            thumbnail: String(formData.get("thumbnail") || "").trim(),
+            shortDescription: String(
+                formData.get("shortDescription") || ""
+            ).trim(),
+            fullDescription: String(
+                formData.get("fullDescription") || ""
+            ).trim(),
 
-            type: String(formData.get("type") || ""),
-            access: String(formData.get("access") || ""),
             level: String(formData.get("level") || ""),
-            status: String(formData.get("status") || ""),
+            category: String(formData.get("category") || ""),
 
             price: Number(formData.get("price") || 0),
-            discountPrice: Number(formData.get("discountPrice") || 0),
-            estimatedDurationHours: Number(
-                formData.get("estimatedDurationHours") || 0
-            ),
+            discountPrice: formData.get("discountPrice")
+                ? Number(formData.get("discountPrice"))
+                : null,
 
-            certificateEnabled:
-                String(formData.get("certificateEnabled")) === "on",
+            duration: Number(formData.get("duration") || 0),
+            totalClasses: Number(formData.get("totalClasses") || 0),
 
-            metaTitle: String(formData.get("metaTitle") || "").trim(),
-            metaDescription: String(formData.get("metaDescription") || "").trim(),
+            isPremium: String(formData.get("isPremium")) === "true",
+            isFeatured: String(formData.get("isFeatured")) === "true",
         };
 
-        // Basic validation
+        // ================= VALIDATION =================
         if (!payload.title || !payload.slug) {
             return {
                 success: false,
@@ -45,8 +47,57 @@ export const createCourse = async (
             };
         }
 
-        console.log("Create course payload:", payload);
+        // ================= CURRICULUM PARSE =================
+        const curriculum: any[] = [];
+        let cIndex = 0;
 
+        while (formData.get(`curriculum[${cIndex}][title]`)) {
+            curriculum.push({
+                title: String(
+                    formData.get(`curriculum[${cIndex}][title]`)
+                ),
+                content: String(
+                    formData.get(`curriculum[${cIndex}][content]`)
+                ),
+                order: cIndex + 1,
+            });
+            cIndex++;
+        }
+
+        // ================= LEARNINGS PARSE =================
+        const learnings: any[] = [];
+        let lIndex = 0;
+
+        while (formData.get(`learnings[${lIndex}]`)) {
+            learnings.push({
+                content: String(formData.get(`learnings[${lIndex}]`)),
+            });
+            lIndex++;
+        }
+
+        // ================= FAQ PARSE =================
+        const faqs: any[] = [];
+        let fIndex = 0;
+
+        while (formData.get(`faqs[${fIndex}][question]`)) {
+            faqs.push({
+                question: String(
+                    formData.get(`faqs[${fIndex}][question]`)
+                ),
+                answer: String(
+                    formData.get(`faqs[${fIndex}][answer]`)
+                ),
+            });
+            fIndex++;
+        }
+
+        payload.curriculum = curriculum;
+        payload.learnings = learnings;
+        payload.faqs = faqs;
+
+        console.log("Final Create Course Payload:", payload);
+
+        // ================= API CALL =================
         const res = await serverFetch.post("/course", {
             headers: {
                 "Content-Type": "application/json",
