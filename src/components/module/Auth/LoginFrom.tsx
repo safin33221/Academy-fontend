@@ -1,3 +1,4 @@
+"use client"
 import { useActionState, useEffect, useState } from "react";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { login } from "@/services/auth/login";
@@ -6,7 +7,6 @@ import Link from "next/link";
 import Btn from "@/components/shared/Btn";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
-import Logo from "@/components/shared/Logo";
 export function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [state, formAction, isPending] = useActionState(login, null);
