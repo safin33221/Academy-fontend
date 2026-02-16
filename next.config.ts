@@ -33,8 +33,8 @@ const nextConfig: NextConfig = {
     "192.168.56.1",
     "http://192.168.56.1:3000",
     "http://192.168.56.1",
-    "http://192.168.0.102:3000",
-    "*.local-origin.dev",
+    "192.168.0.102:3000",
+
   ],
 
   // Experimental (optional, production safe)

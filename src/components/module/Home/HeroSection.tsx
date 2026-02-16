@@ -35,7 +35,7 @@ const itemVariants: Variants = {
 
 export default function HeroSection() {
     return (
-        <section className="relative max-md:py-20 max-md:pt-52 md:min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-slate-50 via-white to-slate-100
+        <section className="relative max-md:py-20 max-md:pt-52  md:min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-slate-50 via-white to-slate-100
          dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
 
             {/* Floating Tech Badges */}

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import Btn from "../shared/Btn";
 import LogoutBtn from "../shared/LogoutBtn";
@@ -18,6 +17,7 @@ import {
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Logo from "../shared/Logo";
 
 interface NavItem {
     label: string;
@@ -43,9 +43,9 @@ export default function Navbar({ user }: { user: IUser | null }) {
 
                 {/* Logo */}
                 <Link href="/">
-                    <h1 className="text-xl font-semibold tracking-tight bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        Academy
-                    </h1>
+                    <Logo
+
+                    />
                 </Link>
 
                 {/* Desktop Menu */}
@@ -69,63 +69,61 @@ export default function Navbar({ user }: { user: IUser | null }) {
 
                     {user ? (
                         <>
-                            {user.role !== IUserRole.USER ? (
-                                <>
-                                    <Link href={dashboard}>
-                                        <Button variant="outline">Dashboard</Button>
-                                    </Link>
-                                    <LogoutBtn />
-                                </>
-                            ) : (
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="relative">
-                                            <Avatar className="h-10 w-10 ring-2 ring-blue-500/30 hover:ring-blue-500 transition">
-                                                <AvatarImage src={user.profileImage || ""} />
-                                                <AvatarFallback>
-                                                    {user.name?.charAt(0).toUpperCase()}
-                                                </AvatarFallback>
-                                            </Avatar>
 
-                                            {/* Online Indicator */}
-                                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
-                                        </button>
-                                    </DropdownMenuTrigger>
+                            <DropdownMenu modal={false}>
+                                <DropdownMenuTrigger asChild>
+                                    <button className="relative">
+                                        <Avatar className="h-10 w-10 ring-2 ring-blue-500/30 hover:ring-blue-500 transition">
+                                            <AvatarImage src={user.profileImage || ""} />
+                                            <AvatarFallback>
+                                                {user.name?.charAt(0).toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
 
-                                    <DropdownMenuContent
-                                        align="end"
-                                        sideOffset={10}
-                                        className="w-64 rounded-xl border bg-white shadow-xl"
-                                    >
-                                        <DropdownMenuLabel>
-                                            <div className="flex flex-col">
-                                                <span className="font-medium text-slate-800">
-                                                    {user.name}
-                                                </span>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {user.email}
-                                                </span>
-                                            </div>
-                                        </DropdownMenuLabel>
+                                        {/* Online Indicator */}
+                                        <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+                                    </button>
+                                </DropdownMenuTrigger>
 
-                                        <DropdownMenuSeparator />
+                                <DropdownMenuContent
+                                    align="end"
+                                    sideOffset={10}
+                                    className="w-64 rounded-xl border bg-white shadow-xl"
+                                >
+                                    <DropdownMenuLabel>
+                                        <div className="flex flex-col">
+                                            <span className="font-medium text-slate-800">
+                                                {user.name}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {user.email}
+                                            </span>
+                                        </div>
+                                    </DropdownMenuLabel>
 
+                                    <DropdownMenuSeparator />
+
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/my-profile">My Profile</Link>
+                                    </DropdownMenuItem>
+                                    {user.role !== IUserRole.USER && (
                                         <DropdownMenuItem asChild>
-                                            <Link href="/profile">My Profile</Link>
+                                            <Link href={dashboard}>Dashboard</Link>
                                         </DropdownMenuItem>
+                                    )}
 
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/course">Browse Courses</Link>
-                                        </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/course">Browse Courses</Link>
+                                    </DropdownMenuItem>
 
-                                        <DropdownMenuSeparator />
+                                    <DropdownMenuSeparator />
 
-                                        <DropdownMenuItem asChild>
-                                            <LogoutBtn />
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            )}
+                                    <DropdownMenuItem asChild>
+                                        <LogoutBtn />
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
                         </>
                     ) : (
                         <>
@@ -165,8 +163,9 @@ export default function Navbar({ user }: { user: IUser | null }) {
                             {item.label}
                         </Link>
                     ))}
+
                 </div>
             </div>
-        </nav>
+        </nav >
     );
 }

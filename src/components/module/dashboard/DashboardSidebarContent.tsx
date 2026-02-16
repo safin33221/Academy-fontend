@@ -46,7 +46,7 @@ export default function DashboardSidebarContent({
                                             key={itemId}
                                             href={item.href}
                                             className={cn(
-                                                "px-3 py-2 rounded-md text-lg text-primary",
+                                                "px-3 py-2 rounded-md text-lg text-black",
                                                 isActive
                                                     ? " text-indigo-600  font-bold bg-slate-200 transition"
                                                     : "hover:bg-muted"

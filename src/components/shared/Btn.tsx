@@ -38,7 +38,7 @@ export default function Btn({
             disabled={disabled || isLoading}
             onClick={onClick}
             className={cn(
-                "w-full font-semibold rounded-xl shadow-lg shadow-primary/20 bg-linear-to-r from-primary to-blue-600 hover:opacity-90 transition duration-300",
+                "w-full font-semibold rounded-xl shadow-lg shadow-black/20 bg-linear-to-r from-black to-blue-600 hover:opacity-90 transition duration-300",
                 sizeStyles[size],
                 className
             )}

@@ -1,10 +1,11 @@
+import AuthPage from "@/components/module/Auth/AuthPage";
 
-import AuthAnimation from "@/components/module/Auth/AuthForm";
+
 export default function Page() {
     return (
         <div className="">
             {/* <RegisterFrom /> */}
-            <AuthAnimation />
+            <AuthPage />
         </div>
     );
 }
