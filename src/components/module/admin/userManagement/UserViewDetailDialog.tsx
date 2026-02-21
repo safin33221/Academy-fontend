@@ -1,7 +1,7 @@
 "use client";
 
 import InfoRow from "@/components/shared/InfoRow";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
     Dialog,
@@ -35,6 +35,7 @@ const UserViewDetailDialog = ({
     user,
 }: IUserViewDetailDialogProps) => {
     if (!user) return null;
+    console.log({ user });
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
@@ -48,7 +49,7 @@ const UserViewDetailDialog = ({
                     <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-muted/40 rounded-lg mb-6">
                         <Avatar className="h-24 w-24 border shadow">
                             {/* If you later add profileImage field */}
-                            {/* <AvatarImage src={user.profileImage} /> */}
+                            <AvatarImage src={user?.profilePhoto} />
                             <AvatarFallback className="text-2xl">
                                 {getInitials(user.name)}
                             </AvatarFallback>

@@ -15,7 +15,7 @@ export interface IUser {
     email: string;
     phone: string;
     password: string;
-    profileImage: string
+    profilePhoto: string
 
     // Authorization
     role: IUserRole;

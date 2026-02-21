@@ -74,7 +74,7 @@ export default function Navbar({ user }: { user: IUser | null }) {
                                 <DropdownMenuTrigger asChild>
                                     <button className="relative">
                                         <Avatar className="h-10 w-10 ring-2 ring-blue-500/30 hover:ring-blue-500 transition">
-                                            <AvatarImage src={user.profileImage || ""} />
+                                            <AvatarImage src={user.profilePhoto || ""} />
                                             <AvatarFallback>
                                                 {user.name?.charAt(0).toUpperCase()}
                                             </AvatarFallback>
