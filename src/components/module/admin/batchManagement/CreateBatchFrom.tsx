@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { ArrowLeft } from "lucide-react";
@@ -14,26 +15,58 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createBatch } from "@/services/Batch/createBatch";
-
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 interface Props {
     courses: { id: string; title: string }[];
 }
 
+interface FormState {
+    success: boolean;
+    message: string;
+    formData?: any;
+}
+
+const initialState: FormState = {
+    success: false,
+    message: "",
+    formData: null,
+};
+
 export default function BatchCreateForm({ courses }: Props) {
+    const [_state, formAction, isPending] = useActionState(
+        createBatch,
+        initialState
+    );
+
     const [status, setStatus] = useState("UPCOMING");
     const [isActive, setIsActive] = useState(true);
     const [courseId, setCourseId] = useState("");
 
-    const [_state, formAction, isPending] = useActionState(
-        createBatch,
-        null
-    );
+    // Toast + Reset Logic
+    useEffect(() => {
+        if (!_state?.message) return;
+
+        if (_state.success) {
+            toast.success(_state.message);
+
+            // Reset local states on success
+            queueMicrotask(() => {
+                setStatus("UPCOMING");
+                setIsActive(true);
+                setCourseId("");
+            });
+            redirect("/admin/dashboard/batch")
+        } else {
+            toast.error(_state.message);
+        }
+    }, [_state]);
 
     return (
-        <div className=" bg-muted/40 p-6">
+        <div className="bg-muted/40 p-6">
             <div className="max-w-5xl mx-auto space-y-8">
                 {/* HEADER */}
                 <div className="flex items-center justify-between">
@@ -62,8 +95,6 @@ export default function BatchCreateForm({ courses }: Props) {
                 >
                     {/* LEFT SIDE */}
                     <div className="lg:col-span-2 space-y-8">
-
-                        {/* BASIC INFO */}
                         <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
                             <h2 className="text-lg font-semibold">
                                 Batch Information
@@ -72,18 +103,30 @@ export default function BatchCreateForm({ courses }: Props) {
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
                                     <FieldLabel>Batch Name</FieldLabel>
-                                    <Input name="name" placeholder="January 2025 Batch" />
+                                    <Input
+                                        name="name"
+                                        defaultValue={_state?.formData?.name ?? ""}
+                                    />
                                 </Field>
 
                                 <Field>
                                     <FieldLabel>Slug</FieldLabel>
-                                    <Input name="slug" placeholder="jan-2025-batch" />
+                                    <Input
+                                        name="slug"
+                                        defaultValue={_state?.formData?.slug ?? ""}
+                                    />
                                 </Field>
                             </div>
 
                             <Field>
                                 <FieldLabel>Select Course</FieldLabel>
-                                <Select onValueChange={setCourseId}>
+                                <Select
+                                    value={
+                                        _state?.formData?.courseId ??
+                                        courseId
+                                    }
+                                    onValueChange={setCourseId}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Choose course" />
                                     </SelectTrigger>
@@ -98,18 +141,63 @@ export default function BatchCreateForm({ courses }: Props) {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <input type="hidden" name="courseId" value={courseId} />
+                                <input
+                                    type="hidden"
+                                    name="courseId"
+                                    value={
+                                        _state?.formData?.courseId ??
+                                        courseId
+                                    }
+                                />
                             </Field>
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
+                                    <FieldLabel>Enrollment Start</FieldLabel>
+                                    <Input
+                                        name="enrollmentStart"
+                                        type="date"
+                                        defaultValue={
+                                            _state?.formData?.enrollmentStart ??
+                                            ""
+                                        }
+                                    />
+                                </Field>
+
+                                <Field>
+                                    <FieldLabel>Enrollment End</FieldLabel>
+                                    <Input
+                                        name="enrollmentEnd"
+                                        type="date"
+                                        defaultValue={
+                                            _state?.formData?.enrollmentEnd ??
+                                            ""
+                                        }
+                                    />
+                                </Field>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <Field>
                                     <FieldLabel>Start Date</FieldLabel>
-                                    <Input name="startDate" type="date" />
+                                    <Input
+                                        name="startDate"
+                                        type="date"
+                                        defaultValue={
+                                            _state?.formData?.startDate ?? ""
+                                        }
+                                    />
                                 </Field>
 
                                 <Field>
                                     <FieldLabel>End Date</FieldLabel>
-                                    <Input name="endDate" type="date" />
+                                    <Input
+                                        name="endDate"
+                                        type="date"
+                                        defaultValue={
+                                            _state?.formData?.endDate ?? ""
+                                        }
+                                    />
                                 </Field>
                             </div>
                         </div>
@@ -127,25 +215,31 @@ export default function BatchCreateForm({ courses }: Props) {
                                 <Input
                                     name="maxStudents"
                                     type="number"
-                                    placeholder="50"
+                                    defaultValue={
+                                        _state?.formData?.maxStudents ?? ""
+                                    }
                                 />
                             </Field>
 
                             <Field>
-                                <FieldLabel>Batch Price (Optional)</FieldLabel>
+                                <FieldLabel>Batch Price</FieldLabel>
                                 <Input
                                     name="price"
                                     type="number"
-                                    placeholder="5000"
+                                    defaultValue={
+                                        _state?.formData?.price ?? ""
+                                    }
                                 />
                             </Field>
 
-                            {/* Status Select */}
                             <Field>
                                 <FieldLabel>Status</FieldLabel>
                                 <Select
+                                    value={
+                                        _state?.formData?.status ??
+                                        status
+                                    }
                                     onValueChange={setStatus}
-                                    defaultValue="UPCOMING"
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
@@ -165,20 +259,36 @@ export default function BatchCreateForm({ courses }: Props) {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <input type="hidden" name="status" value={status} />
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value={
+                                        _state?.formData?.status ??
+                                        status
+                                    }
+                                />
                             </Field>
 
-                            {/* Active Switch */}
                             <div className="flex items-center justify-between">
-                                <span className="text-sm">Active Batch</span>
+                                <span className="text-sm">
+                                    Active Batch
+                                </span>
                                 <Switch
-                                    checked={isActive}
+                                    checked={
+                                        _state?.formData?.isActive ??
+                                        isActive
+                                    }
                                     onCheckedChange={setIsActive}
                                 />
                                 <input
                                     type="hidden"
                                     name="isActive"
-                                    value={isActive ? "true" : "false"}
+                                    value={
+                                        (_state?.formData?.isActive ??
+                                            isActive)
+                                            ? "true"
+                                            : "false"
+                                    }
                                 />
                             </div>
 
@@ -187,7 +297,9 @@ export default function BatchCreateForm({ courses }: Props) {
                                 className="w-full"
                                 disabled={isPending}
                             >
-                                {isPending ? "Creating..." : "Create Batch"}
+                                {isPending
+                                    ? "Creating..."
+                                    : "Create Batch"}
                             </Button>
                         </div>
                     </div>

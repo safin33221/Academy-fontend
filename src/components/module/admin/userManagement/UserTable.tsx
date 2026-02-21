@@ -4,7 +4,6 @@
 import { useState, useTransition } from "react";
 import ManagementTable from "@/components/shared/ManagementTable";
 import { IUser, IUserRole } from "@/types/user/user";
-
 import { UserColumn } from "./UserColumn";
 import UserViewDetailDialog from "./UserViewDetailDialog";
 import { toggleUserBlockStatus } from "@/services/user/toggleUserBlockStatus";

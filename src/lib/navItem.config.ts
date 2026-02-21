@@ -13,7 +13,7 @@ export const getCommonNavItems = (role: IUserRole): INavSection[] => {
             title: "Dashboard",
             items: [
                 {
-                    title: "My Dashboard",
+                    title: " Dashboard",
                     href: defaultDashboard,
                     icon: "LayoutDashboard",
                     role: [

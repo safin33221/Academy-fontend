@@ -4,6 +4,14 @@ import { IUser } from "@/types/user/user";
 
 import { ShieldCheck } from "lucide-react";
 
+const roleStyles: Record<string, string> = {
+    SUPER_ADMIN: "bg-red-100 text-red-700",
+    ADMIN: "bg-purple-100 text-purple-700",
+    INSTRUCTOR: "bg-green-100 text-green-700",
+    STUDENT: "bg-blue-100 text-blue-700",
+    USER: "bg-gray-100 text-gray-700",
+};
+
 export const UserColumn: columns<IUser>[] = [
     {
         header: "Users",
@@ -36,12 +44,19 @@ export const UserColumn: columns<IUser>[] = [
     },
     {
         header: "Role",
-        accessor: (user) => (
-            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700 uppercase">
-                <ShieldCheck size={12} />
-                {user.role}
-            </span>
-        ),
+        accessor: (user) => {
+            const role = user.role?.toUpperCase();
+            const style = roleStyles[role] || "bg-gray-100 text-gray-700";
+
+            return (
+                <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold uppercase ${style}`}
+                >
+                    <ShieldCheck size={12} />
+                    {role}
+                </span>
+            );
+        },
         className: "text-center",
     },
     {

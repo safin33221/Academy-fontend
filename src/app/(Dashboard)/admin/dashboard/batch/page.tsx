@@ -1,9 +1,10 @@
 import BatchManagementHeader from "@/components/module/admin/batchManagement/BatchManagementHeader";
 import BatchTable from "@/components/module/admin/batchManagement/BatchTable";
-import { IBatch } from "@/types/batch/batch.interface";
+import { getAllBatch } from "@/services/Batch/getAllBatch";
 
-export default function page() {
-    const batch: IBatch[] = []
+export default async function page() {
+    const res = await getAllBatch()
+    const batch = res.data
     return (
         <div>
             <BatchManagementHeader />
