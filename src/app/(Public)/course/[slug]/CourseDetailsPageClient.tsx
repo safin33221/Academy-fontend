@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -7,17 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Accordion } from "@/components/ui/accordion";
 import { CoursePreviewCard } from "@/components/common/CoursePreviewCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
+import { ICourse } from "@/types/course/course.interface";
 
 interface CourseDetailsPageProps {
-  slug: string;
+  course: ICourse;
 }
 
 export default function CourseDetailsPageClient({
-  slug,
+  course,
 }: CourseDetailsPageProps) {
   const router = useRouter();
-  const course = courses.find((c) => c.slug === slug);
-  console.log({ slug });
+
 
   if (!course) {
     return (
@@ -29,13 +30,13 @@ export default function CourseDetailsPageClient({
       </div>
     );
   }
+  console.log({ course });
 
   return (
-    <div className="min-h-screen bg-background pt-14 ">
+    <div className="min-h-screen bg-background pt-14">
       {/* ================= HERO ================= */}
-      <div className="bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b">
+      <div className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b">
         <div className="container mx-auto px-4 md:px-6 py-14 space-y-6">
-          {/* <Badge>{course.category}</Badge> */}
           <Breadcrumb />
 
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight max-w-3xl leading-tight">
@@ -59,7 +60,7 @@ export default function CourseDetailsPageClient({
 
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              Updated 2023
+              Updated {new Date(course.updatedAt).getFullYear()}
             </div>
           </div>
         </div>
@@ -70,23 +71,26 @@ export default function CourseDetailsPageClient({
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-16">
           {/* LEFT CONTENT */}
           <div className="space-y-16">
-            {/* What You'll Learn */}
-            <section className="rounded-3xl border bg-card p-8 shadow-sm">
-              <h2 className="text-2xl font-semibold mb-6">
-                What you&apos;ll learn
-              </h2>
 
-              <div className="grid sm:grid-cols-2 gap-5">
-                {course.whatYouWillLearn.map((item, i) => (
-                  <div key={i} className="flex gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-sm text-muted-foreground">
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
+            {/* What You'll Learn */}
+            {course.learnings?.length > 0 && (
+              <section className="rounded-3xl border bg-card p-8 shadow-sm">
+                <h2 className="text-2xl font-semibold mb-6">
+                  What you&apos;ll learn
+                </h2>
+
+                <div className="grid sm:grid-cols-2 gap-5">
+                  {course.learnings.map((item: any) => (
+                    <div key={item.id} className="flex gap-3">
+                      <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground">
+                        {item.content}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Description */}
             <section className="space-y-4 max-w-3xl">
@@ -97,81 +101,97 @@ export default function CourseDetailsPageClient({
             </section>
 
             {/* Curriculum */}
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">Course Content</h2>
+            {course.curriculum?.length > 0 && (
+              <section className="space-y-6">
+                <h2 className="text-2xl font-semibold">Course Content</h2>
 
-              <div className="text-sm text-muted-foreground">
-                {course.curriculum.length} sections &bull;{" "}
-                {course.totalClasses} lectures &bull; {course.duration}h total
-                length
-              </div>
+                <div className="text-sm text-muted-foreground">
+                  {course.curriculum.length} sections •{" "}
+                  {course.totalClasses} lectures • {course.duration}h total
+                  length
+                </div>
 
-              <Accordion items={course.curriculum} allowMultiple />
-            </section>
+                <Accordion
+                  items={course.curriculum.map((section: any) => ({
+                    title: section.title,
+                    content: section.content,
+                  }))}
+                  allowMultiple
+                />
+              </section>
+            )}
 
             {/* Requirements */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-semibold">Requirements</h2>
-              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                {course.requirements.map((req, i) => (
-                  <li key={i}>{req}</li>
-                ))}
-              </ul>
-            </section>
+            {course.requirements?.length > 0 && (
+              <section className="space-y-4">
+                <h2 className="text-2xl font-semibold">Requirements</h2>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  {course.requirements.map((req: any) => (
+                    <li key={req.id}>{req.content}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             {/* Reviews */}
-            <section className="space-y-8">
-              <h2 className="text-2xl font-semibold">Student Reviews</h2>
+            {course.reviews?.length > 0 && (
+              <section className="space-y-8">
+                <h2 className="text-2xl font-semibold">Student Reviews</h2>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                {course.reviews.map((review) => (
-                  <div
-                    key={review.id}
-                    className="rounded-2xl border p-6 bg-card shadow-sm space-y-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold">
-                        {review.user[0]}
-                      </div>
+                <div className="grid md:grid-cols-2 gap-8">
+                  {course.reviews.map((review: any) => (
+                    <div
+                      key={review.id}
+                      className="rounded-2xl border p-6 bg-card shadow-sm space-y-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold">
+                          {review.user?.name?.[0] || "U"}
+                        </div>
 
-                      <div>
-                        <p className="font-semibold text-sm">{review.user}</p>
+                        <div>
+                          <p className="font-semibold text-sm">
+                            {review.user?.name || "User"}
+                          </p>
 
-                        <div className="flex text-yellow-500">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-3 w-3 ${i < review.rating
-                                ? "fill-current"
-                                : "text-muted-foreground/30"
-                                }`}
-                            />
-                          ))}
+                          <div className="flex text-yellow-500">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-3 w-3 ${i < review.rating
+                                  ? "fill-current"
+                                  : "text-muted-foreground/30"
+                                  }`}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <p className="text-sm text-muted-foreground">
-                      &quot;{review.comment}&quot;
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
+                      <p className="text-sm text-muted-foreground">
+                        &quot;{review.comment}&quot;
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* FAQ */}
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">
-                Frequently Asked Questions
-              </h2>
+            {course.faqs?.length > 0 && (
+              <section className="space-y-6">
+                <h2 className="text-2xl font-semibold">
+                  Frequently Asked Questions
+                </h2>
 
-              <Accordion
-                items={course.faqs.map((f) => ({
-                  title: f.question,
-                  content: f.answer,
-                }))}
-              />
-            </section>
+                <Accordion
+                  items={course.faqs.map((f: any) => ({
+                    title: f.question,
+                    content: f.answer,
+                  }))}
+                />
+              </section>
+            )}
           </div>
 
           {/* RIGHT SIDEBAR */}
@@ -179,7 +199,9 @@ export default function CourseDetailsPageClient({
             <div className="sticky top-24">
               <CoursePreviewCard
                 course={course}
-                onEnroll={() => router.push(`/course/${slug}/enroll`)}
+                onEnroll={() =>
+                  router.push(`/course/${course.id}/enroll`)
+                }
               />
             </div>
           </div>

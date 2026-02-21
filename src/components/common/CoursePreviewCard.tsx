@@ -11,12 +11,13 @@ import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { Course } from "../../../public/data/courses";
 import Btn from "../shared/Btn";
+import { ICourse } from "@/types/course/course.interface";
+import ShareModal from "./ShareModal";
 
 
 interface CoursePreviewCardProps {
-    course: Course;
+    course: ICourse;
     onEnroll: () => void;
 }
 
@@ -24,6 +25,26 @@ export function CoursePreviewCard({
     course,
     onEnroll,
 }: CoursePreviewCardProps) {
+    const handleShare = async () => {
+        const shareData = {
+            title: course.title,
+            text: course.shortDescription,
+            url: `${window.location.origin}/course/${course.slug}`,
+        };
+
+        try {
+            // Modern browsers (mobile + some desktop)
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback: copy to clipboard
+                await navigator.clipboard.writeText(shareData.url);
+                alert("Course link copied to clipboard");
+            }
+        } catch (error) {
+            console.error("Share failed:", error);
+        }
+    };
     const discount =
         course.discountPrice &&
         Math.round(
@@ -88,9 +109,9 @@ export function CoursePreviewCard({
                         Enroll Now
                     </Btn>
 
-                    <p className="text-xs text-center text-muted-foreground">
+                    {/* <p className="text-xs text-center text-muted-foreground">
                         30-Day Money-Back Guarantee
-                    </p>
+                    </p> */}
 
                     {/* Course Info */}
                     <div className="space-y-4 pt-4 border-t">
@@ -122,14 +143,11 @@ export function CoursePreviewCard({
                     </div>
 
                     {/* Share */}
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full text-muted-foreground"
-                    >
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Share Course
-                    </Button>
+                    <ShareModal
+                        title={course.title}
+                        description={course.shortDescription}
+                        slug={course.slug}
+                    />
                 </CardContent>
             </Card>
         </div >

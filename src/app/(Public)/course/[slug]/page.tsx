@@ -1,4 +1,6 @@
+import { getSingleCourse } from "@/services/course/getSingleCourse";
 import CourseDetailsPageClient from "./CourseDetailsPageClient";
+import { ICourse } from "@/types/course/course.interface";
 
 interface PageProps {
     params: Promise<{
@@ -8,5 +10,7 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
     const { slug } = await params;
-    return <CourseDetailsPageClient slug={slug} />;
+    const res = await getSingleCourse(slug)
+    const course: ICourse = res.data
+    return < CourseDetailsPageClient course={course} />;
 }

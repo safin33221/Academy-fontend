@@ -1,12 +1,14 @@
-import { courses } from "../../../../public/data/courses";
 import { CourseCard } from "@/components/module/admin/course/CourseCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
+import { getAllCourse } from "@/services/course/getAllCourse";
+import { ICourse } from "@/types/course/course.interface";
 
-export default function CoursesPage() {
-    const allCourses = courses;
+export default async function CoursesPage() {
+    const res = await getAllCourse();
+    const allCourses = res.data
 
     return (
         <section className="relative py-24 bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
@@ -44,7 +46,7 @@ export default function CoursesPage() {
                 {/* Course Grid */}
                 {allCourses.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-                        {allCourses.map((course) => (
+                        {allCourses.map((course: ICourse) => (
                             <div
                                 key={course.id}
                                 className="group transition-all duration-300 hover:-translate-y-1"

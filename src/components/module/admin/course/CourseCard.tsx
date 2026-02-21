@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
 import { Course } from "../../../../../public/data/courses";
+import { ICourse } from "@/types/course/course.interface";
 
 interface CourseCardProps {
-    course: Course;
+    course: ICourse;
 }
 
 export function CourseCard({ course }: CourseCardProps) {
