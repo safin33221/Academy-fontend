@@ -3,13 +3,10 @@ import {
     BookOpen,
     Clock,
     Award,
-    BarChart,
-    Share2,
-    PlayCircle,
+    BarChart, PlayCircle
 } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
-import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import Btn from "../shared/Btn";
 import { ICourse } from "@/types/course/course.interface";
@@ -25,26 +22,7 @@ export function CoursePreviewCard({
     course,
     onEnroll,
 }: CoursePreviewCardProps) {
-    const handleShare = async () => {
-        const shareData = {
-            title: course.title,
-            text: course.shortDescription,
-            url: `${window.location.origin}/course/${course.slug}`,
-        };
 
-        try {
-            // Modern browsers (mobile + some desktop)
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                // Fallback: copy to clipboard
-                await navigator.clipboard.writeText(shareData.url);
-                alert("Course link copied to clipboard");
-            }
-        } catch (error) {
-            console.error("Share failed:", error);
-        }
-    };
     const discount =
         course.discountPrice &&
         Math.round(
