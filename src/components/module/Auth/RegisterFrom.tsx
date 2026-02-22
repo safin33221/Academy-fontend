@@ -102,7 +102,7 @@ export default function RegisterForm() {
                 className="w-full"
                 disabled={isPending}
             >
-                {isPending ? "Logging in..." : "Login"}
+                {isPending ? "sign in..." : "sing in"}
             </Btn>
         </form>
 

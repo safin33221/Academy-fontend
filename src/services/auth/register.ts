@@ -2,6 +2,7 @@
 "use server";
 
 import { serverFetch } from "@/lib/serverFetch";
+import { login } from "./login";
 
 interface RegisterResponse {
     success: boolean;
@@ -9,7 +10,7 @@ interface RegisterResponse {
 }
 
 export const register = async (
-    _prevState: unknown,
+    _currentData: any,
     formData: FormData
 ): Promise<RegisterResponse> => {
     try {
@@ -46,6 +47,14 @@ export const register = async (
                 success: false,
                 message: result?.message || "failed to create account",
             };
+        }
+
+        if (result.success) {
+            const loginFormData = new FormData()
+            loginFormData.append("email", payload.email)
+            loginFormData.append("password", payload.password)
+            await login(_currentData, loginFormData)
+
         }
         return {
             success: true,

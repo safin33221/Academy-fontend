@@ -154,7 +154,7 @@ export const studentNavItems: INavSection[] = [
         items: [
             {
                 title: "My Courses",
-                href: "/dashboard/student/courses",
+                href: "/dashboard/courses",
                 icon: "BookOpen",
                 role: [IUserRole.STUDENT],
             },
@@ -164,6 +164,18 @@ export const studentNavItems: INavSection[] = [
                 icon: "CreditCard",
                 role: [IUserRole.STUDENT],
             },
+        ],
+    },
+    {
+        title: "History",
+        items: [
+            {
+                title: "Payment",
+                href: "/dashboard/payment",
+                icon: "payment",
+                role: [IUserRole.STUDENT],
+            },
+
         ],
     },
 ];

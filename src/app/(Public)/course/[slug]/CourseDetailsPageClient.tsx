@@ -1,22 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Star, CheckCircle, Globe, Calendar } from "lucide-react";
-import { courses } from "../../../../../public/data/courses";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@/components/ui/accordion";
 import { CoursePreviewCard } from "@/components/common/CoursePreviewCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import { ICourse } from "@/types/course/course.interface";
+import { initiatePayment } from "@/services/payment/payment";
+import { IUser } from "@/types/user/user";
+import { useState } from "react";
 
 interface CourseDetailsPageProps {
   course: ICourse;
+  user: IUser
 }
 
 export default function CourseDetailsPageClient({
-  course,
+  course, user
 }: CourseDetailsPageProps) {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
 
@@ -30,12 +34,33 @@ export default function CourseDetailsPageClient({
       </div>
     );
   }
-  console.log({ course });
+
+  const handleEnroll = async (courseId: string) => {
+    if (!user) {
+      window.location.href = "/join-us";
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await initiatePayment(courseId);
+      console.log(res);
+
+      if (res?.gatewayUrl) {
+        window.location.href = res.gatewayUrl;
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pt-14">
       {/* ================= HERO ================= */}
-      <div className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b">
+      <div className="bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b">
         <div className="container mx-auto px-4 md:px-6 py-14 space-y-6">
           <Breadcrumb />
 
@@ -199,9 +224,8 @@ export default function CourseDetailsPageClient({
             <div className="sticky top-24">
               <CoursePreviewCard
                 course={course}
-                onEnroll={() =>
-                  router.push(`/course/${course.id}/enroll`)
-                }
+                loading={loading}
+                onEnroll={() => handleEnroll(course.id)}
               />
             </div>
           </div>

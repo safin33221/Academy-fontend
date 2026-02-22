@@ -16,11 +16,13 @@ import ShareModal from "./ShareModal";
 interface CoursePreviewCardProps {
     course: ICourse;
     onEnroll: () => void;
+    loading: boolean
 }
 
 export function CoursePreviewCard({
     course,
     onEnroll,
+    loading
 }: CoursePreviewCardProps) {
 
     const discount =
@@ -83,8 +85,9 @@ export function CoursePreviewCard({
                     <Btn
                         onClick={onEnroll}
                         className="w-full h-12 text-base font-semibold"
+                        disabled={loading}
                     >
-                        Enroll Now
+                        {loading ? 'Enrolling ...' : "Enroll Now"}
                     </Btn>
 
                     {/* <p className="text-xs text-center text-muted-foreground">
