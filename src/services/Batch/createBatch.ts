@@ -10,7 +10,6 @@ export const createBatch = async (
 ) => {
     const payload = {
         name: formData.get("name") as string,
-        slug: formData.get("slug") as string,
         courseId: formData.get("courseId") as string,
         enrollmentStart: formData.get("enrollmentStart") as string,
         enrollmentEnd: formData.get("enrollmentEnd") as string,
@@ -28,7 +27,6 @@ export const createBatch = async (
         // Basic validation
         if (
             !payload.name ||
-            !payload.slug ||
             !payload.courseId ||
             !payload.startDate ||
             !payload.enrollmentStart ||
@@ -42,6 +40,7 @@ export const createBatch = async (
                 formData: payload, // 🔥 IMPORTANT
             }
         }
+        console.log({ payload });
 
         const res = await serverFetch.post("/batch", {
             headers: { "Content-Type": "application/json" },
