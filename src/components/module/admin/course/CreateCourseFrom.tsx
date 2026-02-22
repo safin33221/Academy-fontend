@@ -15,22 +15,36 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createCourse } from "@/services/course/createCourse";
+import SingleImageUploader from "@/components/shared/SingleImageUploader";
+import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function CourseCreateForm() {
     const [level, setLevel] = useState("");
     const [isPremium, setIsPremium] = useState(false);
     const [isFeatured, setIsFeatured] = useState(false);
+    const [image, setImage] = useState<File | null>(null);
 
-    const [curriculums, setCurriculums] = useState([{ title: "", content: "" }]);
+    const [curriculums, setCurriculums] = useState([
+        { title: "", content: "" },
+    ]);
     const [learnings, setLearnings] = useState([""]);
-    const [faqs, setFaqs] = useState([{ question: "", answer: "" }]);
+    const [faqs, setFaqs] = useState([
+        { question: "", answer: "" },
+    ]);
 
     const [_state, formAction, isPending] = useActionState(
         createCourse,
         null
     );
+    useEffect(() => {
+        if (_state?.success) {
+            toast.success(_state.message)
+            redirect("/admin/dashboard/courses")
+        }
+    }, [_state])
 
     return (
         <div className="min-h-screen bg-muted/40 p-6">
@@ -55,17 +69,26 @@ export default function CourseCreateForm() {
                 </div>
 
                 <motion.form
-                    action={formAction}
+                    action={async (formData: FormData) => {
+                        if (image) {
+                            formData.append("image", image);
+                        }
+                        return formAction(formData);
+                    }}
+                    encType="multipart/form-data"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="grid grid-cols-1 lg:grid-cols-3 gap-8"
                 >
                     {/* LEFT SIDE */}
                     <div className="lg:col-span-2 space-y-8">
-
                         {/* BASIC INFO */}
                         <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
-                            <h2 className="text-lg font-semibold">Basic Information</h2>
+                            <h2 className="text-lg font-semibold">
+                                Basic Information
+                            </h2>
+
+                            <SingleImageUploader onChange={setImage} />
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
@@ -94,16 +117,26 @@ export default function CourseCreateForm() {
                         <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
                             <div className="flex justify-between items-center">
                                 <h2 className="text-lg font-semibold">Curriculum</h2>
-                                <Button type="button" size="sm" onClick={() =>
-                                    setCurriculums([...curriculums, { title: "", content: "" }])
-                                }>
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={() =>
+                                        setCurriculums([
+                                            ...curriculums,
+                                            { title: "", content: "" },
+                                        ])
+                                    }
+                                >
                                     <Plus size={14} className="mr-2" />
                                     Add Module
                                 </Button>
                             </div>
 
                             {curriculums.map((_, index) => (
-                                <div key={index} className="border rounded-xl p-4 space-y-3 bg-muted/30">
+                                <div
+                                    key={index}
+                                    className="border rounded-xl p-4 space-y-3 bg-muted/30"
+                                >
                                     <Input
                                         name={`curriculum[${index}][title]`}
                                         placeholder="Module title"
@@ -120,7 +153,9 @@ export default function CourseCreateForm() {
                                             variant="ghost"
                                             className="text-destructive"
                                             onClick={() =>
-                                                setCurriculums(curriculums.filter((_, i) => i !== index))
+                                                setCurriculums(
+                                                    curriculums.filter((_, i) => i !== index)
+                                                )
                                             }
                                         >
                                             <Trash2 size={14} className="mr-2" />
@@ -133,7 +168,9 @@ export default function CourseCreateForm() {
 
                         {/* LEARNINGS */}
                         <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
-                            <h2 className="text-lg font-semibold">What You Will Learn</h2>
+                            <h2 className="text-lg font-semibold">
+                                What You Will Learn
+                            </h2>
 
                             {learnings.map((_, index) => (
                                 <div key={index} className="flex gap-3">
@@ -144,7 +181,9 @@ export default function CourseCreateForm() {
                                             variant="ghost"
                                             size="icon"
                                             onClick={() =>
-                                                setLearnings(learnings.filter((_, i) => i !== index))
+                                                setLearnings(
+                                                    learnings.filter((_, i) => i !== index)
+                                                )
                                             }
                                         >
                                             <Trash2 size={16} />
@@ -156,7 +195,9 @@ export default function CourseCreateForm() {
                             <Button
                                 type="button"
                                 size="sm"
-                                onClick={() => setLearnings([...learnings, ""])}
+                                onClick={() =>
+                                    setLearnings([...learnings, ""])
+                                }
                             >
                                 <Plus size={14} className="mr-2" />
                                 Add Learning
@@ -168,7 +209,10 @@ export default function CourseCreateForm() {
                             <h2 className="text-lg font-semibold">FAQs</h2>
 
                             {faqs.map((_, index) => (
-                                <div key={index} className="border rounded-xl p-4 space-y-3 bg-muted/30">
+                                <div
+                                    key={index}
+                                    className="border rounded-xl p-4 space-y-3 bg-muted/30"
+                                >
                                     <Input
                                         name={`faqs[${index}][question]`}
                                         placeholder="Question"
@@ -199,7 +243,10 @@ export default function CourseCreateForm() {
                                 type="button"
                                 size="sm"
                                 onClick={() =>
-                                    setFaqs([...faqs, { question: "", answer: "" }])
+                                    setFaqs([
+                                        ...faqs,
+                                        { question: "", answer: "" },
+                                    ])
                                 }
                             >
                                 <Plus size={14} className="mr-2" />
@@ -211,7 +258,9 @@ export default function CourseCreateForm() {
                     {/* RIGHT SIDEBAR */}
                     <div className="space-y-6">
                         <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6 sticky top-6">
-                            <h2 className="text-lg font-semibold">Pricing & Status</h2>
+                            <h2 className="text-lg font-semibold">
+                                Pricing & Status
+                            </h2>
 
                             <Input name="price" type="number" placeholder="Price" />
                             <Input

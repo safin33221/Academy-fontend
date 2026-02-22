@@ -38,7 +38,7 @@ const CourseDetailsView = ({ course }: Props) => {
             <div className="flex flex-col md:flex-row gap-8 bg-muted/40 p-6 rounded-xl">
                 <div className="relative w-full md:w-72 h-48 rounded-lg overflow-hidden border bg-muted">
                     <Image
-                        src="/placeholder.png"
+                        src={course.thumbnail}
                         alt={course.title}
                         fill
                         className="object-cover"

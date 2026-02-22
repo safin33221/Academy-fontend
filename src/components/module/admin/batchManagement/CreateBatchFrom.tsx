@@ -109,47 +109,41 @@ export default function BatchCreateForm({ courses }: Props) {
                                     />
                                 </Field>
 
+
                                 <Field>
-                                    <FieldLabel>Slug</FieldLabel>
-                                    <Input
-                                        name="slug"
-                                        defaultValue={_state?.formData?.slug ?? ""}
+                                    <FieldLabel>Select Course</FieldLabel>
+                                    <Select
+                                        value={
+                                            _state?.formData?.courseId ??
+                                            courseId
+                                        }
+                                        onValueChange={setCourseId}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Choose course" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {courses.map(course => (
+                                                <SelectItem
+                                                    key={course.id}
+                                                    value={course.id}
+                                                >
+                                                    {course.title}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <input
+                                        type="hidden"
+                                        name="courseId"
+                                        value={
+                                            _state?.formData?.courseId ??
+                                            courseId
+                                        }
                                     />
                                 </Field>
                             </div>
 
-                            <Field>
-                                <FieldLabel>Select Course</FieldLabel>
-                                <Select
-                                    value={
-                                        _state?.formData?.courseId ??
-                                        courseId
-                                    }
-                                    onValueChange={setCourseId}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Choose course" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {courses.map(course => (
-                                            <SelectItem
-                                                key={course.id}
-                                                value={course.id}
-                                            >
-                                                {course.title}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <input
-                                    type="hidden"
-                                    name="courseId"
-                                    value={
-                                        _state?.formData?.courseId ??
-                                        courseId
-                                    }
-                                />
-                            </Field>
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>

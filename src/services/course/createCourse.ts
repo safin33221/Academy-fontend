@@ -2,6 +2,7 @@
 "use server";
 
 import { serverFetch } from "@/lib/serverFetch";
+import { redirect } from "next/navigation";
 
 interface CreateCourseResponse {
     success: boolean;
@@ -13,6 +14,8 @@ export const createCourse = async (
     formData: FormData
 ): Promise<CreateCourseResponse> => {
     try {
+        const image = formData.get("image") as File | null;
+
         // ================= BASIC FIELDS =================
         const payload: any = {
             title: String(formData.get("title") || "").trim(),
@@ -95,14 +98,33 @@ export const createCourse = async (
         payload.learnings = learnings;
         payload.faqs = faqs;
 
-        console.log("Final Create Course Payload:", payload);
+        // ================= BUILD MULTIPART =================
+        const apiFormData = new FormData();
+
+        // append primitive fields
+        Object.entries(payload).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                if (
+                    typeof value === "object" &&
+                    !Array.isArray(value)
+                ) {
+                    apiFormData.append(key, JSON.stringify(value));
+                } else if (Array.isArray(value)) {
+                    apiFormData.append(key, JSON.stringify(value));
+                } else {
+                    apiFormData.append(key, String(value));
+                }
+            }
+        });
+
+        // append image
+        if (image && image.size > 0) {
+            apiFormData.append("file", image);
+        }
 
         // ================= API CALL =================
         const res = await serverFetch.post("/course", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
+            body: apiFormData, // 🔥 multipart
         });
 
         const result = await res.json();
@@ -110,7 +132,8 @@ export const createCourse = async (
         if (!res.ok) {
             return {
                 success: false,
-                message: result?.message || "Failed to create course",
+                message:
+                    result?.message || "Failed to create course",
             };
         }
 
