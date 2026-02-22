@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { courses } from "../../../../public/data/courses";
 import { CourseCard } from "../admin/course/CourseCard";
 import Link from "next/link";
+import { ICourse } from "@/types/course/course.interface";
 
 export default function Courses() {
-    const popularCourses = courses.slice(0, 4)
+    const popularCourses = courses?.slice(0, 4)
     return (
         <section id="courses" className="py-20 bg-slate-50 dark:bg-slate-950">
             <div className="container px-4 md:px-6 mx-auto space-y-12">
@@ -30,7 +32,7 @@ export default function Courses() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                    {popularCourses.map((course) =>
+                    {popularCourses.map((course: any) =>
                         <div key={course.id} className="h-full">
                             <CourseCard
                                 course={course}
