@@ -1,3 +1,5 @@
+import { ICourse } from "../course/course.interface";
+
 export interface IBatch {
     id: string;
     name: string;
@@ -11,8 +13,5 @@ export interface IBatch {
     createdAt: Date;
     updatedAt: Date
 
-    course: {
-        id: string;
-        title: string;
-    };
+    course: ICourse
 }

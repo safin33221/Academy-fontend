@@ -39,7 +39,16 @@ export default function DashboardSidebarContent({
                             <Separator />
                             <div className="flex flex-col gap-1">
                                 {section.items.map((item, itemId) => {
-                                    const isActive = pathname === item.href;
+                                    const isActive = (() => {
+                                        if (item.href === "/admin/dashboard") {
+                                            return pathname === item.href;
+                                        }
+
+                                        return (
+                                            pathname === item.href ||
+                                            pathname.startsWith(item.href + "/")
+                                        );
+                                    })();
 
                                     return (
                                         <Link

@@ -13,15 +13,13 @@ interface BatchTableProps {
 }
 
 export default function BatchTable({ batches }: BatchTableProps) {
-    const [viewingBatch, setViewingBatch] = useState<IBatch | null>(null);
+
 
     /* ================= View ================= */
     const handleView = (batch: IBatch) => {
         // If you want redirect instead of dialog:
-        redirect(`/admin/dashboard/batches/${batch.slug}`);
+        redirect(`/admin/dashboard/batch/${batch.slug}`);
 
-        // If you want dialog instead:
-        // setViewingBatch(batch);
     };
 
     return (
