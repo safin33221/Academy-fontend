@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { IBatch } from "@/types/batch/batch.interface";
+import { IUser } from "@/types/user/user";
 import {
     Calendar,
     Users,
@@ -118,7 +121,7 @@ export default function BatchDetails({ batch }: { batch: IBatch }) {
                             width={300}
                             src={course.thumbnail}
                             alt={course.title}
-                            className="w-full object-cover"
+                            className="w-full max-h-96 object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                     </div>
                 </div>
@@ -154,8 +157,120 @@ export default function BatchDetails({ batch }: { batch: IBatch }) {
                             </span>
                         </div>
                     </section>
-                </div>
-            </div>
-        </div>
+
+
+                    {/* ================= ENROLLED STUDENTS ================= */}
+                    {/* ================= ENROLLED STUDENTS TABLE ================= */}
+                    <section className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-2xl font-semibold">
+                                Enrolled Students
+                            </h2>
+
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm text-muted-foreground">
+                                    {batch.enrollments?.length || 0} Students
+                                </span>
+
+                                <Button className="px-4 py-2 text-sm bg-primary text-white rounded-lg">
+                                    Send Email
+                                </Button>
+                            </div>
+                        </div>
+
+                        {batch.enrollments?.length === 0 ? (
+                            <div className="text-muted-foreground text-sm">
+                                No students enrolled yet.
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto border rounded-xl">
+                                <table className="w-full text-sm">
+                                    <thead className="bg-muted/50 text-left">
+                                        <tr>
+                                            <th className="px-4 py-3">Student</th>
+                                            <th className="px-4 py-3">Email</th>
+                                            <th className="px-4 py-3">Assignments</th>
+                                            <th className="px-4 py-3">Attendance</th>
+                                            <th className="px-4 py-3">Progress</th>
+                                            <th className="px-4 py-3 text-right">Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {batch.enrollments.map((item: any) => {
+                                            const user = item.user;
+
+                                            // Example placeholders (replace with real data)
+                                            const assignmentMark = user.assignmentMark ?? 85;
+                                            const attendance = user.attendancePercent ?? 90;
+                                            const progress = user.progressPercent ?? 70;
+
+                                            return (
+                                                <tr
+                                                    key={item.id}
+                                                    className="border-t hover:bg-muted/40 transition"
+                                                >
+                                                    {/* Student Info */}
+                                                    <td className="px-4 py-3 flex items-center gap-3">
+                                                        <div className="h-9 w-9 rounded-full overflow-hidden bg-muted flex items-center justify-center text-xs font-medium">
+                                                            {user.profilePhoto ? (
+                                                                <Image
+                                                                    src={user.profilePhoto}
+                                                                    alt={user.name}
+                                                                    width={36}
+                                                                    height={36}
+                                                                    className="object-cover"
+                                                                />
+                                                            ) : (
+                                                                user.name?.charAt(0)
+                                                            )}
+                                                        </div>
+                                                        <span className="font-medium">
+                                                            {user.name}
+                                                        </span>
+                                                    </td>
+
+                                                    {/* Email */}
+                                                    <td className="px-4 py-3 text-muted-foreground">
+                                                        {user.email}
+                                                    </td>
+
+                                                    {/* Assignment */}
+                                                    <td className="px-4 py-3">
+                                                        {assignmentMark}%
+                                                    </td>
+
+                                                    {/* Attendance */}
+                                                    <td className="px-4 py-3">
+                                                        {attendance}%
+                                                    </td>
+
+                                                    {/* Progress Bar */}
+                                                    <td className="px-4 py-3 w-40">
+                                                        <div className="w-full bg-muted rounded-full h-2">
+                                                            <div
+                                                                className="bg-primary h-2 rounded-full"
+                                                                style={{ width: `${progress}%` }}
+                                                            />
+                                                        </div>
+                                                    </td>
+
+                                                    {/* Action */}
+                                                    <td className="px-4 py-3 text-right">
+                                                        <button className="text-sm text-primary underline">
+                                                            Email
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </section>
+                </div >
+            </div >
+        </div >
     );
 }

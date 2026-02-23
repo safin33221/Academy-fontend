@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICourse } from "../course/course.interface";
 
 export interface IBatch {
@@ -12,6 +13,7 @@ export interface IBatch {
     price?: number
     createdAt: Date;
     updatedAt: Date
+    enrollments: any
 
     course: ICourse
 }

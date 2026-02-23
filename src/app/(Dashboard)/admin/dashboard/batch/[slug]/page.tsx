@@ -1,5 +1,7 @@
 import BatchDetails from "@/components/module/admin/batchManagement/BatchDetails"
-import { getSingleBatch } from "@/services/Batch/getSinglebatch"
+import { getSingleBatch } from "@/services/Batch/getSingleBatch"
+
+
 
 export default async function Page({
     params,

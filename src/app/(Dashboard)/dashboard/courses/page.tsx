@@ -81,7 +81,7 @@ export default async function Page() {
 
                                     <Link
                                         href={`/courses/${course.slug}`}
-                                        className="mt-6 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-black to-gray-800 text-white py-2.5 font-medium transition-all duration-300 hover:opacity-90"
+                                        className="mt-6 inline-flex items-center justify-center rounded-xl bg-linear-to-r from-black to-gray-800 text-white py-2.5 font-medium transition-all duration-300 hover:opacity-90"
                                     >
                                         Continue Learning
                                     </Link>

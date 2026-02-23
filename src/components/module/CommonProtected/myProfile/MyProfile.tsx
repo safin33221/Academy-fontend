@@ -19,6 +19,7 @@ import {
     ShieldCheck,
     ShieldX,
     Shield,
+    Edit,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Btn from "@/components/shared/Btn";
@@ -28,6 +29,7 @@ export default function MyProfile({ user }: { user: IUser }) {
     const [previewImage, setPreviewImage] = useState(
         user.profilePhoto || ""
     );
+    console.log({ user });
 
     const [state, formAction, isPending] =
         useActionState(updateUserAction, null);
@@ -46,14 +48,14 @@ export default function MyProfile({ user }: { user: IUser }) {
     return (
         <form
             action={formAction}
-            className="max-w-5xl mx-auto p-6 space-y-8"
+            className="max-w-7xl mx-auto p-6 space-y-8"
         >
             <input type="hidden" name="id" value={user.id} />
 
             {/* ================= PROFILE HEADER ================= */}
             <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-muted/40 rounded-lg">
                 <div className="relative">
-                    <Avatar className="h-24 w-24 border shadow">
+                    <Avatar className="h-44 w-44 border shadow">
                         <AvatarImage src={previewImage} />
                         <AvatarFallback className="text-2xl">
                             {getInitials(user.name)}
@@ -61,8 +63,8 @@ export default function MyProfile({ user }: { user: IUser }) {
                     </Avatar>
 
                     {isEditing && (
-                        <label className="absolute bottom-0 right-0 bg-black text-white text-xs px-2 py-1 rounded cursor-pointer">
-                            Change
+                        <label className="absolute bottom-0 right-0  text-xs px-2 py-1 rounded cursor-pointer">
+                            <Edit />
                             <input
                                 type="file"
                                 name="file" // must match multer field

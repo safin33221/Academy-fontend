@@ -2,7 +2,7 @@ import { getSingleCourse } from "@/services/course/getSingleCourse";
 import CourseDetailsPageClient from "./CourseDetailsPageClient";
 import { ICourse } from "@/types/course/course.interface";
 import { getMe } from "@/services/auth/getMe";
-import { getSingleBatch } from "@/services/Batch/getSinglebatch";
+import { getSingleBatch } from "@/services/Batch/getSingleBatch";
 import { IBatch } from "@/types/batch/batch.interface";
 
 interface PageProps {
