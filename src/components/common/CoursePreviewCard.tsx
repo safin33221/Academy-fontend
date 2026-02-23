@@ -26,7 +26,7 @@ export function CoursePreviewCard({
     loading
 }: CoursePreviewCardProps) {
     const course = batch.course
-
+    console.log({ batch });
     const discount =
         course.discountPrice &&
         Math.round(
