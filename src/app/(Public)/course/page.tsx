@@ -3,25 +3,24 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
-import { getAllCourse } from "@/services/course/getAllCourse";
-import { ICourse } from "@/types/course/course.interface";
+import { getAllBatch } from "@/services/Batch/getAllBatch";
+import { IBatch } from "@/types/batch/batch.interface";
 
 export default async function CoursesPage() {
-    const res = await getAllCourse();
-    const allCourses = res.data
+    const res = await getAllBatch();
+    const batches: IBatch[] = res.data || [];
 
     return (
         <section className="relative py-24 bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
             <div className="container px-4 md:px-6 mx-auto space-y-14">
 
-                {/* Breadcrumb */}
                 <Breadcrumb />
 
                 {/* Header */}
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                     <div className="space-y-3 max-w-xl">
                         <Badge variant="secondary" className="text-xs">
-                            {allCourses.length}+ Courses Available
+                            {batches.length}+ Courses Available
                         </Badge>
 
                         <h1 className="text-4xl font-bold tracking-tight">
@@ -33,7 +32,6 @@ export default async function CoursesPage() {
                         </p>
                     </div>
 
-                    {/* Search */}
                     <div className="relative w-full lg:w-80">
                         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -44,14 +42,14 @@ export default async function CoursesPage() {
                 </div>
 
                 {/* Course Grid */}
-                {allCourses.length > 0 ? (
+                {batches.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-                        {allCourses.map((course: ICourse) => (
+                        {batches.map((batch) => (
                             <div
-                                key={course.id}
+                                key={batch.id}
                                 className="group transition-all duration-300 hover:-translate-y-1"
                             >
-                                <CourseCard course={course} />
+                                <CourseCard batch={batch} />
                             </div>
                         ))}
                     </div>

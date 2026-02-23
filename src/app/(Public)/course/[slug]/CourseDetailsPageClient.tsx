@@ -1,30 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Star, CheckCircle, Globe, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@/components/ui/accordion";
 import { CoursePreviewCard } from "@/components/common/CoursePreviewCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
-import { ICourse } from "@/types/course/course.interface";
 import { initiatePayment } from "@/services/payment/payment";
 import { IUser } from "@/types/user/user";
 import { useState } from "react";
+import { IBatch } from "@/types/batch/batch.interface";
 
 interface CourseDetailsPageProps {
-  course: ICourse;
+  batch: IBatch;
   user: IUser
 }
 
 export default function CourseDetailsPageClient({
-  course, user
+  batch, user
 }: CourseDetailsPageProps) {
+  console.log({ batch });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
 
-  if (!course) {
+  if (!batch) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
         <h1 className="text-2xl font-bold">Course not found</h1>
@@ -34,8 +35,9 @@ export default function CourseDetailsPageClient({
       </div>
     );
   }
+  const course = batch.course
 
-  const handleEnroll = async (courseId: string) => {
+  const handleEnroll = async (batchId: string) => {
     if (!user) {
       window.location.href = "/join-us";
       return;
@@ -44,7 +46,7 @@ export default function CourseDetailsPageClient({
     setLoading(true);
 
     try {
-      const res = await initiatePayment(courseId);
+      const res = await initiatePayment(batchId);
       console.log(res);
 
       if (res?.gatewayUrl) {
@@ -225,7 +227,7 @@ export default function CourseDetailsPageClient({
               <CoursePreviewCard
                 course={course}
                 loading={loading}
-                onEnroll={() => handleEnroll(course.id)}
+                onEnroll={() => handleEnroll(batch.id)}
               />
             </div>
           </div>

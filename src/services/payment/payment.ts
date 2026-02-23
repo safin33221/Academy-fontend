@@ -1,12 +1,12 @@
 "use server"
 import { serverFetch } from "@/lib/serverFetch";
 
-export const initiatePayment = async (courseId: string) => {
+export const initiatePayment = async (batchId: string) => {
     try {
 
         const res = await serverFetch.post("/payment/initiate", {
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ courseId }),
+            body: JSON.stringify({ batchId }),
         });
 
 

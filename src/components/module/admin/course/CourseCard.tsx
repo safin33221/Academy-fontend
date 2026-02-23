@@ -6,14 +6,16 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
-import { Course } from "../../../../../public/data/courses";
-import { ICourse } from "@/types/course/course.interface";
+import { IBatch } from "@/types/batch/batch.interface";
 
 interface CourseCardProps {
-    course: ICourse;
+    batch: IBatch;
 }
 
-export function CourseCard({ course }: CourseCardProps) {
+export function CourseCard({ batch }: CourseCardProps) {
+    console.log({ batch });
+    if (!batch) return null
+    const course = batch?.course
     return (
         <Card className="group flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-background transition-all duration-500 hover:shadow-xl hover:-translate-y-1 gap-3 ">
 
@@ -44,7 +46,7 @@ export function CourseCard({ course }: CourseCardProps) {
             {/* Content */}
             <CardContent className=" md:p-4">
                 <h3 className="font-semibold text-sm sm:text-lg md:text-base line-clamp-2 group-hover:text-primary transition-colors duration-300">
-                    {course.title}
+                    {course.title}-{batch.name}
                 </h3>
             </CardContent>
 
@@ -54,7 +56,7 @@ export function CourseCard({ course }: CourseCardProps) {
                     ${course.discountPrice ?? course.price}
                 </span>
 
-                <Link href={`/course/${course.slug}`}>
+                <Link href={`/course/${batch.slug}`}>
                     <Button size="sm" variant="outline" className="text-xs sm:text-sm">
                         Details
                     </Button>
