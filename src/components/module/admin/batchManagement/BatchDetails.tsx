@@ -31,7 +31,7 @@ export default function BatchDetails({ batch }: { batch: IBatch }) {
         course.discountPrice ?? course.price;
 
     return (
-        <div className="min-h-screen bg-background pt-16">
+        <div className="min-h-screen bg-background ">
             <div className="container mx-auto px-4 md:px-6 py-12 space-y-16">
 
                 {/* ================= HERO ================= */}

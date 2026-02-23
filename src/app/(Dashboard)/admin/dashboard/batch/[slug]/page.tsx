@@ -10,8 +10,7 @@ export default async function Page({
 }) {
     const { slug } = await params
     const res = await getSingleBatch(slug)
-    const batch = res.data
-    console.log({ batch });
+    const batch = res?.data
     return (
         <div>
             <BatchDetails batch={batch} />

@@ -8,7 +8,7 @@ export default function Page() {
 
     if (!hasCompletedCourse) {
         return (
-            <div className=" flex items-center justify-center bg-muted/30 px-6">
+            <div className=" flex items-center justify-start bg-muted/30 px-6">
                 <div className="max-w-md w-full bg-white rounded-2xl shadow-md border p-10 text-center space-y-6">
                     <div className="flex justify-center">
                         <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">

@@ -35,7 +35,7 @@ export default function Courses() {
                     {popularCourses.map((course: any) =>
                         <div key={course.id} className="h-full">
                             <CourseCard
-                                course={course}
+                                batch={course}
                             />
 
                         </div>
