@@ -38,15 +38,20 @@ export default function BatchDetails({ batch }: { batch: IBatch }) {
                 {/* ================= HERO ================= */}
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                     <div className="space-y-6">
-
+                        <span
+                            className={`inline-block px-3 py-1 text-xl rounded-full  font-medium `}
+                        >
+                            {batch.name}
+                        </span>
                         <span
                             className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${statusColor[batch.status]}`}
                         >
                             {batch.status}
                         </span>
 
+
                         <h1 className="text-4xl font-bold leading-tight">
-                            {batch.name}
+                            {course.title}
                         </h1>
 
                         <p className="text-muted-foreground">
@@ -84,7 +89,7 @@ export default function BatchDetails({ batch }: { batch: IBatch }) {
                             </div>
                             <div className="w-full bg-muted rounded-full h-2">
                                 <div
-                                    className="bg-primary h-2 rounded-full"
+                                    className="bg-indigo-700 h-2 rounded-full"
                                     style={{ width: `${enrollmentPercent}%` }}
                                 />
                             </div>

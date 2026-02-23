@@ -161,6 +161,19 @@ export const studentNavItems: INavSection[] = [
 
         ],
     },
+
+    {
+        title: "Achievement",
+        items: [
+            {
+                title: "certificate",
+                href: "/dashboard/certificate",
+                icon: "payment",
+                role: [IUserRole.STUDENT],
+            },
+
+        ],
+    },
     {
         title: "History",
         items: [

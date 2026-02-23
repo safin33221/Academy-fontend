@@ -1,19 +1,25 @@
-"use client"
+"use client";
 
-import { useEffect, type Dispatch, type SetStateAction } from "react"
-import Image from "next/image"
-import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react"
-import { useFileUpload } from "@/app/hooks/use-file-upload"
-
-
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import Image from "next/image";
+import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react";
+import { useFileUpload } from "@/app/hooks/use-file-upload";
 
 type Props = {
-  onChange: Dispatch<SetStateAction<File | null>>
-}
+  onChange: Dispatch<SetStateAction<File | null>>;
+  defaultImageUrl?: string; // ✅ NEW
+};
 
-export default function SingleImageUploader({ onChange }: Props) {
-  const maxSizeMB = 5
-  const maxSize = maxSizeMB * 1024 * 1024
+export default function SingleImageUploader({
+  onChange,
+  defaultImageUrl,
+}: Props) {
+  const maxSizeMB = 5;
+  const maxSize = maxSizeMB * 1024 * 1024;
+
+  const [existingImage, setExistingImage] = useState<string | null>(
+    defaultImageUrl || null
+  );
 
   const [
     { files, isDragging, errors },
@@ -30,24 +36,24 @@ export default function SingleImageUploader({ onChange }: Props) {
     accept: "image/*",
     maxSize,
     multiple: false,
-  })
+  });
 
+  /* ================= Sync File ================= */
   useEffect(() => {
-    const firstFile = files[0]?.file
+    const firstFile = files[0]?.file;
 
     if (firstFile instanceof File) {
-      onChange(firstFile)
-    } else {
-      onChange(null)
+      onChange(firstFile);
+    } else if (!existingImage) {
+      onChange(null);
     }
-  }, [files, onChange])
+  }, [files, onChange, existingImage]);
 
-  const previewUrl = files[0]?.preview || null
+  const previewUrl = files[0]?.preview || existingImage;
 
   return (
     <div className="flex flex-col gap-2">
       <div className="relative">
-        {/* Drop Area */}
         <div
           role="button"
           onClick={openFileDialog}
@@ -68,7 +74,7 @@ export default function SingleImageUploader({ onChange }: Props) {
             <div className="absolute inset-0">
               <Image
                 src={previewUrl}
-                alt={files[0]?.file?.name || "Uploaded image"}
+                alt="Course image"
                 fill
                 className="object-cover"
               />
@@ -88,14 +94,19 @@ export default function SingleImageUploader({ onChange }: Props) {
           )}
         </div>
 
-        {/* Remove Button */}
         {previewUrl && (
           <div className="absolute top-4 right-4">
             <button
               type="button"
-              onClick={() => { const fileId = files[0]?.id; if (fileId) removeFile(fileId) }}
+              onClick={() => {
+                const fileId = files[0]?.id;
+                if (fileId) {
+                  removeFile(fileId);
+                }
+                setExistingImage(null);
+                onChange(null);
+              }}
               className="z-50 flex size-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
-              aria-label="Remove image"
             >
               <XIcon className="size-4" />
             </button>
@@ -103,14 +114,15 @@ export default function SingleImageUploader({ onChange }: Props) {
         )}
       </div>
 
-      {/* Error */}
       {errors.length > 0 && (
-        <div className="text-destructive flex items-center gap-1 text-xs" role="alert">
+        <div
+          className="text-destructive flex items-center gap-1 text-xs"
+          role="alert"
+        >
           <AlertCircleIcon className="size-3 shrink-0" />
           <span>{errors[0]}</span>
         </div>
       )}
     </div>
-  )
+  );
 }
-
