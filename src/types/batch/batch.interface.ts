@@ -14,6 +14,7 @@ export interface IBatch {
     createdAt: Date;
     updatedAt: Date
     enrollments: any
+    thumbnail: string
 
     course: ICourse
 }

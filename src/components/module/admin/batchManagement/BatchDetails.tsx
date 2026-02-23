@@ -3,7 +3,6 @@
 
 import { Button } from "@/components/ui/button";
 import { IBatch } from "@/types/batch/batch.interface";
-import { IUser } from "@/types/user/user";
 import {
     Calendar,
     Users,
@@ -124,7 +123,7 @@ export default function BatchDetails({ batch }: { batch: IBatch }) {
                         <Image
                             height={100}
                             width={300}
-                            src={course.thumbnail}
+                            src={batch.thumbnail}
                             alt={course.title}
                             className="w-full max-h-96 object-cover transition-transform duration-500 group-hover:scale-105"
                         />

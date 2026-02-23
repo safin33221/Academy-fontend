@@ -19,6 +19,7 @@ import { useActionState, useEffect, useState } from "react";
 import { createBatch } from "@/services/Batch/createBatch";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
+import SingleImageUploader from "@/components/shared/SingleImageUploader";
 
 interface Props {
     courses: { id: string; title: string }[];
@@ -45,7 +46,7 @@ export default function BatchCreateForm({ courses }: Props) {
     const [status, setStatus] = useState("UPCOMING");
     const [isActive, setIsActive] = useState(true);
     const [courseId, setCourseId] = useState("");
-
+    const [image, setImage] = useState<File | null>(null);
     // Toast + Reset Logic
     useEffect(() => {
         if (!_state?.message) return;
@@ -88,7 +89,12 @@ export default function BatchCreateForm({ courses }: Props) {
                 </div>
 
                 <motion.form
-                    action={formAction}
+                    action={async (formData: FormData) => {
+                        if (image) {
+                            formData.append("image", image);
+                        }
+                        return formAction(formData);
+                    }}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="grid grid-cols-1 lg:grid-cols-3 gap-8"
@@ -99,6 +105,7 @@ export default function BatchCreateForm({ courses }: Props) {
                             <h2 className="text-lg font-semibold">
                                 Batch Information
                             </h2>
+                            <SingleImageUploader onChange={setImage} />
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
@@ -298,7 +305,7 @@ export default function BatchCreateForm({ courses }: Props) {
                         </div>
                     </div>
                 </motion.form>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

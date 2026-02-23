@@ -23,7 +23,7 @@ export function CourseCard({ batch }: CourseCardProps) {
             <div className="relative aspect-video w-full overflow-hidden bg-muted">
                 {course.thumbnail ? (
                     <Image
-                        src={course.thumbnail}
+                        src={batch.thumbnail}
                         alt={course.title}
                         fill
                         sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
@@ -46,7 +46,8 @@ export function CourseCard({ batch }: CourseCardProps) {
             {/* Content */}
             <CardContent className=" md:p-4">
                 <h3 className="font-semibold text-sm sm:text-lg md:text-base line-clamp-2 group-hover:text-primary transition-colors duration-300">
-                    {course.title}-{batch.name}
+                    {course.title}-<br />
+                    {batch.name}
                 </h3>
             </CardContent>
 

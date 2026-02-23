@@ -154,7 +154,7 @@ export const studentNavItems: INavSection[] = [
         items: [
             {
                 title: "My Courses",
-                href: "/dashboard/courses",
+                href: "/dashboard/my-courses",
                 icon: "BookOpen",
                 role: [IUserRole.STUDENT],
             },

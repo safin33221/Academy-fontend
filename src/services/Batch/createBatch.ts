@@ -1,78 +1,122 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use server"
+"use server";
 
-import { serverFetch } from "@/lib/serverFetch"
-import { revalidatePath } from "next/cache"
+import { serverFetch } from "@/lib/serverFetch";
+
+interface CreateBatchResponse {
+    success: boolean;
+    message: string;
+    formData?: any;
+}
 
 export const createBatch = async (
-    _prevState: any,
+    _prevState: unknown,
     formData: FormData
-) => {
-    const payload = {
-        name: formData.get("name") as string,
-        courseId: formData.get("courseId") as string,
-        enrollmentStart: formData.get("enrollmentStart") as string,
-        enrollmentEnd: formData.get("enrollmentEnd") as string,
-        startDate: formData.get("startDate") as string,
-        endDate: formData.get("endDate") as string,
-        maxStudents: Number(formData.get("maxStudents")),
-        price: formData.get("price")
-            ? Number(formData.get("price"))
-            : null,
-        isActive: formData.get("isActive") === "true",
-        status: formData.get("status") as string,
-    }
+): Promise<CreateBatchResponse> => {
+    let payload: any = {}; // ✅ define outside try
 
     try {
-        // Basic validation
+        const image = formData.get("image") as File | null;
+
+        // ================= BASIC FIELDS =================
+        payload = {
+            name: String(formData.get("name") || "").trim(),
+            courseId: String(formData.get("courseId") || "").trim(),
+
+            enrollmentStart: String(
+                formData.get("enrollmentStart") || ""
+            ),
+            enrollmentEnd: String(
+                formData.get("enrollmentEnd") || ""
+            ),
+
+            startDate: String(formData.get("startDate") || ""),
+            endDate: String(formData.get("endDate") || ""),
+
+            maxStudents: Number(formData.get("maxStudents") || 0),
+
+            price: formData.get("price")
+                ? Number(formData.get("price"))
+                : null,
+
+            isActive: String(formData.get("isActive")) === "true",
+
+            status: String(formData.get("status") || "UPCOMING"),
+        };
+
+        // ================= VALIDATION =================
         if (
             !payload.name ||
             !payload.courseId ||
             !payload.startDate ||
             !payload.enrollmentStart ||
-            !payload.enrollmentEnd ||
             !Number.isFinite(payload.maxStudents) ||
             payload.maxStudents <= 0
         ) {
             return {
                 success: false,
                 message: "All required fields must be provided correctly",
-                formData: payload, // 🔥 IMPORTANT
-            }
+                formData: payload,
+            };
         }
-        console.log({ payload });
 
-        const res = await serverFetch.post("/batch", {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        })
-
-        const response = await res.json()
-
-        if (!res.ok || !response?.success) {
+        if (
+            payload.enrollmentEnd &&
+            new Date(payload.enrollmentEnd) <
+            new Date(payload.enrollmentStart)
+        ) {
             return {
                 success: false,
-                message: response?.message || "Failed to create batch",
-                formData: payload, // 🔥 KEEP DATA
-            }
+                message:
+                    "Enrollment end date must be after enrollment start date",
+                formData: payload,
+            };
         }
 
-        revalidatePath("/admin/dashboard/batch")
+        // ================= BUILD MULTIPART =================
+        const apiFormData = new FormData();
 
-        // 🔥 Redirect on success
+        Object.entries(payload).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                apiFormData.append(key, String(value));
+            }
+        });
 
+        if (image && image.size > 0) {
+            apiFormData.append("file", image);
+        }
+        console.log({ apiFormData, image });
+        // ================= API CALL =================
+        const res = await serverFetch.post("/batch", {
+            body: apiFormData,
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message:
+                    result?.message || "Failed to create batch",
+                formData: payload,
+            };
+        }
 
         return {
             success: true,
             message: "Batch created successfully",
-            formData: null, // 🔥 clear form on success
+        };
+    } catch (error: any) {
+        if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+            throw error;
         }
 
-    } catch (error: any) {
+        console.error("createBatch error:", error);
+
         return {
             success: false,
             message: error?.message || "Something went wrong",
-            formData: payload, // 🔥 KEEP DATA ON ERROR
-        }
+            formData: payload, // ✅ now safe
+        };
     }
-}
+};

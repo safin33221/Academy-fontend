@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { IUser } from "@/types/user/user";
 import { Separator } from "@/components/ui/separator";
+import Logo from "@/components/shared/Logo";
 
 
 interface DashboardSideBarContentProps {
@@ -23,8 +24,8 @@ export default function DashboardSidebarContent({
         <div className="flex flex-col justify-between h-[calc(100vh-4rem)]">
 
             {/* Top Section */}
-            <div>
-                <h1 className="text-xl font-bold p-4">Academy Logo</h1>
+            <div className="">
+                <Logo height={50} />
 
                 <nav className="px-4 space-y-6">
                     {navItems.map((section, sectionId) => (

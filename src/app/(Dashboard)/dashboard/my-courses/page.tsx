@@ -6,6 +6,7 @@ import { getMyCourses } from "@/services/course/myCourses";
 export default async function Page() {
     const res = await getMyCourses();
     const courses = res.data || [];
+    console.log({ courses });
 
     return (
         <div className="max-w-7xl mx-auto px-6 md:px-8 py-12">
@@ -49,7 +50,7 @@ export default async function Page() {
                                 {/* Thumbnail */}
                                 <div className="relative overflow-hidden">
                                     <Image
-                                        src={course?.thumbnail}
+                                        src={item?.batch?.thumbnail}
                                         alt={course.title}
                                         width={400}
                                         height={250}

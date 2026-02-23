@@ -11,19 +11,21 @@ import { Badge } from "../ui/badge";
 import Btn from "../shared/Btn";
 import { ICourse } from "@/types/course/course.interface";
 import ShareModal from "./ShareModal";
+import { IBatch } from "@/types/batch/batch.interface";
 
 
 interface CoursePreviewCardProps {
-    course: ICourse;
+    batch: IBatch;
     onEnroll: () => void;
     loading: boolean
 }
 
 export function CoursePreviewCard({
-    course,
+    batch,
     onEnroll,
     loading
 }: CoursePreviewCardProps) {
+    const course = batch.course
 
     const discount =
         course.discountPrice &&
@@ -40,7 +42,7 @@ export function CoursePreviewCard({
                     {course.thumbnail ? (
                         <Image
 
-                            src={course.thumbnail}
+                            src={batch.thumbnail}
 
                             alt={course.title}
                             height={50}

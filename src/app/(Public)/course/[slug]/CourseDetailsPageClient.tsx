@@ -67,7 +67,7 @@ export default function CourseDetailsPageClient({
           <Breadcrumb />
 
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight max-w-3xl leading-tight">
-            {course.title}
+            {course.title} ({batch.name})
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-2xl">
@@ -230,7 +230,7 @@ export default function CourseDetailsPageClient({
           <div className="relative">
             <div className="sticky top-24">
               <CoursePreviewCard
-                course={course}
+                batch={batch}
                 loading={loading}
                 onEnroll={() => handleEnroll(batch.id)}
               />

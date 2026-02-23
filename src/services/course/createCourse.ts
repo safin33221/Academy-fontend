@@ -2,7 +2,6 @@
 "use server";
 
 import { serverFetch } from "@/lib/serverFetch";
-import { redirect } from "next/navigation";
 
 interface CreateCourseResponse {
     success: boolean;

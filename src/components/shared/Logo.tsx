@@ -30,7 +30,7 @@ export default function Logo({
                 alt="Nexaali Logo"
                 fill
                 priority={priority}
-                className="object-contain p-0 m-0"
+                className="object-contain h-fit p-0 m-0 "
             />
         </div>
     );
