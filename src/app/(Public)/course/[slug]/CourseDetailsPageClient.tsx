@@ -89,6 +89,11 @@ export default function CourseDetailsPageClient({
               <Calendar className="h-4 w-4" />
               Updated {new Date(course.updatedAt).getFullYear()}
             </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+
+              Enrolled :{batch.enrolledCount}/{batch.maxStudents}
+            </div>
           </div>
         </div>
       </div>

@@ -158,12 +158,7 @@ export const studentNavItems: INavSection[] = [
                 icon: "BookOpen",
                 role: [IUserRole.STUDENT],
             },
-            {
-                title: "Payments",
-                href: "/dashboard/student/payments",
-                icon: "CreditCard",
-                role: [IUserRole.STUDENT],
-            },
+
         ],
     },
     {

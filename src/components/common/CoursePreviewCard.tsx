@@ -43,9 +43,9 @@ export function CoursePreviewCard({
                             src={course.thumbnail}
 
                             alt={course.title}
-                            height={100}
+                            height={50}
                             width={100}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="w-full max-h-72 object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center bg-muted">

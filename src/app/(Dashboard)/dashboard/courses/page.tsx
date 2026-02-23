@@ -49,7 +49,7 @@ export default async function Page() {
                                 {/* Thumbnail */}
                                 <div className="relative overflow-hidden">
                                     <Image
-                                        src={course.thumbnail}
+                                        src={course?.thumbnail}
                                         alt={course.title}
                                         width={400}
                                         height={250}
