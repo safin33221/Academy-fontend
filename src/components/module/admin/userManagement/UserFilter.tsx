@@ -10,14 +10,14 @@ export default function UserFilter() {
             <div className="flex-1 min-w-0">
                 <SearchFilter
                     paramName="searchTerm"
-                    placeholder="Search admins..."
+                    placeholder="Search users ..."
 
                 />
             </div>
 
             {/* Additional filters - Collapsible on mobile */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
-                <div className="hidden md:flex items-center gap-2">
+                <div className="items-center gap-2">
                     <RoleFilter />
 
                 </div>

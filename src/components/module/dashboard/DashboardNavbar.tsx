@@ -1,99 +1,22 @@
-"use client";
 
-import { Menu, Bell, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import LogoutBtn from "@/components/shared/LogoutBtn";
-import { IUser } from "@/types/user/user";
-import Breadcrumb from "@/components/shared/Breadcrumb";
+import { INavSection } from "@/types/dashboard/NavItem";
+import { getNavItemByRole } from "@/lib/navItem.config";
+import DashboardNavbarContent from "./DashboardNavbarContent";
+import { IUser, IUserRole } from "@/types/user/user";
 
 interface DashboardNavbarProps {
-    onMenuClick?: () => void;
+
     user: IUser
 }
-
 export default function DashboardNavbar({
-    onMenuClick,
+
     user
 }: DashboardNavbarProps) {
+    const navItems: INavSection[] = getNavItemByRole(user?.role as IUserRole)
     return (
-        <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
-            <div className="flex h-16 items-center justify-between px-4 md:px-6">
-                {/* Left Section */}
-                <div className="max-md:hidden items-center justify-center flex">
-                    <Breadcrumb />
-                </div>
-                <div className="flex items-center gap-4">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="md:hidden"
-                        onClick={onMenuClick}
-                    >
-                        <Menu className="h-5 w-5" />
-                    </Button>
+        <div>
+            <DashboardNavbarContent user={user} navItems={navItems} />
+        </div>
 
-                </div>
-
-
-                {/* Center Search */}
-                <div className="hidden md:flex w-full max-w-sm items-center relative">
-                    <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Search..."
-                        className="pl-9"
-                    />
-                </div>
-
-                {/* Right Section */}
-                <div className="flex items-center gap-4">
-                    {/* Notifications */}
-                    <Button variant="ghost" size="icon" className="relative">
-                        <Bell className="h-5 w-5" />
-                        <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
-                    </Button>
-
-                    {/* User Dropdown */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                className="relative h-9 w-9 rounded-full"
-                            >
-                                <Avatar className="h-9 w-9">
-                                    <AvatarImage src="/avatar.png" />
-                                    <AvatarFallback>{user?.name?.slice(0, 1)}</AvatarFallback>
-                                </Avatar>
-                            </Button>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent
-                            align="end"
-                            className="w-56"
-                        >
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
-                            <DropdownMenuLabel className="text-indigo-600">{user.role}</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem >
-                                <LogoutBtn />
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            </div>
-        </header>
     );
 }
