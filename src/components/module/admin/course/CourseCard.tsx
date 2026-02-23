@@ -7,23 +7,35 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
 import { IBatch } from "@/types/batch/batch.interface";
+import { ICourse } from "@/types/course/course.interface";
 
 interface CourseCardProps {
-    batch: IBatch;
+    batch: IBatch | (Partial<ICourse> & { slug?: string; name?: string; thumbnail?: string });
 }
 
 export function CourseCard({ batch }: CourseCardProps) {
-    console.log({ batch });
-    if (!batch) return null
-    const course = batch?.course
+    if (!batch) return null;
+
+    const hasNestedCourse = "course" in batch && !!(batch as IBatch).course;
+    const course = hasNestedCourse
+        ? (batch as IBatch).course
+        : (batch as Partial<ICourse>);
+
+    if (!course?.title) return null;
+
+    const imageSrc = course.thumbnail || ("thumbnail" in batch ? batch.thumbnail : undefined);
+    const courseSlug = ("slug" in batch && batch.slug) || course.slug;
+    const batchName = "name" in batch ? batch.name : undefined;
+    const price = course.discountPrice ?? course.price;
+
     return (
         <Card className="group flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-background transition-all duration-500 hover:shadow-xl hover:-translate-y-1 gap-3 ">
 
             {/* Thumbnail */}
             <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                {course.thumbnail ? (
+                {imageSrc ? (
                     <Image
-                        src={batch.thumbnail}
+                        src={imageSrc}
                         alt={course.title}
                         fill
                         sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
@@ -46,18 +58,23 @@ export function CourseCard({ batch }: CourseCardProps) {
             {/* Content */}
             <CardContent className=" md:p-4">
                 <h3 className="font-semibold text-sm sm:text-lg md:text-base line-clamp-2 group-hover:text-primary transition-colors duration-300">
-                    {course.title}-<br />
-                    {batch.name}
+                    {course.title}
+                    {batchName ? (
+                        <>
+                            -<br />
+                            {batchName}
+                        </>
+                    ) : null}
                 </h3>
             </CardContent>
 
             {/* Footer */}
             <CardFooter className=" sm:p-4 pt-0 flex items-center justify-between mt-auto">
                 <span className="text-sm sm:text-base md:text-lg font-bold text-primary">
-                    ${course.discountPrice ?? course.price}
+                    {typeof price === "number" ? `$${price}` : "N/A"}
                 </span>
 
-                <Link href={`/course/${batch.slug}`}>
+                <Link href={courseSlug ? `/course/${courseSlug}` : "/course"}>
                     <Button size="sm" variant="outline" className="text-xs sm:text-sm">
                         Details
                     </Button>
