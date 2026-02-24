@@ -23,7 +23,7 @@ export function CourseCard({ batch }: CourseCardProps) {
 
     if (!course?.title) return null;
 
-    const imageSrc = course.thumbnail || ("thumbnail" in batch ? batch.thumbnail : undefined);
+    const imageSrc = batch.thumbnail
     const courseSlug = ("slug" in batch && batch.slug) || course.slug;
     const batchName = "name" in batch ? batch.name : undefined;
     const price = course.discountPrice ?? course.price;
