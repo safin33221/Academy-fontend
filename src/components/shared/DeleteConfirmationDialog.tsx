@@ -13,11 +13,14 @@ import {
 interface DeleteConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   title?: string;
   description?: React.ReactNode;
   itemName?: string;
   isDeleting?: boolean;
+  isLoading?: boolean;
+  confirmText?: string;
+  variant?: React.ComponentProps<typeof AlertDialogAction>["variant"];
 }
 
 const DeleteConfirmationDialog = ({
@@ -28,7 +31,12 @@ const DeleteConfirmationDialog = ({
   description,
   itemName,
   isDeleting,
+  isLoading,
+  confirmText,
+  variant = "destructive",
 }: DeleteConfirmDialogProps) => {
+  const loading = isLoading ?? isDeleting ?? false;
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -44,13 +52,13 @@ const DeleteConfirmationDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            disabled={isDeleting}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={loading}
+            variant={variant}
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {loading ? "Processing..." : confirmText ?? "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
