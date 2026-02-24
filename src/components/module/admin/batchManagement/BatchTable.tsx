@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { redirect } from "next/navigation";
 
 import ManagementTable from "@/components/shared/ManagementTable";
@@ -21,6 +20,11 @@ export default function BatchTable({ batches }: BatchTableProps) {
         redirect(`/admin/dashboard/batch/${batch.slug}`);
 
     };
+    const handleUpdate = (batch: IBatch) => {
+        // If you want redirect instead of dialog:
+        redirect(`/admin/dashboard/batch/update/${batch.slug}`);
+
+    };
 
     return (
         <>
@@ -30,6 +34,7 @@ export default function BatchTable({ batches }: BatchTableProps) {
                     columns={BatchColumn}
                     getRowKey={(batch) => batch.id}
                     onView={handleView}
+                    onEdit={handleUpdate}
                 />
             </div>
 
