@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import ManagementTable from "@/components/shared/ManagementTable";
-import DeleteConfirmationDialog from "@/components/shared/DeleteConfirmationDialog copy";
 import { CourseColumn } from "./CourseColumn";
 import { ICourse } from "@/types/course/course.interface";
 import { courseSoftDelete } from "@/services/course/deleteCourse";
+import DeleteConfirmationDialog from "@/components/shared/DeleteConfirmationDialog";
 
 interface CourseTableProps {
     courses: ICourse[];
@@ -77,8 +77,8 @@ export default function CourseTable({ courses }: CourseTableProps) {
                 onOpenChange={(open) => !open && setDeleting(null)}
                 onConfirm={confirmDelete}
                 title="Delete Course"
-                description={`Are you sure you want to delete ${deleting?.title}? This action cannot be undone.`}
-                isDeleting={isDeletingDialog}
+                description={`Are you sure you want to delete ${deleting?.title} ? This action cannot be undone.`}
+            isDeleting={isDeletingDialog}
             />
         </>
     );

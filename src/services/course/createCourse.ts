@@ -6,50 +6,56 @@ import { serverFetch } from "@/lib/serverFetch";
 interface CreateCourseResponse {
     success: boolean;
     message: string;
+    formData?: any;
 }
 
 export const createCourse = async (
     _prevState: unknown,
     formData: FormData
 ): Promise<CreateCourseResponse> => {
+
+    // ✅ Move payload outside try
+    const payload: any = {};
+
     try {
         const image = formData.get("image") as File | null;
 
         // ================= BASIC FIELDS =================
-        const payload: any = {
-            title: String(formData.get("title") || "").trim(),
-            slug: String(formData.get("slug") || "").trim(),
-            shortDescription: String(
-                formData.get("shortDescription") || ""
-            ).trim(),
-            fullDescription: String(
-                formData.get("fullDescription") || ""
-            ).trim(),
+        payload.title = String(formData.get("title") || "").trim();
+        payload.slug = String(formData.get("slug") || "").trim();
+        payload.shortDescription = String(
+            formData.get("shortDescription") || ""
+        ).trim();
+        payload.fullDescription = String(
+            formData.get("fullDescription") || ""
+        ).trim();
 
-            level: String(formData.get("level") || ""),
-            category: String(formData.get("category") || ""),
+        payload.level = String(formData.get("level") || "");
+        payload.category = String(formData.get("category") || "");
 
-            price: Number(formData.get("price") || 0),
-            discountPrice: formData.get("discountPrice")
-                ? Number(formData.get("discountPrice"))
-                : null,
+        payload.price = Number(formData.get("price") || 0);
+        payload.discountPrice = formData.get("discountPrice")
+            ? Number(formData.get("discountPrice"))
+            : null;
 
-            duration: Number(formData.get("duration") || 0),
-            totalClasses: Number(formData.get("totalClasses") || 0),
+        payload.duration = Number(formData.get("duration") || 0);
+        payload.totalClasses = Number(formData.get("totalClasses") || 0);
 
-            isPremium: String(formData.get("isPremium")) === "true",
-            isFeatured: String(formData.get("isFeatured")) === "true",
-        };
+        payload.isPremium =
+            String(formData.get("isPremium")) === "true";
+        payload.isFeatured =
+            String(formData.get("isFeatured")) === "true";
 
         // ================= VALIDATION =================
         if (!payload.title || !payload.slug) {
             return {
                 success: false,
                 message: "Title and Slug are required",
+                formData: payload, // ✅ return values
             };
         }
 
-        // ================= CURRICULUM PARSE =================
+        // ================= CURRICULUM =================
         const curriculum: any[] = [];
         let cIndex = 0;
 
@@ -66,7 +72,7 @@ export const createCourse = async (
             cIndex++;
         }
 
-        // ================= LEARNINGS PARSE =================
+        // ================= LEARNINGS =================
         const learnings: any[] = [];
         let lIndex = 0;
 
@@ -77,7 +83,7 @@ export const createCourse = async (
             lIndex++;
         }
 
-        // ================= FAQ PARSE =================
+        // ================= FAQ =================
         const faqs: any[] = [];
         let fIndex = 0;
 
@@ -97,33 +103,27 @@ export const createCourse = async (
         payload.learnings = learnings;
         payload.faqs = faqs;
 
-        // ================= BUILD MULTIPART =================
+        // ================= MULTIPART =================
         const apiFormData = new FormData();
 
-        // append primitive fields
         Object.entries(payload).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
-                if (
-                    typeof value === "object" &&
-                    !Array.isArray(value)
-                ) {
-                    apiFormData.append(key, JSON.stringify(value));
-                } else if (Array.isArray(value)) {
-                    apiFormData.append(key, JSON.stringify(value));
-                } else {
-                    apiFormData.append(key, String(value));
-                }
+                apiFormData.append(
+                    key,
+                    Array.isArray(value) || typeof value === "object"
+                        ? JSON.stringify(value)
+                        : String(value)
+                );
             }
         });
 
-        // append image
         if (image && image.size > 0) {
             apiFormData.append("file", image);
         }
 
         // ================= API CALL =================
         const res = await serverFetch.post("/course", {
-            body: apiFormData, // 🔥 multipart
+            body: apiFormData,
         });
 
         const result = await res.json();
@@ -133,6 +133,7 @@ export const createCourse = async (
                 success: false,
                 message:
                     result?.message || "Failed to create course",
+                formData: payload, // ✅ preserve values
             };
         }
 
@@ -140,7 +141,9 @@ export const createCourse = async (
             success: true,
             message: "Course created successfully",
         };
+
     } catch (error: any) {
+
         if (error?.digest?.startsWith("NEXT_REDIRECT")) {
             throw error;
         }
@@ -150,6 +153,7 @@ export const createCourse = async (
         return {
             success: false,
             message: "Something went wrong",
+            formData: payload, // ✅ now safe
         };
     }
 };

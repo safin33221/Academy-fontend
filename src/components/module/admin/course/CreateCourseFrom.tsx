@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
@@ -17,12 +18,29 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { createCourse } from "@/services/course/createCourse";
-import SingleImageUploader from "@/components/shared/SingleImageUploader";
-import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
+import SingleImageUploader from "@/components/shared/SingleImageUploader";
+
+interface FormState {
+    success: boolean;
+    message: string;
+    formData?: any;
+}
+
+const initialState: FormState = {
+    success: false,
+    message: "",
+    formData: null,
+};
 
 export default function CourseCreateForm() {
-    const [level, setLevel] = useState("");
+    const [_state, formAction, isPending] = useActionState(
+        createCourse,
+        initialState
+    );
+
+    const [level, setLevel] = useState("BEGINNER");
     const [isPremium, setIsPremium] = useState(false);
     const [isFeatured, setIsFeatured] = useState(false);
     const [image, setImage] = useState<File | null>(null);
@@ -30,24 +48,37 @@ export default function CourseCreateForm() {
     const [curriculums, setCurriculums] = useState([
         { title: "", content: "" },
     ]);
+
     const [learnings, setLearnings] = useState([""]);
+
     const [faqs, setFaqs] = useState([
         { question: "", answer: "" },
     ]);
 
-    const [_state, formAction, isPending] = useActionState(
-        createCourse,
-        null
-    );
+    // Toast + Reset
     useEffect(() => {
-        if (_state?.success) {
-            toast.success(_state.message)
-            redirect("/admin/dashboard/courses")
+        if (!_state?.message) return;
+
+        if (_state.success) {
+            toast.success(_state.message);
+
+            queueMicrotask(() => {
+                setLevel("BEGINNER");
+                setIsPremium(false);
+                setIsFeatured(false);
+                setCurriculums([{ title: "", content: "" }]);
+                setLearnings([""]);
+                setFaqs([{ question: "", answer: "" }]);
+            });
+
+            redirect("/admin/dashboard/courses");
+        } else {
+            toast.error(_state.message);
         }
-    }, [_state])
+    }, [_state]);
 
     return (
-        <div className="min-h-screen bg-muted/40 p-6">
+        <div className="bg-muted/40 p-6">
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* HEADER */}
                 <div className="flex items-center justify-between">
@@ -70,9 +101,7 @@ export default function CourseCreateForm() {
 
                 <motion.form
                     action={async (formData: FormData) => {
-                        if (image) {
-                            formData.append("image", image);
-                        }
+                        if (image) formData.append("image", image);
                         return formAction(formData);
                     }}
                     encType="multipart/form-data"
@@ -93,30 +122,50 @@ export default function CourseCreateForm() {
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
                                     <FieldLabel>Title</FieldLabel>
-                                    <Input name="title" />
+                                    <Input
+                                        name="title"
+                                        defaultValue={_state?.formData?.title ?? ""}
+                                    />
                                 </Field>
 
                                 <Field>
                                     <FieldLabel>Slug</FieldLabel>
-                                    <Input name="slug" />
+                                    <Input
+                                        name="slug"
+                                        defaultValue={_state?.formData?.slug ?? ""}
+                                    />
                                 </Field>
                             </div>
 
                             <Field>
                                 <FieldLabel>Short Description</FieldLabel>
-                                <Textarea name="shortDescription" rows={2} />
+                                <Textarea
+                                    name="shortDescription"
+                                    rows={2}
+                                    defaultValue={
+                                        _state?.formData?.shortDescription ?? ""
+                                    }
+                                />
                             </Field>
 
                             <Field>
                                 <FieldLabel>Full Description</FieldLabel>
-                                <Textarea name="fullDescription" rows={5} />
+                                <Textarea
+                                    name="fullDescription"
+                                    rows={5}
+                                    defaultValue={
+                                        _state?.formData?.fullDescription ?? ""
+                                    }
+                                />
                             </Field>
                         </div>
 
                         {/* CURRICULUM */}
                         <div className="bg-background rounded-2xl border shadow-sm p-6 space-y-6">
                             <div className="flex justify-between items-center">
-                                <h2 className="text-lg font-semibold">Curriculum</h2>
+                                <h2 className="text-lg font-semibold">
+                                    Curriculum
+                                </h2>
                                 <Button
                                     type="button"
                                     size="sm"
@@ -139,10 +188,19 @@ export default function CourseCreateForm() {
                                 >
                                     <Input
                                         name={`curriculum[${index}][title]`}
+                                        defaultValue={
+                                            _state?.formData?.curriculum?.[index]
+                                                ?.title ?? ""
+                                        }
                                         placeholder="Module title"
                                     />
+
                                     <Textarea
                                         name={`curriculum[${index}][content]`}
+                                        defaultValue={
+                                            _state?.formData?.curriculum?.[index]
+                                                ?.content ?? ""
+                                        }
                                         placeholder="Module content"
                                     />
 
@@ -173,23 +231,14 @@ export default function CourseCreateForm() {
                             </h2>
 
                             {learnings.map((_, index) => (
-                                <div key={index} className="flex gap-3">
-                                    <Input name={`learnings[${index}]`} />
-                                    {index > 0 && (
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() =>
-                                                setLearnings(
-                                                    learnings.filter((_, i) => i !== index)
-                                                )
-                                            }
-                                        >
-                                            <Trash2 size={16} />
-                                        </Button>
-                                    )}
-                                </div>
+                                <Input
+                                    key={index}
+                                    name={`learnings[${index}]`}
+                                    defaultValue={
+                                        _state?.formData?.learnings?.[index]
+                                            ?.content ?? ""
+                                    }
+                                />
                             ))}
 
                             <Button
@@ -215,43 +264,22 @@ export default function CourseCreateForm() {
                                 >
                                     <Input
                                         name={`faqs[${index}][question]`}
+                                        defaultValue={
+                                            _state?.formData?.faqs?.[index]
+                                                ?.question ?? ""
+                                        }
                                         placeholder="Question"
                                     />
                                     <Textarea
                                         name={`faqs[${index}][answer]`}
+                                        defaultValue={
+                                            _state?.formData?.faqs?.[index]
+                                                ?.answer ?? ""
+                                        }
                                         placeholder="Answer"
                                     />
-
-                                    {index > 0 && (
-                                        <Button
-                                            type="button"
-                                            size="sm"
-                                            variant="ghost"
-                                            className="text-destructive"
-                                            onClick={() =>
-                                                setFaqs(faqs.filter((_, i) => i !== index))
-                                            }
-                                        >
-                                            <Trash2 size={14} className="mr-2" />
-                                            Remove
-                                        </Button>
-                                    )}
                                 </div>
                             ))}
-
-                            <Button
-                                type="button"
-                                size="sm"
-                                onClick={() =>
-                                    setFaqs([
-                                        ...faqs,
-                                        { question: "", answer: "" },
-                                    ])
-                                }
-                            >
-                                <Plus size={14} className="mr-2" />
-                                Add FAQ
-                            </Button>
                         </div>
                     </div>
 
@@ -262,54 +290,107 @@ export default function CourseCreateForm() {
                                 Pricing & Status
                             </h2>
 
-                            <Input name="price" type="number" placeholder="Price" />
+                            <Input
+                                name="price"
+                                type="number"
+                                defaultValue={_state?.formData?.price ?? ""}
+                            />
+
                             <Input
                                 name="discountPrice"
                                 type="number"
-                                placeholder="Discount Price"
+                                defaultValue={
+                                    _state?.formData?.discountPrice ?? ""
+                                }
                             />
-                            <Input name="duration" type="number" placeholder="Duration (hrs)" />
+
+                            <Input
+                                name="duration"
+                                type="number"
+                                defaultValue={
+                                    _state?.formData?.duration ?? ""
+                                }
+                            />
+
                             <Input
                                 name="totalClasses"
                                 type="number"
-                                placeholder="Total Classes"
+                                defaultValue={
+                                    _state?.formData?.totalClasses ?? ""
+                                }
                             />
 
-                            <Select onValueChange={setLevel}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Level" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="BEGINNER">Beginner</SelectItem>
-                                    <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-                                    <SelectItem value="ADVANCED">Advanced</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <input type="hidden" name="level" value={level} />
+                            <Field>
+                                <FieldLabel>Level</FieldLabel>
+                                <Select
+                                    value={
+                                        _state?.formData?.level ?? level
+                                    }
+                                    onValueChange={setLevel}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="BEGINNER">
+                                            Beginner
+                                        </SelectItem>
+                                        <SelectItem value="INTERMEDIATE">
+                                            Intermediate
+                                        </SelectItem>
+                                        <SelectItem value="ADVANCED">
+                                            Advanced
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <input
+                                    type="hidden"
+                                    name="level"
+                                    value={
+                                        _state?.formData?.level ?? level
+                                    }
+                                />
+                            </Field>
 
                             <div className="flex items-center justify-between">
                                 <span className="text-sm">Premium</span>
                                 <Switch
-                                    checked={isPremium}
+                                    checked={
+                                        _state?.formData?.isPremium ??
+                                        isPremium
+                                    }
                                     onCheckedChange={setIsPremium}
                                 />
                                 <input
                                     type="hidden"
                                     name="isPremium"
-                                    value={isPremium ? "true" : "false"}
+                                    value={
+                                        (_state?.formData?.isPremium ??
+                                            isPremium)
+                                            ? "true"
+                                            : "false"
+                                    }
                                 />
                             </div>
 
                             <div className="flex items-center justify-between">
                                 <span className="text-sm">Featured</span>
                                 <Switch
-                                    checked={isFeatured}
+                                    checked={
+                                        _state?.formData?.isFeatured ??
+                                        isFeatured
+                                    }
                                     onCheckedChange={setIsFeatured}
                                 />
                                 <input
                                     type="hidden"
                                     name="isFeatured"
-                                    value={isFeatured ? "true" : "false"}
+                                    value={
+                                        (_state?.formData?.isFeatured ??
+                                            isFeatured)
+                                            ? "true"
+                                            : "false"
+                                    }
                                 />
                             </div>
 
@@ -318,7 +399,9 @@ export default function CourseCreateForm() {
                                 className="w-full"
                                 disabled={isPending}
                             >
-                                {isPending ? "Creating..." : "Create Course"}
+                                {isPending
+                                    ? "Creating..."
+                                    : "Create Course"}
                             </Button>
                         </div>
                     </div>
