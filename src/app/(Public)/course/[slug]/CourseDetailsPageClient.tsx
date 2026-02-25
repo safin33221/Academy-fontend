@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Star, CheckCircle, Globe, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@/components/ui/accordion";
@@ -20,10 +20,12 @@ interface CourseDetailsPageProps {
 export default function CourseDetailsPageClient({
   batch, user
 }: CourseDetailsPageProps) {
-  console.log({ batch });
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   if (!batch) {
     return (
@@ -39,8 +41,11 @@ export default function CourseDetailsPageClient({
 
   const handleEnroll = async (batchId: string) => {
     if (!user) {
-      window.location.href = "/join-us";
-      return;
+      const currentPath =
+        pathname + (searchParams.toString() ? `?${searchParams}` : "");
+
+      router.push(`/join-us?callbackUrl=${encodeURIComponent(currentPath)}`);
+      return null;
     }
 
     setLoading(true);
