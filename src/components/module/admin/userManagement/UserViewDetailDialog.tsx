@@ -35,7 +35,7 @@ const UserViewDetailDialog = ({
     user,
 }: IUserViewDetailDialogProps) => {
     if (!user) return null;
-    console.log({ user });
+
 
     return (
         <Dialog open={open} onOpenChange={onClose}>

@@ -12,7 +12,7 @@ export async function generateMetadata(
 
     const { slug } = await props.params;
 
-    console.log("Slug in metadata:", slug);
+
 
     if (!slug) {
         return { title: "Course" };
@@ -40,7 +40,7 @@ export default async function Page(
 ) {
     const { slug } = await props.params;
 
-    console.log("Slug in page:", slug);
+
 
     const res = await getSingleBatch(slug);
     const batch: IBatch = res.data;

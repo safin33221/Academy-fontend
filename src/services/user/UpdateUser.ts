@@ -31,7 +31,7 @@ export async function updateUserAction(
         if (file && file.size > 0) {
             payload.append("file", file);
         }
-        console.log({ payload });
+
 
         const res = await serverFetch.patch(`/users/${id}`, {
             body: payload,

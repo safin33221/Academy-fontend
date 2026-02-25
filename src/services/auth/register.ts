@@ -29,7 +29,7 @@ export const register = async (
             };
         }
 
-        console.log("Register payload:", payload);
+
 
         // TODO: Save to DB or call API here
         const res = await serverFetch.post('/auth/register', {
@@ -39,7 +39,7 @@ export const register = async (
             body: JSON.stringify(payload),
         })
         const result = await res.json();
-        console.log({ result });
+
 
 
         if (!res.ok) {

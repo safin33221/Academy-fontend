@@ -52,7 +52,7 @@ export default function CourseDetailsPageClient({
 
     try {
       const res = await initiatePayment(batchId);
-      console.log(res);
+
 
       if (res?.gatewayUrl) {
         window.location.href = res.gatewayUrl;
