@@ -13,7 +13,7 @@ export const initiatePayment = async (batchId: string) => {
         const result = await res.json();
 
         if (!res.ok) {
-            throw new Error("Failed to initiate payment");
+            throw new Error(result.message || "Failed to initiate payment");
         }
 
         return result.data

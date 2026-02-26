@@ -11,6 +11,7 @@ import { initiatePayment } from "@/services/payment/payment";
 import { IUser } from "@/types/user/user";
 import { useState } from "react";
 import { IBatch } from "@/types/batch/batch.interface";
+import toast from "react-hot-toast";
 
 interface CourseDetailsPageProps {
   batch: IBatch;
@@ -52,12 +53,13 @@ export default function CourseDetailsPageClient({
 
     try {
       const res = await initiatePayment(batchId);
-
+      console.log({ res });
 
       if (res?.gatewayUrl) {
         window.location.href = res.gatewayUrl;
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message)
       console.error("Payment error:", error);
     } finally {
       setLoading(false);
