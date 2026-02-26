@@ -62,13 +62,13 @@ export const superAdminNavItems: INavSection[] = [
         items: [
             {
                 title: "Manage Admins",
-                href: "/dashboard/super-admin/admins",
+                href: "/admin/dashboard",
                 icon: "Shield",
                 role: [IUserRole.SUPER_ADMIN],
             },
             {
                 title: "All Users",
-                href: "/dashboard/super-admin/users",
+                href: "/admin/dashboard/users",
                 icon: "Users",
                 role: [IUserRole.SUPER_ADMIN],
             },
@@ -131,13 +131,13 @@ export const instructorNavItems: INavSection[] = [
         items: [
             {
                 title: "My Courses",
-                href: "/dashboard/instructor/courses",
+                href: "/dashboard/my-courses",
                 icon: "BookOpen",
                 role: [IUserRole.INSTRUCTOR],
             },
             {
                 title: "Create class",
-                href: "/dashboard/instructor/courses/create",
+                href: "/course",
                 icon: "PlusCircle",
                 role: [IUserRole.INSTRUCTOR],
             },
