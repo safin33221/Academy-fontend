@@ -4,6 +4,8 @@ import { getMe } from "@/services/auth/getMe";
 import { getCookies } from "@/services/auth/tokenHandler";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function layout({ children }: { children: React.ReactNode }) {
 
 

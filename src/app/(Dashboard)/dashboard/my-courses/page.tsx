@@ -6,7 +6,7 @@ import { getMyCourses } from "@/services/course/myCourses";
 export default async function Page() {
     const res = await getMyCourses();
     const courses = res.data || [];
-    console.log({ courses });
+
 
     return (
         <div className="max-w-7xl mx-auto px-6 md:px-8 py-12">
@@ -81,7 +81,7 @@ export default async function Page() {
                                     </div>
 
                                     <Link
-                                        href={`/courses/${course.slug}`}
+                                        href={`/dashboard/my-courses/${course.slug}`}
                                         className="mt-6 inline-flex items-center justify-center rounded-xl bg-linear-to-r from-black to-gray-800 text-white py-2.5 font-medium transition-all duration-300 hover:opacity-90"
                                     >
                                         Continue Learning

@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { courses } from "../../../../public/data/courses";
 import { CourseCard } from "../admin/course/CourseCard";
 import Link from "next/link";
-import { ICourse } from "@/types/course/course.interface";
+import { getAllBatch } from "@/services/Batch/getAllBatch";
+import { IBatch } from "@/types/batch/batch.interface";
 
-export default function Courses() {
-    const popularCourses = courses?.slice(0, 4)
+export default async function Courses() {
+    const batches = await getAllBatch()
+    const popularCourses = batches.data
     return (
         <section id="courses" className="py-20 bg-slate-50 dark:bg-slate-950">
             <div className="container px-4 md:px-6 mx-auto space-y-12">
@@ -32,7 +33,7 @@ export default function Courses() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                    {popularCourses.map((course: any) =>
+                    {popularCourses.map((course: IBatch) =>
                         <div key={course.id} className="h-full">
                             <CourseCard
                                 batch={course}

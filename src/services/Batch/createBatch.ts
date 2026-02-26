@@ -85,7 +85,7 @@ export const createBatch = async (
         if (image && image.size > 0) {
             apiFormData.append("file", image);
         }
-        console.log({ apiFormData, image });
+
         // ================= API CALL =================
         const res = await serverFetch.post("/batch", {
             body: apiFormData,

@@ -9,7 +9,7 @@ export const updateUserRole = async (
     role: IUserRole
 ) => {
     try {
-        console.log({ id, role });
+
         const res = await serverFetch.patch(
             `/users/${id}`,
             {
@@ -19,7 +19,7 @@ export const updateUserRole = async (
                 body: JSON.stringify({ role }),
             }
         );
-        console.log(res);
+
 
         return await res.json();
     } catch (error) {

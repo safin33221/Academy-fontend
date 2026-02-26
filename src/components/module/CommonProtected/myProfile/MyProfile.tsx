@@ -29,7 +29,7 @@ export default function MyProfile({ user }: { user: IUser }) {
     const [previewImage, setPreviewImage] = useState(
         user.profilePhoto || ""
     );
-    console.log({ user });
+
 
     const [state, formAction, isPending] =
         useActionState(updateUserAction, null);
