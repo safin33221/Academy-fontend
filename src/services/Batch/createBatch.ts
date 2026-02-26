@@ -13,10 +13,15 @@ export const createBatch = async (
     _prevState: unknown,
     formData: FormData
 ): Promise<CreateBatchResponse> => {
-    let payload: any = {}; // ✅ define outside try
+    let payload: any = {};
 
     try {
         const image = formData.get("image") as File | null;
+
+        // ✅ MULTIPLE INSTRUCTORS
+        const instructorIds = formData.getAll(
+            "instructorIds"
+        ) as string[];
 
         // ================= BASIC FIELDS =================
         payload = {
@@ -42,6 +47,8 @@ export const createBatch = async (
             isActive: String(formData.get("isActive")) === "true",
 
             status: String(formData.get("status") || "UPCOMING"),
+
+            instructorIds, // ✅ add instructors
         };
 
         // ================= VALIDATION =================
@@ -78,7 +85,13 @@ export const createBatch = async (
 
         Object.entries(payload).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
-                apiFormData.append(key, String(value));
+                if (Array.isArray(value)) {
+                    value.forEach((v) =>
+                        apiFormData.append(key, v)
+                    );
+                } else {
+                    apiFormData.append(key, String(value));
+                }
             }
         });
 
@@ -92,6 +105,7 @@ export const createBatch = async (
         });
 
         const result = await res.json();
+
 
         if (!res.ok) {
             return {
@@ -116,7 +130,7 @@ export const createBatch = async (
         return {
             success: false,
             message: error?.message || "Something went wrong",
-            formData: payload, // ✅ now safe
+            formData: payload,
         };
     }
 };

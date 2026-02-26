@@ -25,6 +25,7 @@ export const updateBatch = async (
         }
 
         const image = formData.get("image") as File | null;
+        const instructorIds = formData.getAll("instructorIds") as string[];
 
         payload = {
             name: String(formData.get("name") || "").trim(),
@@ -45,6 +46,7 @@ export const updateBatch = async (
             isActive: String(formData.get("isActive")) === "true",
 
             status: String(formData.get("status") || "UPCOMING"),
+            instructorIds,
         };
 
         // ================= VALIDATION =================
@@ -81,7 +83,11 @@ export const updateBatch = async (
 
         Object.entries(payload).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
-                apiFormData.append(key, String(value));
+                if (Array.isArray(value)) {
+                    value.forEach((v) => apiFormData.append(key, String(v)));
+                } else {
+                    apiFormData.append(key, String(value));
+                }
             }
         });
 

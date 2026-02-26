@@ -15,6 +15,7 @@ import Image from "next/image";
 
 export default function BatchDetails({ batch }: { batch: IBatch }) {
     if (!batch) return null
+    console.log({ batch });
     const { course } = batch;
 
     const enrollmentPercent =

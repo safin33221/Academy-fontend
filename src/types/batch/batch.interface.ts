@@ -21,7 +21,7 @@ export interface IBatch {
     thumbnail: string
 
     course: ICourse
-
+    instructors: any
 
     // Dates
     enrollmentStart: string;

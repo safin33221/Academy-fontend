@@ -1,5 +1,6 @@
 import BatchDetails from "@/components/module/admin/batchManagement/BatchDetails"
 import { getSingleBatch } from "@/services/Batch/getSingleBatch"
+import { IBatch } from "@/types/batch/batch.interface"
 
 
 
@@ -10,7 +11,7 @@ export default async function Page({
 }) {
     const { slug } = await params
     const res = await getSingleBatch(slug)
-    const batch = res?.data
+    const batch: IBatch = res?.data || {}
     return (
         <div>
             <BatchDetails batch={batch} />
