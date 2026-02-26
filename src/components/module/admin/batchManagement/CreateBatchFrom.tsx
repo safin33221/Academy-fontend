@@ -23,6 +23,7 @@ import SingleImageUploader from "@/components/shared/SingleImageUploader";
 
 interface Props {
     courses: { id: string; title: string }[];
+    instructors: { id: string, name: string }[]
 }
 
 interface FormState {
@@ -37,7 +38,7 @@ const initialState: FormState = {
     formData: null,
 };
 
-export default function BatchCreateForm({ courses }: Props) {
+export default function BatchCreateForm({ courses, instructors }: Props) {
     const [_state, formAction, isPending] = useActionState(
         createBatch,
         initialState
@@ -47,6 +48,7 @@ export default function BatchCreateForm({ courses }: Props) {
     const [isActive, setIsActive] = useState(true);
     const [courseId, setCourseId] = useState("");
     const [image, setImage] = useState<File | null>(null);
+    const [selectedInstructors, setSelectedInstructors] = useState<string[]>([]);
     // Toast + Reset Logic
     useEffect(() => {
         if (!_state?.message) return;
@@ -67,8 +69,8 @@ export default function BatchCreateForm({ courses }: Props) {
     }, [_state]);
 
     return (
-        <div className="bg-muted/40 p-6">
-            <div className="max-w-5xl mx-auto space-y-8">
+        <div className="bg-muted/40 md:p-6">
+            <div className="max-w-7xl mx-auto space-y-8">
                 {/* HEADER */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -223,15 +225,36 @@ export default function BatchCreateForm({ courses }: Props) {
                             </Field>
 
                             <Field>
-                                <FieldLabel>Batch Price</FieldLabel>
-                                <Input
-                                    name="price"
-                                    type="number"
-                                    defaultValue={
-                                        _state?.formData?.price ?? ""
-                                    }
-                                    placeholder="Option If You need change "
-                                />
+                                <FieldLabel>Assign Instructors</FieldLabel>
+
+                                <div className="space-y-2 max-h-40 overflow-y-auto border rounded-md p-3">
+                                    {instructors.map((instructor) => (
+                                        <label
+                                            key={instructor.id}
+                                            className="flex items-center gap-2 text-sm cursor-pointer"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedInstructors.includes(instructor.id)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedInstructors((prev) => [...prev, instructor.id]);
+                                                    } else {
+                                                        setSelectedInstructors((prev) =>
+                                                            prev.filter((id) => id !== instructor.id)
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                            {instructor.name}
+                                        </label>
+                                    ))}
+                                </div>
+
+                                {/* Hidden inputs for form submission */}
+                                {selectedInstructors.map((id) => (
+                                    <input key={id} type="hidden" name="instructorIds" value={id} />
+                                ))}
                             </Field>
 
                             <Field>

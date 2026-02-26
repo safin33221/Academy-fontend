@@ -22,10 +22,10 @@ import SingleImageUploader from "@/components/shared/SingleImageUploader";
 import { BatchStatus, IBatch } from "@/types/batch/batch.interface";
 import { updateBatch } from "@/services/Batch/UpdateBatch";
 
-
 interface Props {
     batch: IBatch;
     courses: { id: string; title: string }[];
+    instructors: { id: string; name: string }[];
 }
 
 interface FormState {
@@ -34,22 +34,45 @@ interface FormState {
     formData?: any;
 }
 
+const getInstructorId = (item: any): string | null => {
+    if (!item) return null;
+    if (typeof item === "string") return item;
+
+    const value = item.id ?? item._id ?? item.userId ?? item.user?.id;
+    return value ? String(value) : null;
+};
+
 const initialState: FormState = {
     success: false,
     message: "",
     formData: null,
 };
 
-export default function UpdateBatchForm({ batch, courses }: Props) {
+export default function UpdateBatchForm({
+    batch,
+    courses,
+    instructors,
+}: Props) {
+
+
     const [_state, formAction, isPending] = useActionState(
         updateBatch,
         initialState
     );
 
-    const [status, setStatus] = useState(batch.status || "UPCOMING");
-    const [isActive, setIsActive] = useState(batch.isActive);
-    const [courseId, setCourseId] = useState(batch.courseId);
+    const [status, setStatus] = useState<BatchStatus>(
+        batch?.status || "UPCOMING"
+    );
+    const [isActive, setIsActive] = useState<boolean>(batch?.isActive ?? true);
+    const [courseId, setCourseId] = useState<string>(batch?.courseId || "");
     const [image, setImage] = useState<File | null>(null);
+    const [selectedInstructors, setSelectedInstructors] = useState<string[]>(
+        Array.isArray(batch?.instructors)
+            ? batch.instructors
+                .map((instructor: any) => getInstructorId(instructor))
+                .filter((id): id is string => Boolean(id))
+            : []
+    );
 
     useEffect(() => {
         if (!_state?.message) return;
@@ -61,10 +84,10 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
             toast.error(_state.message);
         }
     }, [_state]);
-
+    if (!batch) return null
     return (
         <div className="bg-muted/40 p-6">
-            <div className="max-w-5xl mx-auto space-y-8">
+            <div className="max-w-7xl mx-auto space-y-8">
                 {/* HEADER */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -106,20 +129,16 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
                             </h2>
 
                             <SingleImageUploader
-                                defaultImageUrl={batch.thumbnail}
+                                defaultImageUrl={batch?.thumbnail}
                                 onChange={setImage}
                             />
-                            <Input
-                                name="id"
-                                defaultValue={batch.id}
-                                className="hidden"
-                            />
+
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
                                     <FieldLabel>Batch Name</FieldLabel>
                                     <Input
                                         name="name"
-                                        defaultValue={batch.name}
+                                        defaultValue={batch?.name}
                                     />
                                 </Field>
 
@@ -133,7 +152,7 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {courses.map(course => (
+                                            {courses.map((course) => (
                                                 <SelectItem
                                                     key={course.id}
                                                     value={course.id}
@@ -151,6 +170,7 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
                                 </Field>
                             </div>
 
+                            {/* Dates */}
                             <div className="grid md:grid-cols-2 gap-6">
                                 <Field>
                                     <FieldLabel>Enrollment Start</FieldLabel>
@@ -209,13 +229,54 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
                                 />
                             </Field>
 
+                            {/* ✅ Instructor Update Section */}
                             <Field>
-                                <FieldLabel>Batch Price</FieldLabel>
-                                <Input
-                                    name="price"
-                                    type="number"
-                                    defaultValue={batch.price}
-                                />
+                                <FieldLabel>Assign Instructors</FieldLabel>
+
+                                <div className="space-y-2 max-h-40 overflow-y-auto border rounded-md p-3">
+                                    {instructors
+                                        .map((instructor: any) => ({
+                                            id: getInstructorId(instructor),
+                                            name: instructor?.name ?? "Unnamed instructor",
+                                        }))
+                                        .filter((instructor) => Boolean(instructor.id))
+                                        .map((instructor) => (
+                                            <label
+                                                key={instructor.id as string}
+                                                className="flex items-center gap-2 text-sm cursor-pointer"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedInstructors.includes(instructor.id as string)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedInstructors((prev) => [
+                                                                ...prev,
+                                                                instructor.id as string,
+                                                            ]);
+                                                        } else {
+                                                            setSelectedInstructors((prev) =>
+                                                                prev.filter(
+                                                                    (id) => id !== (instructor.id as string)
+                                                                )
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                                {instructor.name}
+                                            </label>
+                                        ))}
+                                </div>
+
+                                {/* Hidden inputs */}
+                                {selectedInstructors.map((id) => (
+                                    <input
+                                        key={id}
+                                        type="hidden"
+                                        name="instructorIds"
+                                        value={id}
+                                    />
+                                ))}
                             </Field>
 
                             <Field>
@@ -252,9 +313,7 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
                             </Field>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm">
-                                    Active Batch
-                                </span>
+                                <span className="text-sm">Active Batch</span>
                                 <Switch
                                     checked={isActive}
                                     onCheckedChange={setIsActive}
@@ -278,7 +337,8 @@ export default function UpdateBatchForm({ batch, courses }: Props) {
                         </div>
                     </div>
                 </motion.form>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 }
+
