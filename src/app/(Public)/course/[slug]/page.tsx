@@ -3,6 +3,7 @@ import CourseDetailsPageClient from "./CourseDetailsPageClient";
 import { getMe } from "@/services/auth/getMe";
 import { getSingleBatch } from "@/services/Batch/getSingleBatch";
 import { IBatch } from "@/types/batch/batch.interface";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata(
     props: {
@@ -43,7 +44,11 @@ export default async function Page(
 
 
     const res = await getSingleBatch(slug);
-    const batch: IBatch = res.data;
+    const batch: IBatch | undefined = res?.data;
+
+    if (!batch) {
+        notFound();
+    }
 
     const resUser = await getMe();
     const user = resUser?.data;

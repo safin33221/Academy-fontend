@@ -10,10 +10,16 @@ export default async function layout({ children }: { children: React.ReactNode }
 
 
     const accessToken = await getCookies("accessToken")
-    const user = await getMe()
     if (!accessToken) {
         redirect("/")
 
+    }
+
+    const userRes = await getMe()
+    const user = userRes?.data
+
+    if (!user) {
+        redirect("/")
     }
 
 
@@ -30,7 +36,7 @@ export default async function layout({ children }: { children: React.ReactNode }
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* Navbar */}
                 <div className="shrink-0">
-                    <DashboardNavbar user={user?.data} />
+                    <DashboardNavbar user={user} />
                     {/* <h1>Dashboard navbar</h1> */}
                 </div>
 

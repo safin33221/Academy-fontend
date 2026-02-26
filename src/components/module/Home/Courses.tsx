@@ -8,7 +8,7 @@ import { IBatch } from "@/types/batch/batch.interface";
 
 export default async function Courses() {
     const batches = await getAllBatch()
-    const popularCourses = batches.data
+    const popularCourses: IBatch[] = Array.isArray(batches?.data) ? batches.data : []
     return (
         <section id="courses" className="py-20 bg-slate-50 dark:bg-slate-950">
             <div className="container px-4 md:px-6 mx-auto space-y-12">
