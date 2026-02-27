@@ -2,145 +2,133 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/ui/StatCard";
 import { IBatch } from "@/types/batch/batch.interface";
-import { BookOpen, CalendarDays, Plus, Users } from "lucide-react";
-import { useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import InstructorCreateClassDialog, {
-    CreateClassPayload,
-} from "./InstructorCreateClassDialog";
+import { IUser } from "@/types/user/user";
+import { BookOpen, CalendarDays, Clock3, Plus, Users } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import InstructorCreateClassDialog from "./InstructorCreateClassDialog";
+import ClassCard, {
+    ClassLifecycleStatus,
+    InstructorClass,
+    resolveLifecycleStatus,
+} from "./ClassCard";
 
-type Student = {
-    id?: string;
-    name?: string;
-    email?: string;
-};
-
-type BatchClass = {
-    id: string;
-    title: string;
-    description?: string;
-    startTime: string;
-    duration: number;
-    classType: "LIVE" | "RECORDED";
-};
-
-type BatchWithOptionalFields = IBatch & {
-    classes?: Array<Partial<BatchClass> & { id?: string; date?: string }>;
-};
-type Enrollment = { user?: Student } | Student;
+type Enrollment = { user: IUser } | IUser;
 
 interface InstructorBatchViewProps {
     batch: IBatch | null;
+    classes: InstructorClass[] | null;
 }
 
-const statusClassMap: Record<IBatch["status"], string> = {
+const batchStatusClassMap: Record<IBatch["status"], string> = {
     UPCOMING: "bg-blue-100 text-blue-700",
     ONGOING: "bg-emerald-100 text-emerald-700",
     COMPLETED: "bg-gray-200 text-gray-700",
     CANCELLED: "bg-red-100 text-red-700",
 };
 
-const formatDate = (value: string) => {
-    if (!value) return "N/A";
-    return new Date(value).toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-};
-
-const mapClassFromBatch = (item: Partial<BatchClass> & { id?: string; date?: string }) => ({
-    id: item.id ?? String(Date.now()),
-    title: item.title ?? "Untitled Class",
-    description: item.description ?? "",
-    startTime: item.startTime ?? item.date ?? "",
-    duration: item.duration ?? 60,
-    classType: (item.classType as "LIVE" | "RECORDED") ?? "LIVE",
-});
-
-export default function InstructorBatchView({ batch }: InstructorBatchViewProps) {
+export default function InstructorBatchView({
+    batch,
+    classes,
+}: InstructorBatchViewProps) {
+    const router = useRouter();
     const [openCreateDialog, setOpenCreateDialog] = useState(false);
+    const [nowMilliseconds, setNowMilliseconds] = useState<number>(() => Date.now());
 
-    const classesFromBatch = useMemo(() => {
-        if (!batch) return [];
-        const rawClasses = (batch as BatchWithOptionalFields).classes ?? [];
-        return rawClasses.map(mapClassFromBatch);
-    }, [batch]);
-
-    const [classes, setClasses] = useState<BatchClass[]>(classesFromBatch);
+    useEffect(() => {
+        const interval = setInterval(() => setNowMilliseconds(Date.now()), 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const students = useMemo(() => {
         if (!batch || !Array.isArray(batch.enrollments)) return [];
 
         return batch.enrollments
-            .map((enrollment: Enrollment) => {
-                if (typeof enrollment === "object" && enrollment !== null && "user" in enrollment) {
-                    return enrollment.user ?? null;
-                }
-                return enrollment as Student;
-            })
+            .map((enrollment: Enrollment) =>
+                "user" in enrollment ? enrollment.user ?? null : enrollment
+            )
             .filter(
-                (student): student is Student =>
-                    Boolean(student && (student.name || student.email))
+                (student): student is IUser =>
+                    Boolean(student?.name || student?.email)
             );
     }, [batch]);
 
+    const classList = useMemo<InstructorClass[]>(() => {
+        if (!Array.isArray(classes)) return [];
+
+        return classes.map((cls) => ({
+            ...cls,
+            title: cls.title || "Untitled Class",
+            duration:
+                Number.isFinite(cls.duration) && cls.duration > 0
+                    ? cls.duration
+                    : 60,
+        }));
+    }, [classes]);
+
+    const classSummary = useMemo(() => {
+        return classList.reduce(
+            (acc, cls) => {
+                const status = resolveLifecycleStatus(cls, nowMilliseconds);
+                acc[status] += 1;
+                return acc;
+            },
+            {
+                UPCOMING: 0,
+                ONGOING: 0,
+                ENDED: 0,
+            } as Record<ClassLifecycleStatus, number>
+        );
+    }, [classList, nowMilliseconds]);
+
     if (!batch) {
         return (
-            <div className="rounded-lg border p-6 text-sm text-muted-foreground">
+            <div className="p-8 text-sm text-muted-foreground">
                 No batch found.
             </div>
         );
     }
 
-    const handleCreateClass = (payload: CreateClassPayload) => {
-        const newClass: BatchClass = {
-            id:
-                typeof crypto !== "undefined" && "randomUUID" in crypto
-                    ? crypto.randomUUID()
-                    : String(Date.now()),
-            ...payload,
-        };
-
-        setClasses((prev) => [newClass, ...prev]);
-        toast.success("Class created in UI.");
-    };
-
     return (
-        <div className="mx-auto max-w-7xl space-y-8 p-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="mx-auto max-w-7xl space-y-10 p-8">
+            <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-semibold">{batch.name}</h1>
-                    <p className="text-sm text-muted-foreground">
-                        {batch.course?.title || "N/A"}
+                    <h1 className="text-3xl font-bold">{batch.name}</h1>
+                    <p className="text-muted-foreground text-sm mt-1">
+                        {batch.course?.title}
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <Badge className={statusClassMap[batch.status]}>{batch.status}</Badge>
-                    <Button size="sm" onClick={() => setOpenCreateDialog(true)}>
+                <div className="flex gap-3 items-center">
+                    <Badge className={batchStatusClassMap[batch.status]}>
+                        {batch.status}
+                    </Badge>
+
+                    <Button onClick={() => setOpenCreateDialog(true)}>
                         <Plus size={16} className="mr-2" />
                         Create Class
                     </Button>
                 </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                     icon={<Users size={18} />}
                     title="Students"
                     value={`${batch.enrolledCount}/${batch.maxStudents}`}
                 />
-
                 <StatCard
                     icon={<BookOpen size={18} />}
                     title="Total Classes"
-                    value={classes.length}
+                    value={classList.length}
                 />
-
+                <StatCard
+                    icon={<Clock3 size={18} />}
+                    title="Ongoing"
+                    value={classSummary.ONGOING}
+                />
                 <StatCard
                     icon={<CalendarDays size={18} />}
                     title="Duration"
@@ -150,88 +138,61 @@ export default function InstructorBatchView({ batch }: InstructorBatchViewProps)
                 />
             </div>
 
-            <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Classes</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-10">
+                <div className="lg:col-span-2">
+                    <h2 className="text-xl font-semibold mb-4">Classes</h2>
 
-                {classes.length > 0 ? (
-                    <div className="space-y-3">
-                        {classes.map((cls) => (
-                            <div
-                                key={cls.id}
-                                className="flex items-center justify-between rounded-lg border p-4"
-                            >
-                                <div>
-                                    <p className="font-medium">{cls.title}</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        {formatDate(cls.startTime)}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        {cls.classType} - {cls.duration} mins
-                                    </p>
-                                </div>
-
-                                <Badge variant="secondary">{cls.classType}</Badge>
+                    <div className="max-h-150 overflow-y-auto space-y-4 pr-2">
+                        {classList.length === 0 && (
+                            <div className="border rounded-xl p-8 text-center text-sm text-muted-foreground">
+                                No classes created yet.
                             </div>
+                        )}
+
+                        {classList.map((cls) => (
+                            <ClassCard
+                                key={cls.id}
+                                classItem={cls}
+                                nowMilliseconds={nowMilliseconds}
+                            />
                         ))}
                     </div>
-                ) : (
-                    <p className="text-sm text-muted-foreground">No classes created yet.</p>
-                )}
-            </div>
+                </div>
 
-            <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Enrolled Students</h2>
+                <div>
+                    <h2 className="text-xl font-semibold mb-4">Students</h2>
 
-                {students.length > 0 ? (
-                    <div className="rounded-lg border">
-                        {students.map((student: Student, index: number) => (
+                    <div className="border rounded-xl divide-y">
+                        {students.length === 0 && (
+                            <div className="p-6 text-sm text-muted-foreground text-center">
+                                No students enrolled.
+                            </div>
+                        )}
+
+                        {students.map((student, index) => (
                             <div
                                 key={student.id ?? `${student.email}-${index}`}
-                                className="flex items-center justify-between border-b p-4 last:border-0"
+                                className="p-4 flex justify-between"
                             >
                                 <div>
-                                    <p className="font-medium">{student.name || "N/A"}</p>
+                                    <p className="font-medium">{student.name}</p>
                                     <p className="text-sm text-muted-foreground">
-                                        {student.email || "N/A"}
+                                        {student.email}
                                     </p>
                                 </div>
-
                                 <Badge variant="secondary">Active</Badge>
                             </div>
                         ))}
                     </div>
-                ) : (
-                    <p className="text-sm text-muted-foreground">No students enrolled.</p>
-                )}
+                </div>
             </div>
 
             <InstructorCreateClassDialog
                 open={openCreateDialog}
                 onOpenChange={setOpenCreateDialog}
-                batchName={batch.name}
-                onSubmit={handleCreateClass}
+                batch={batch}
+                onSuccess={() => router.refresh()}
             />
         </div>
     );
 }
-
-function StatCard({
-    icon,
-    title,
-    value,
-}: {
-    icon: React.ReactNode;
-    title: string;
-    value: string | number;
-}) {
-    return (
-        <div className="flex items-center gap-4 rounded-lg border p-5">
-            <div className="rounded-md bg-muted p-3">{icon}</div>
-            <div>
-                <p className="text-sm text-muted-foreground">{title}</p>
-                <p className="text-lg font-semibold">{value}</p>
-            </div>
-        </div>
-    );
-}
-

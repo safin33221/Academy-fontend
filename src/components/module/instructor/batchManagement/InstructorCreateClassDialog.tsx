@@ -1,5 +1,8 @@
 "use client";
 
+import { useActionState, useEffect } from "react";
+import toast from "react-hot-toast";
+
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -12,168 +15,140 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import toast from "react-hot-toast";
 
-export type ClassType = "LIVE" | "RECORDED";
-
-export interface CreateClassPayload {
-    title: string;
-    description: string;
-    startTime: string;
-    duration: number;
-    classType: ClassType;
-}
+import { IBatch } from "@/types/batch/batch.interface";
+import { createBatchClass } from "@/services/batchClass/createBatchClass";
 
 interface InstructorCreateClassDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    batchName: string;
-    onSubmit: (payload: CreateClassPayload) => void;
+    batch: IBatch;
+    onSuccess?: () => void;
 }
-
-const initialForm: CreateClassPayload = {
-    title: "",
-    description: "",
-    startTime: "",
-    duration: 60,
-    classType: "LIVE",
-};
 
 export default function InstructorCreateClassDialog({
     open,
     onOpenChange,
-    batchName,
-    onSubmit,
+    batch,
+    onSuccess,
 }: InstructorCreateClassDialogProps) {
-    const [form, setForm] = useState<CreateClassPayload>(initialForm);
+    const [state, formAction, isPending] = useActionState(
+        createBatchClass,
+        null
+    );
 
-    const resetForm = () => {
-        setForm(initialForm);
-    };
+    useEffect(() => {
+        if (!state) return;
 
-    const handleClose = (nextOpen: boolean) => {
-        if (!nextOpen) {
-            resetForm();
+        if (state.success) {
+            toast.success(state.message);
+            onOpenChange(false);
+            onSuccess?.();
+        } else {
+            toast.error(state.message);
         }
-        onOpenChange(nextOpen);
-    };
-
-    const handleCreate = () => {
-        if (!form.title.trim()) {
-            toast.error("Class title is required.");
-            return;
-        }
-
-        if (!form.startTime) {
-            toast.error("Start time is required.");
-            return;
-        }
-
-        if (form.duration <= 0) {
-            toast.error("Duration must be greater than 0.");
-            return;
-        }
-
-        onSubmit({
-            ...form,
-            title: form.title.trim(),
-            description: form.description.trim(),
-        });
-
-        resetForm();
-        onOpenChange(false);
-    };
+    }, [state, onOpenChange, onSuccess]);
 
     return (
-        <Dialog open={open} onOpenChange={handleClose}>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-xl">
                 <DialogHeader>
                     <DialogTitle>Create Batch Class</DialogTitle>
                     <DialogDescription>
-                        Add a new class for {batchName}.
+                        Add a new class for {batch.name}
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="space-y-4">
+                <form action={formAction} className="space-y-4">
+                    {/* Hidden batchId */}
+                    <input
+                        type="hidden"
+                        name="batchId"
+                        value={batch.id}
+                    />
+
+                    {/* Title */}
                     <div>
-                        <Label htmlFor="class-title">Class Title</Label>
+                        <Label htmlFor="title">Class Title</Label>
                         <Input
-                            id="class-title"
-                            value={form.title}
-                            onChange={(e) =>
-                                setForm((prev) => ({ ...prev, title: e.target.value }))
-                            }
+                            id="title"
+                            name="title"
                             placeholder="Enter class title"
                         />
                     </div>
 
+                    {/* Description */}
                     <div>
-                        <Label htmlFor="class-description">Description</Label>
+                        <Label htmlFor="description">
+                            Description
+                        </Label>
                         <Textarea
-                            id="class-description"
-                            value={form.description}
-                            onChange={(e) =>
-                                setForm((prev) => ({ ...prev, description: e.target.value }))
-                            }
+                            id="description"
+                            name="description"
                             placeholder="Optional description"
                         />
                     </div>
 
+                    {/* Start Time + Duration */}
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <Label htmlFor="class-start-time">Start Time</Label>
+                            <Label htmlFor="startTime">
+                                Start Time
+                            </Label>
                             <Input
-                                id="class-start-time"
+                                id="startTime"
+                                name="startTime"
                                 type="datetime-local"
-                                value={form.startTime}
-                                onChange={(e) =>
-                                    setForm((prev) => ({ ...prev, startTime: e.target.value }))
-                                }
                             />
                         </div>
 
                         <div>
-                            <Label htmlFor="class-duration">Duration (minutes)</Label>
+                            <Label htmlFor="duration">
+                                Duration (minutes)
+                            </Label>
                             <Input
-                                id="class-duration"
+                                id="duration"
+                                name="duration"
                                 type="number"
-                                value={form.duration}
-                                onChange={(e) =>
-                                    setForm((prev) => ({
-                                        ...prev,
-                                        duration: Number(e.target.value),
-                                    }))
-                                }
+                                defaultValue={60}
                             />
                         </div>
                     </div>
 
+                    {/* Class Type */}
                     <div>
-                        <Label htmlFor="class-type">Class Type</Label>
+                        <Label htmlFor="classStatus">
+                            Class Type
+                        </Label>
                         <select
-                            id="class-type"
+                            id="classStatus"
+                            name="classStatus"
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                            value={form.classType}
-                            onChange={(e) =>
-                                setForm((prev) => ({
-                                    ...prev,
-                                    classType: e.target.value as ClassType,
-                                }))
-                            }
+                            defaultValue="LIVE"
                         >
                             <option value="LIVE">Live</option>
-                            <option value="RECORDED">Recorded</option>
+                            <option value="RECORDED">
+                                Recorded
+                            </option>
                         </select>
                     </div>
-                </div>
 
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => handleClose(false)}>
-                        Cancel
-                    </Button>
-                    <Button onClick={handleCreate}>Create Class</Button>
-                </DialogFooter>
+                    <DialogFooter className="pt-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => onOpenChange(false)}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button type="submit" disabled={isPending}>
+                            {isPending
+                                ? "Creating..."
+                                : "Create Class"}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );
