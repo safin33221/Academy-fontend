@@ -44,6 +44,9 @@ export default function DashboardSidebarContent({
                                         if (item.href === "/admin/dashboard") {
                                             return pathname === item.href;
                                         }
+                                        if (item.href === "/instructor/dashboard") {
+                                            return pathname === item.href;
+                                        }
                                         if (item.href === "/dashboard") {
                                             return pathname === item.href;
                                         }
