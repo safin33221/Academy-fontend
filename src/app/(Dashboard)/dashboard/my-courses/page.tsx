@@ -5,18 +5,19 @@ import { getMyCourses } from "@/services/course/myCourses";
 
 export default async function Page() {
     const res = await getMyCourses();
-    const courses = res.data || [];
+    const EnrolledCourses = res.data || [];
+    console.log({ EnrolledCourses });
 
 
     return (
-        <div className="max-w-7xl mx-auto px-6 md:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 ">
             <div className="flex items-center justify-between mb-10">
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+                <h1 className="text-3xl md:text-2xl font-bold tracking-tight text-gray-900">
                     My Courses
                 </h1>
             </div>
 
-            {courses.length === 0 ? (
+            {EnrolledCourses.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-24 text-center">
                     <div className="bg-gray-100 rounded-full p-6 mb-6">
                         <svg
@@ -39,28 +40,28 @@ export default async function Page() {
                 </div>
             ) : (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {courses.map((item: any) => {
+                    {EnrolledCourses.map((item: any) => {
                         const course = item.batch.course;
 
                         return (
                             <div
                                 key={course.id}
-                                className="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                                className="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 max-h-20"
                             >
                                 {/* Thumbnail */}
                                 <div className="relative overflow-hidden">
                                     <Image
                                         src={item?.batch?.thumbnail}
                                         alt={course.title}
-                                        width={400}
-                                        height={250}
-                                        className="object-cover h-52 w-full transition-transform duration-500 group-hover:scale-105"
+                                        width={300}
+                                        height={100}
+                                        className="object-cover h-full w-full transition-transform duration-500 group-hover:scale-105"
                                     />
                                 </div>
 
                                 {/* Content */}
                                 <div className="p-6 flex flex-col h-full">
-                                    <h2 className="text-xl font-semibold text-gray-900 line-clamp-1">
+                                    <h2 className="text-lg font-semibold text-gray-900 line-clamp-1">
                                         {course.title}
                                     </h2>
                                     <h2 className="text-lg md:text-xl font-semibold text-gray-900 leading-snug tracking-tight line-clamp-1">
@@ -81,7 +82,7 @@ export default async function Page() {
                                     </div>
 
                                     <Link
-                                        href={`/dashboard/my-courses/${course.slug}`}
+                                        href={`/dashboard/my-courses/${item?.batch?.slug}`}
                                         className="mt-6 inline-flex items-center justify-center rounded-xl bg-linear-to-r from-black to-gray-800 text-white py-2.5 font-medium transition-all duration-300 hover:opacity-90"
                                     >
                                         Continue Learning

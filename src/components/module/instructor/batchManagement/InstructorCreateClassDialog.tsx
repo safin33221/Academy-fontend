@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
@@ -37,13 +37,8 @@ export default function InstructorCreateClassDialog({
         null
     );
 
-    const hasShownToast = useRef(false);
-
     useEffect(() => {
         if (!state) return;
-
-        // prevent duplicate toast
-        if (hasShownToast.current) return;
 
         if (state.success) {
             toast.success(state.message);
@@ -52,9 +47,7 @@ export default function InstructorCreateClassDialog({
         } else {
             toast.error(state.message);
         }
-
-        hasShownToast.current = true;
-    }, [state]);
+    }, [state, onOpenChange, onSuccess]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
