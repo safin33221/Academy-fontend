@@ -135,12 +135,6 @@ export const instructorNavItems: INavSection[] = [
                 icon: "BookOpen",
                 role: [IUserRole.INSTRUCTOR],
             },
-            {
-                title: "Create class",
-                href: "/course",
-                icon: "PlusCircle",
-                role: [IUserRole.INSTRUCTOR],
-            },
         ],
     },
 ];

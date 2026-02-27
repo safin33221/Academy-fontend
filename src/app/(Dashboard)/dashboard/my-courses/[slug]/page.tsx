@@ -1,8 +1,17 @@
+import MyCourseClassesView from "@/components/module/dashboard/myCourses/MyCourseClassesView";
+import { getStudentClasses } from "@/services/batchClass/getStudentClasses";
 
-export default function page() {
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}) {
+    const { slug } = await params;
+
+    const res = await getStudentClasses(slug);
+    const myClass = Array.isArray(res?.data) ? res.data : [];
+
     return (
-        <div>
-            <h1>Course Content</h1>
-        </div>
+        <MyCourseClassesView classes={myClass} batchSlug={slug} />
     );
-};
+}
