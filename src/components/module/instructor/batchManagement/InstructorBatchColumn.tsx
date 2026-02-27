@@ -28,12 +28,13 @@ export const InstructorBatchColumn: columns<IBatch>[] = [
     {
         header: "Schedule",
         accessor: (batch) => (
-            <div className="space-y-1 text-xs text-muted-foreground">
+            <div className="space-y-1 text-xs text-muted-foreground flex flex-col">
                 <div className="inline-flex items-center gap-1">
                     <CalendarDays size={12} />
                     <span>Start:</span>
                     <DateCell date={batch.startDate} />
                 </div>
+
                 <div className="inline-flex items-center gap-1">
                     <CalendarDays size={12} />
                     <span>End:</span>

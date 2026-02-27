@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { IBatch, BatchStatus } from "@/types/batch/batch.interface";
 import { useMemo, useState } from "react";
 import { InstructorBatchColumn } from "./InstructorBatchColumn";
-import InstructorBatchView from "./InstructorBatchView";
+import { useRouter } from "next/navigation";
 
 interface InstructorBatchTableProps {
     batches: IBatch[];
@@ -24,7 +24,7 @@ const statusOrder: BatchStatusFilter[] = [
 
 export default function InstructorBatchTable({ batches }: InstructorBatchTableProps) {
     const [statusFilter, setStatusFilter] = useState<BatchStatusFilter>("ALL");
-    const [viewingBatch, setViewingBatch] = useState<IBatch | null>(null);
+    const router = useRouter();
 
     const countsByStatus = useMemo(() => {
         const counts: Record<BatchStatusFilter, number> = {
@@ -48,7 +48,7 @@ export default function InstructorBatchTable({ batches }: InstructorBatchTablePr
     }, [batches, statusFilter]);
 
     const handleView = (batch: IBatch) => {
-        setViewingBatch(batch);
+        router.push(`/instructor/dashboard/my-batches/${batch.slug}`);
     };
 
     return (
@@ -86,13 +86,6 @@ export default function InstructorBatchTable({ batches }: InstructorBatchTablePr
                 />
             </div>
 
-            <InstructorBatchView
-                batch={viewingBatch}
-                open={!!viewingBatch}
-                onOpenChange={(open) => {
-                    if (!open) setViewingBatch(null);
-                }}
-            />
         </div>
     );
 }
