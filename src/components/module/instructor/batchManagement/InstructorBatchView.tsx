@@ -83,6 +83,12 @@ export default function InstructorBatchView({
         );
     }, [classList, nowMilliseconds]);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const isClassCreateActive = useMemo(
+        () => batch?.startDate ? new Date(batch.startDate).getTime() > nowMilliseconds : false,
+        [batch?.startDate, nowMilliseconds]
+    );
+
     if (!batch) {
         return (
             <div className="p-8 text-sm text-muted-foreground">
@@ -106,7 +112,9 @@ export default function InstructorBatchView({
                         {batch.status}
                     </Badge>
 
-                    <Button onClick={() => setOpenCreateDialog(true)}>
+                    <Button
+                        // disabled={isClassCreateActive}
+                        onClick={() => setOpenCreateDialog(true)}>
                         <Plus size={16} className="mr-2" />
                         Create Class
                     </Button>
@@ -193,6 +201,6 @@ export default function InstructorBatchView({
                 batch={batch}
                 onSuccess={() => router.refresh()}
             />
-        </div>
+        </div >
     );
 }
