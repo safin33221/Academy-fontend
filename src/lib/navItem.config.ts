@@ -130,8 +130,8 @@ export const instructorNavItems: INavSection[] = [
         title: "Course Management",
         items: [
             {
-                title: "My Courses",
-                href: "/dashboard/my-courses",
+                title: "My Batches",
+                href: "/instructor/dashboard/my-batches",
                 icon: "BookOpen",
                 role: [IUserRole.INSTRUCTOR],
             },
