@@ -6,7 +6,6 @@ import { getMyCourses } from "@/services/course/myCourses";
 export default async function Page() {
     const res = await getMyCourses();
     const EnrolledCourses = res.data || [];
-    console.log({ EnrolledCourses });
 
 
     return (
@@ -46,16 +45,16 @@ export default async function Page() {
                         return (
                             <div
                                 key={course.id}
-                                className="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 max-h-20"
+                                className="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                             >
                                 {/* Thumbnail */}
-                                <div className="relative overflow-hidden">
+                                <div className="relative h-44 overflow-hidden">
                                     <Image
                                         src={item?.batch?.thumbnail}
                                         alt={course.title}
-                                        width={300}
-                                        height={100}
-                                        className="object-cover h-full w-full transition-transform duration-500 group-hover:scale-105"
+                                        fill
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
                                 </div>
 
