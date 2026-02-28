@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { ChangeEvent, useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
@@ -32,10 +32,31 @@ export default function InstructorCreateClassDialog({
     batch,
     onSuccess,
 }: InstructorCreateClassDialogProps) {
+    const [startTimeLocal, setStartTimeLocal] = useState("");
+    const [startTimeUTC, setStartTimeUTC] = useState("");
+
     const [state, formAction, isPending] = useActionState(
         createBatchClass,
         null
     );
+    const timezoneOffsetMinutes = new Date().getTimezoneOffset();
+
+    const handleStartTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setStartTimeLocal(value);
+
+        if (!value) {
+            setStartTimeUTC("");
+            return;
+        }
+
+        const parsedDate = new Date(value);
+        setStartTimeUTC(
+            Number.isNaN(parsedDate.getTime())
+                ? ""
+                : parsedDate.toISOString()
+        );
+    };
 
     useEffect(() => {
         if (!state) return;
@@ -97,8 +118,16 @@ export default function InstructorCreateClassDialog({
                             </Label>
                             <Input
                                 id="startTime"
-                                name="startTime"
+                                name="startTimeLocal"
                                 type="datetime-local"
+                                value={startTimeLocal}
+                                onChange={handleStartTimeChange}
+                            />
+                            <input type="hidden" name="startTime" value={startTimeUTC} />
+                            <input
+                                type="hidden"
+                                name="timezoneOffsetMinutes"
+                                value={String(timezoneOffsetMinutes)}
                             />
                         </div>
 
