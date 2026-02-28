@@ -1,4 +1,4 @@
-import MyCourseClassesView from "@/components/module/dashboard/myCourses/MyCourseClassesView";
+import MyCourseClassesView from "@/components/module/student/myCourses/MyCourseClassesView";
 import { getStudentClasses } from "@/services/batchClass/getStudentClasses";
 
 export default async function Page({
