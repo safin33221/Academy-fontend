@@ -5,9 +5,10 @@ import { CourseCard } from "../admin/course/CourseCard";
 import Link from "next/link";
 import { getAllBatch } from "@/services/Batch/getAllBatch";
 import { IBatch } from "@/types/batch/batch.interface";
+import { getPublicBatches } from "@/services/Batch/getPublicBatches";
 
 export default async function Courses() {
-    const batches = await getAllBatch()
+    const batches = await getPublicBatches()
     const popularCourses: IBatch[] = Array.isArray(batches?.data) ? batches.data : []
     return (
         <section id="courses" className="py-20 bg-slate-50 dark:bg-slate-950">

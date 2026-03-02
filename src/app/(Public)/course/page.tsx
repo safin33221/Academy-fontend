@@ -3,13 +3,12 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
-import { getAllBatch } from "@/services/Batch/getAllBatch";
 import { IBatch } from "@/types/batch/batch.interface";
+import { getPublicBatches } from "@/services/Batch/getPublicBatches";
 
 export default async function CoursesPage() {
-    const res = await getAllBatch();
+    const res = await getPublicBatches();
     const batches: IBatch[] = res.data || [];
-
     return (
         <section className="relative py-24 bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
             <div className="container px-4 md:px-6 mx-auto space-y-14">
