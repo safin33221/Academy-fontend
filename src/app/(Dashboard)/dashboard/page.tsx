@@ -1,4 +1,4 @@
-import StudentDashboard from "@/components/module/studentDashboard/StudentDashboard";
+import StudentDashboard from "@/components/module/student/studentDashboard/StudentDashboard";
 
 export default function page() {
     return (

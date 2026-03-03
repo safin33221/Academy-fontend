@@ -69,7 +69,7 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
     const attendance = attendanceAndEnrollment.todayAttendance;
 
     return (
-        <div className="space-y-8 bg-slate-100 p-6 md:p-8 min-h-screen">
+        <div className="space-y-8  p-6 md:p-8 min-h-screen">
             <div>
                 <h1 className="text-2xl md:text-3xl font-bold">{pageHeader.title}</h1>
                 <p className="text-slate-500 mt-1">{pageHeader.subtitle}</p>
