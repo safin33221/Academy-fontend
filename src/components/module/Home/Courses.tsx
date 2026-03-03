@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { CourseCard } from "../admin/course/CourseCard";
 import Link from "next/link";
-import { getAllBatch } from "@/services/Batch/getAllBatch";
 import { IBatch } from "@/types/batch/batch.interface";
 import { getPublicBatches } from "@/services/Batch/getPublicBatches";
 
