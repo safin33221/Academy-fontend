@@ -245,7 +245,7 @@ export default function MyCourseClassesView({
 
     return (
         <div className=" mx-auto  md:p-6 space-y-6">
-            <div className="sticky top-0 bg-indigo-300-300 bg-white   ">
+            <div className="sticky top-0 bg-indigo-300-300 bg-white  z-50 ">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-xl md:text-3xl font-bold">

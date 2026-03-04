@@ -186,7 +186,7 @@ export default function InstructorBatchView({
                         </div>
                     </div>
 
-                    <div className="max-h-[38rem] overflow-y-auto space-y-3 pr-1 sm:pr-2">
+                    <div className="max-h-152 overflow-y-auto space-y-3 pr-1 sm:pr-2">
                         {classList.length === 0 && (
                             <div className="border rounded-xl p-8 text-center text-sm text-muted-foreground">
                                 No classes created yet.
