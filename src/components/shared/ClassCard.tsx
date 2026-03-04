@@ -4,58 +4,181 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    CalendarDays,
-    Clock3,
     PlayCircle,
-    Video, CheckCircle2,
-    XCircle,
-    Loader2,
-    ExternalLink,
+    Video,
     Calendar,
-    UserCheck,
-    UserX,
+    Info,
+    X,
+    CalendarDays,
     Clock,
-    Eye
+    UserCheck,
+    Eye, CheckCircle2,
+    UserX,
+    type LucideIcon
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cn, normalizeDeliveryType, resolveLifecycleStatus } from "@/lib/utils";
-
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { formatDateTime, formatDurationSmart, formatRemainingTime, } from "@/lib/formatters";
+import { formatDateTime, formatDurationSmart } from "@/lib/formatters";
 import { ClassLifecycleStatus, StudentClass } from "@/types/class/myClasses.interface";
+import { formatRemainingTime } from "@/lib/formatRemainingTime";
 
-/* ============================================================================
-   CONSTANTS & CONFIGURATION
-============================================================================ */
+// ==================== Popup Component ====================
+const DetailsPopup = ({ isOpen, onClose, attendanceData, classItem }: any) => {
+    if (!isOpen) return null;
+
+    const formatJoinTime = (timestamp: string) => {
+        if (!timestamp) return "";
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
+    return (
+        <>
+            {/* Backdrop */}
+            <div
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
+                onClick={onClose}
+            />
+
+            {/* Popup */}
+            <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-2xl z-50 p-5">
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold">Class Details</h3>
+                    <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+
+                <div className="space-y-4">
+                    {/* Date & Time */}
+                    <div className="flex items-start gap-3">
+                        <CalendarDays className="h-4 w-4 text-muted-foreground mt-0.5" />
+                        <div>
+                            <p className="text-sm font-medium">Date & Time</p>
+                            <p className="text-sm text-muted-foreground">
+                                {formatDateTime(attendanceData?.startTime || classItem.startTime)}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Duration */}
+                    <div className="flex items-start gap-3">
+                        <Clock className="h-4 w-4 text-muted-foreground mt-0.5" />
+                        <div>
+                            <p className="text-sm font-medium">Duration</p>
+                            <p className="text-sm text-muted-foreground">
+                                {attendanceData?.durationMinutes || classItem.duration} minutes
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Zoom Meeting ID */}
+                    {attendanceData?.zoomMeetingId && (
+                        <div className="flex items-start gap-3">
+                            <Eye className="h-4 w-4 text-muted-foreground mt-0.5" />
+                            <div>
+                                <p className="text-sm font-medium">Meeting ID</p>
+                                <p className="text-sm text-muted-foreground">
+                                    {attendanceData.zoomMeetingId}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Attendance Details */}
+                    {attendanceData && (
+                        <>
+                            <div className="border-t my-2" />
+
+                            {/* Join Time */}
+                            {attendanceData.firstJoinTime && (
+                                <div className="flex items-start gap-3">
+                                    <UserCheck className="h-4 w-4 text-green-600 mt-0.5" />
+                                    <div>
+                                        <p className="text-sm font-medium">Joined</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {formatJoinTime(attendanceData.firstJoinTime)}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Leave Time */}
+                            {attendanceData.lastLeaveTime && (
+                                <div className="flex items-start gap-3">
+                                    <Clock className="h-4 w-4 text-orange-600 mt-0.5" />
+                                    <div>
+                                        <p className="text-sm font-medium">Left</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {formatJoinTime(attendanceData.lastLeaveTime)}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Total Duration */}
+                            {attendanceData.totalDurationSeconds && (
+                                <div className="flex items-start gap-3">
+                                    <Clock className="h-4 w-4 text-purple-600 mt-0.5" />
+                                    <div>
+                                        <p className="text-sm font-medium">Time in Class</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {formatDurationSmart(attendanceData.totalDurationSeconds)}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Sessions */}
+                            {attendanceData.sessionCount && attendanceData.sessionCount > 1 && (
+                                <div className="flex items-start gap-3">
+                                    <span className="text-lg">📊</span>
+                                    <div>
+                                        <p className="text-sm font-medium">Sessions</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {attendanceData.sessionCount} sessions
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
+
+
+                </div>
+            </div>
+        </>
+    );
+};
+
+// ==================== Constants ====================
 const LIFECYCLE_STATUS_CONFIG: Record<ClassLifecycleStatus, {
     label: string;
     badgeClass: string;
     icon: React.ElementType;
-    progressColor: string;
 }> = {
     UPCOMING: {
         label: "Upcoming",
         badgeClass: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200 dark:border-blue-800",
         icon: Calendar,
-        progressColor: "bg-blue-500"
     },
     ONGOING: {
         label: "Live Now",
         badgeClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 animate-pulse",
         icon: PlayCircle,
-        progressColor: "bg-emerald-500"
     },
     ENDED: {
         label: "Ended",
         badgeClass: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700",
         icon: CheckCircle2,
-        progressColor: "bg-gray-400"
     },
 };
 
-// Attendance Status Config
 const ATTENDANCE_STATUS_CONFIG = {
     PRESENT: {
         label: "Present",
@@ -79,6 +202,15 @@ const ATTENDANCE_STATUS_CONFIG = {
     }
 };
 
+type AttendanceStatus = keyof typeof ATTENDANCE_STATUS_CONFIG;
+
+interface AttendanceConfig {
+    label: string;
+    badgeClass: string;
+    icon: LucideIcon;
+}
+
+// ==================== Main Component ====================
 export const ClassCard = ({
     classItem,
     nowMilliseconds,
@@ -90,131 +222,30 @@ export const ClassCard = ({
     showAttendance?: boolean;
     attendanceData?: any;
 }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
 
     const lifecycleStatus = resolveLifecycleStatus(classItem, nowMilliseconds);
     const deliveryType = normalizeDeliveryType(classItem.classStatus);
-    const startMilliseconds = new Date(classItem.startTime).getTime();
     const statusConfig = LIFECYCLE_STATUS_CONFIG[lifecycleStatus];
     const StatusIcon = statusConfig.icon;
 
-    const timeRemaining = startMilliseconds - nowMilliseconds;
-    const timeRemainingFormatted = formatRemainingTime(timeRemaining);
-
-    // Attendance related - নতুন ডাটা স্ট্রাকচার অনুযায়ী
     const hasAttendance = showAttendance && attendanceData && lifecycleStatus === "ENDED";
 
-    const getAttendanceConfig = () => {
-        if (!attendanceData?.attendanceStatus) return null;
-        return ATTENDANCE_STATUS_CONFIG[attendanceData.attendanceStatus as keyof typeof ATTENDANCE_STATUS_CONFIG] || null;
+    const getAttendanceConfig = (): AttendanceConfig | null => {
+        const status = attendanceData?.attendanceStatus as AttendanceStatus | undefined;
+        if (!status) return null;
+        return ATTENDANCE_STATUS_CONFIG[status] ?? null;
     };
 
     const attendanceConfig = getAttendanceConfig();
-    const AttendanceIcon = attendanceConfig?.icon || UserCheck;
-
-    // Format join/leave time
-    const formatJoinTime = (timestamp: string) => {
-        if (!timestamp) return "";
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        });
-    };
+    const AttendanceIcon: LucideIcon = attendanceConfig?.icon ?? UserCheck;
 
     const getActionButton = () => {
-        if (deliveryType === "RECORDED") {
-            if (classItem.recordingUrl) {
-                return (
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    size="sm"
-                                    asChild
-                                    className="gap-2 bg-primary hover:bg-primary/90 text-white"
-                                >
-                                    <Link
-                                        href={classItem.recordingUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <PlayCircle className="h-4 w-4" />
-                                        Watch Recording
-                                    </Link>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Watch recorded session</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                );
-            }
+        // Recording available
+        if (deliveryType === "RECORDED" && classItem.recordingUrl) {
             return (
-                <Button size="sm" disabled variant="outline" className="gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing Recording
-                </Button>
-            );
-        }
-
-        if (lifecycleStatus === "ONGOING") {
-            if (classItem.zoomJoinUrl) {
-                return (
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    size="sm"
-                                    asChild
-                                    className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white animate-pulse"
-                                >
-                                    <Link
-                                        href={classItem.zoomJoinUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <Video className="h-4 w-4" />
-                                        Join Live Class
-                                    </Link>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Join the ongoing session</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                );
-            }
-            return (
-                <Button size="sm" disabled variant="destructive" className="gap-2">
-                    <XCircle className="h-4 w-4" />
-                    Join Link Missing
-                </Button>
-            );
-        }
-
-        if (lifecycleStatus === "UPCOMING") {
-            return (
-                <Button size="sm" disabled variant="outline" className="gap-2">
-                    <CalendarDays className="h-4 w-4" />
-                    Starts {timeRemainingFormatted}
-                </Button>
-            );
-        }
-
-        // ENDED - Show recording if available
-        if (classItem.recordingUrl) {
-            return (
-                <Button size="sm" variant="outline" asChild className="gap-2">
-                    <Link
-                        href={classItem.recordingUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
+                <Button size="sm" asChild className="gap-2 bg-primary hover:bg-primary/90">
+                    <Link href={classItem.recordingUrl} target="_blank">
                         <PlayCircle className="h-4 w-4" />
                         Watch Recording
                     </Link>
@@ -222,31 +253,61 @@ export const ClassCard = ({
             );
         }
 
-        return (
-            <Button size="sm" disabled variant="ghost" className="gap-2">
-                <CheckCircle2 className="h-4 w-4" />
-                Class Ended
-            </Button>
-        );
+        // Live class
+        if (lifecycleStatus === "ONGOING" && classItem.zoomJoinUrl) {
+            return (
+                <Button size="sm" asChild className="gap-2 bg-emerald-600 hover:bg-emerald-700 animate-pulse">
+                    <Link href={classItem.zoomJoinUrl} target="_blank">
+                        <Video className="h-4 w-4" />
+                        Join Live
+                    </Link>
+                </Button>
+            );
+        }
+
+        // Upcoming class
+        if (lifecycleStatus === "UPCOMING") {
+            const timeRemaining = new Date(classItem.startTime).getTime() - nowMilliseconds;
+            return (
+                <Button size="sm" disabled variant="outline" className="gap-2">
+                    <CalendarDays className="h-4 w-4" />
+                    Starts in {formatRemainingTime(timeRemaining)}
+                </Button>
+            );
+        }
+
+        // Ended class with recording
+        if (classItem.recordingUrl) {
+            return (
+                <Button size="sm" variant="outline" asChild className="gap-2">
+                    <Link href={classItem.recordingUrl} target="_blank">
+                        <PlayCircle className="h-4 w-4" />
+                        Watch Recording
+                    </Link>
+                </Button>
+            );
+        }
+
+        return null;
     };
 
     return (
-        <div
-            className={cn(
-                "border rounded-xl p-5 bg-card hover:shadow-md transition-all duration-300",
-                lifecycleStatus === "ONGOING" && "border-emerald-200 dark:border-emerald-800 shadow-emerald-100 dark:shadow-emerald-950",
-                lifecycleStatus === "UPCOMING" && "border-blue-200 dark:border-blue-800",
-                hasAttendance && attendanceData?.attendanceStatus === "ABSENT" && "border-red-200 dark:border-red-800 bg-red-50/30 dark:bg-red-950/20"
-            )}
-        >
-            {/* Header with Status Badges */}
-            <div className="flex flex-wrap justify-between items-start gap-3">
-                <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        {/* Lifecycle Status Badge */}
-                        <Badge className={cn("border", statusConfig.badgeClass)}>
+        <>
+            <div
+                className={cn(
+                    "border rounded-xl p-4 bg-card hover:shadow-md transition-all duration-300",
+                    lifecycleStatus === "ONGOING" && "border-emerald-200 dark:border-emerald-800",
+                    lifecycleStatus === "UPCOMING" && "border-blue-200 dark:border-blue-800",
+                    hasAttendance && attendanceData?.attendanceStatus === "ABSENT" && "border-red-200 dark:border-red-800 bg-red-50/30 dark:bg-red-950/20"
+                )}
+            >
+                {/* Top Row - Badges and Info Button */}
+                <div className="flex items-start justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                        {/* Status Badge */}
+                        <Badge className={cn("border text-xs", statusConfig.badgeClass)}>
                             <StatusIcon className="h-3 w-3 mr-1" />
-                            {statusConfig.label}
+                            {lifecycleStatus === "ONGOING" ? "LIVE" : statusConfig.label}
                         </Badge>
 
                         {/* Delivery Type Badge */}
@@ -254,140 +315,54 @@ export const ClassCard = ({
                             {deliveryType}
                         </Badge>
 
-                        {/* Attendance Badge - Show only for ended classes */}
+                        {/* Attendance Badge */}
                         {hasAttendance && attendanceConfig && (
-                            <Badge className={cn("border", attendanceConfig.badgeClass)}>
+                            <Badge className={cn("border text-xs", attendanceConfig.badgeClass)}>
                                 <AttendanceIcon className="h-3 w-3 mr-1" />
                                 {attendanceConfig.label}
                             </Badge>
                         )}
-                    </div>
-
-                    <h2 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                        {attendanceData?.title || classItem.title}
-                    </h2>
-
-                    <p className={cn(
-                        "text-sm text-muted-foreground transition-all duration-300",
-                        !isExpanded && "line-clamp-2"
-                    )}>
-                        {classItem.description || "No description provided."}
-                    </p>
-
-                    {classItem.description && classItem.description.length > 100 && (
-                        <button
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            className="text-xs text-primary hover:underline mt-1"
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowDetails(true)}
+                            className="h-8 w-8 p-0 rounded-full"
                         >
-                            {isExpanded ? "Show less" : "Read more"}
-                        </button>
-                    )}
-                </div>
-            </div>
-
-            {/* Metadata - Class Info + Attendance Details */}
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
-                <div className="flex items-center gap-1">
-                    <CalendarDays className="h-3.5 w-3.5" />
-                    <span>{formatDateTime(attendanceData?.startTime || classItem.startTime)}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <Clock3 className="h-3.5 w-3.5" />
-                    <span>{attendanceData?.durationMinutes || classItem.duration} minutes</span>
-                </div>
-
-                {/* Zoom Meeting ID (if available) */}
-                {attendanceData?.zoomMeetingId && (
-                    <div className="flex items-center gap-1 text-blue-600">
-                        <Eye className="h-3.5 w-3.5" />
-                        <span>Meeting ID: {attendanceData.zoomMeetingId}</span>
+                            <Info className="h-4 w-4" />
+                        </Button>
                     </div>
-                )}
 
-                {/* Attendance Time Details */}
-                {hasAttendance && attendanceData && (
-                    <>
-                        {attendanceData.firstJoinTime && (
-                            <div className="flex items-center gap-1 text-green-600">
-                                <UserCheck className="h-3.5 w-3.5" />
-                                <span>Joined: {formatJoinTime(attendanceData.firstJoinTime)}</span>
-                            </div>
-                        )}
-                        {attendanceData.lastLeaveTime && (
-                            <div className="flex items-center gap-1 text-orange-600">
-                                <Clock className="h-3.5 w-3.5" />
-                                <span>Left: {formatJoinTime(attendanceData.lastLeaveTime)}</span>
-                            </div>
-                        )}
-                        {attendanceData.totalDurationSeconds && (
-                            <div className="flex items-center gap-1 font-medium">
-                                <Clock className="h-3.5 w-3.5" />
-                                <span className={cn(
-                                    attendanceData.totalDurationSeconds >= 2700 ? "text-green-600" :
-                                        attendanceData.totalDurationSeconds >= 1800 ? "text-emerald-600" :
-                                            attendanceData.totalDurationSeconds >= 900 ? "text-yellow-600" :
-                                                attendanceData.totalDurationSeconds >= 300 ? "text-orange-600" :
-                                                    "text-red-600"
-                                )}>
-                                    Duration: {formatDurationSmart(attendanceData.totalDurationSeconds)}
-                                </span>
-                            </div>
-                        )}
-                        {attendanceData.sessionCount && attendanceData.sessionCount > 1 && (
-                            <div className="flex items-center gap-1 text-purple-600">
-                                <span>📊</span>
-                                <span>{attendanceData.sessionCount} sessions</span>
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
 
-            <Separator className="my-4" />
-
-            {/* Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                    {getActionButton()}
-
-                    {attendanceData?.zoomJoinUrl && lifecycleStatus === "ENDED" && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button size="sm" variant="ghost" asChild>
-                                        <Link
-                                            href={attendanceData.zoomJoinUrl}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            <ExternalLink className="h-4 w-4" />
-                                        </Link>
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Open meeting link</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    )}
                 </div>
 
-                {lifecycleStatus === "UPCOMING" && (
-                    <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-24 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-blue-500 rounded-full"
-                                style={{
-                                    width: `${Math.min(100, (1 - timeRemaining / (7 * 24 * 60 * 60 * 1000)) * 100)}%`
-                                }}
-                            />
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                            {timeRemainingFormatted} left
-                        </span>
+                {/* Title & Description */}
+                <div className="flex  justify-between gap-4">
+                    <div className="space-y-2 mb-4">
+                        <h3 className="font-semibold text-base leading-tight">
+                            {attendanceData?.title || classItem.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                            {classItem.description || "No description provided."}
+                        </p>
                     </div>
-                )}
-            </div>
-        </div>
+                    {/* Info Button */}
+
+                    {/* Action Button */}
+                    <div className="flex justify-start">
+                        {getActionButton()}
+                    </div>
+                </div>
+
+
+            </div >
+
+            {/* Details Popup */}
+            < DetailsPopup
+                isOpen={showDetails}
+                onClose={() => setShowDetails(false)}
+                attendanceData={attendanceData}
+                classItem={classItem}
+            />
+        </>
     );
 };

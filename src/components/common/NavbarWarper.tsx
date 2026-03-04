@@ -7,7 +7,7 @@ export default async function NavbarWarper() {
 
 
     return (
-        <div className="absolute ">
+        <div>
             <Navbar user={user} />
         </div>
     );

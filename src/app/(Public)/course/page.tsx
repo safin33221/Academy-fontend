@@ -13,7 +13,9 @@ export default async function CoursesPage() {
         <section className="relative py-24 bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
             <div className="container px-4 md:px-6 mx-auto space-y-14">
 
-                <Breadcrumb />
+                <div className="max-md:hidden" >
+                    <Breadcrumb />
+                </div>
 
                 {/* Header */}
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
@@ -42,7 +44,7 @@ export default async function CoursesPage() {
 
                 {/* Course Grid */}
                 {batches.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
                         {batches.map((batch) => (
                             <div
                                 key={batch.id}

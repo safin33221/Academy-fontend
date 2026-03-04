@@ -38,18 +38,16 @@ export default function Navbar({ user }: { user: IUser | null }) {
     const dashboard = getDefaultDashboard(user?.role as IUserRole);
 
     return (
-        <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-6">
-            <div className="flex h-16 items-center justify-between rounded-2xl border border-white/20 bg-white/70 backdrop-blur-xl shadow-lg px-6">
+        <nav className="fixed top-3 left-1/2 z-50 w-full max-w-7xl -translate-x-1/2 px-3 sm:top-4 sm:px-4 lg:px-6">
+            <div className="flex h-14 items-center justify-between rounded-2xl border border-white/20 bg-white/70 px-3 shadow-lg backdrop-blur-xl sm:h-16 sm:px-4 lg:px-6">
 
                 {/* Logo */}
                 <Link href="/">
-                    <Logo
-
-                    />
+                    <Logo width={104} height={36} className="sm:w-28 sm:h-10" />
                 </Link>
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8">
+                <div className="hidden md:flex items-center gap-6 lg:gap-8">
                     {NAV_ITEMS.map((item) => (
                         <Link
                             key={item.label}
@@ -65,7 +63,7 @@ export default function Navbar({ user }: { user: IUser | null }) {
                 </div>
 
                 {/* Right Side */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-3">
 
                     {user ? (
                         <>
@@ -136,7 +134,7 @@ export default function Navbar({ user }: { user: IUser | null }) {
 
                     {/* Mobile Toggle */}
                     <button
-                        className="md:hidden p-2"
+                        className="md:hidden p-1.5"
                         onClick={() => setMobileOpen(!mobileOpen)}
                     >
                         {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -149,7 +147,7 @@ export default function Navbar({ user }: { user: IUser | null }) {
                 className={`md:hidden overflow-hidden transition-all duration-500 ${mobileOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
                     }`}
             >
-                <div className="rounded-2xl border bg-white shadow-lg p-6 space-y-4">
+                <div className="mt-3 space-y-4 rounded-2xl border bg-white p-5 shadow-lg">
                     {NAV_ITEMS.map((item) => (
                         <Link
                             key={item.label}

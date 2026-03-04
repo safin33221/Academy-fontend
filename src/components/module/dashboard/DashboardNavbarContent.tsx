@@ -27,7 +27,7 @@ import { Separator } from "@/components/ui/separator";
 
 import LogoutBtn from "@/components/shared/LogoutBtn";
 import Breadcrumb from "@/components/shared/Breadcrumb";
-import { IUser } from "@/types/user/user";
+import { IUser, IUserRole } from "@/types/user/user";
 import { INavSection } from "@/types/dashboard/NavItem";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +49,7 @@ export default function DashboardNavbarContent({
             <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
                 <div className="flex h-16 items-center justify-between px-4 md:px-6">
                     <div className="max-md:hidden flex items-center">
-                        <Breadcrumb />
+                        {user.role != IUserRole.STUDENT && <Breadcrumb />}
                     </div>
 
                     <Button
@@ -61,10 +61,10 @@ export default function DashboardNavbarContent({
                         <Menu className="h-5 w-5" />
                     </Button>
 
-                    <div className="hidden md:flex w-full max-w-sm items-center relative">
+                    {/* <div className="hidden md:flex w-full max-w-sm items-center relative">
                         <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
                         <Input placeholder="Search..." className="pl-9" />
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="icon" className="relative">

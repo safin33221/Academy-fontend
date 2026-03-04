@@ -36,9 +36,10 @@ export default function InstructorBatchView({
     const router = useRouter();
     const [openCreateDialog, setOpenCreateDialog] = useState(false);
     const [nowMilliseconds, setNowMilliseconds] = useState<number>(() => Date.now());
+    const [classFilter, setClassFilter] = useState<"ALL" | ClassLifecycleStatus>("ALL");
 
     useEffect(() => {
-        const interval = setInterval(() => setNowMilliseconds(Date.now()), 30000);
+        const interval = setInterval(() => setNowMilliseconds(Date.now()), 1000);
         return () => clearInterval(interval);
     }, []);
 
@@ -82,6 +83,14 @@ export default function InstructorBatchView({
             } as Record<ClassLifecycleStatus, number>
         );
     }, [classList, nowMilliseconds]);
+
+    const filteredClassList = useMemo(() => {
+        if (classFilter === "ALL") return classList;
+
+        return classList.filter(
+            (cls) => resolveLifecycleStatus(cls, nowMilliseconds) === classFilter
+        );
+    }, [classList, classFilter, nowMilliseconds]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const isClassCreateActive = useMemo(
@@ -148,16 +157,49 @@ export default function InstructorBatchView({
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-10">
                 <div className="lg:col-span-2">
-                    <h2 className="text-xl font-semibold mb-4">Classes</h2>
+                    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <h2 className="text-xl font-semibold">
+                            Classes ({filteredClassList.length})
+                        </h2>
 
-                    <div className="max-h-150 overflow-y-auto space-y-4 pr-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                            {(["ALL", "ONGOING", "UPCOMING", "ENDED"] as const).map((filterKey) => {
+                                const count =
+                                    filterKey === "ALL"
+                                        ? classList.length
+                                        : classSummary[filterKey];
+
+                                return (
+                                    <button
+                                        key={filterKey}
+                                        type="button"
+                                        onClick={() => setClassFilter(filterKey)}
+                                        className={`rounded-full border px-3 py-1 text-xs font-medium transition ${classFilter === filterKey
+                                            ? "border-primary bg-primary text-primary-foreground"
+                                            : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                                            }`}
+                                    >
+                                        {filterKey} ({count})
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="max-h-[38rem] overflow-y-auto space-y-3 pr-1 sm:pr-2">
                         {classList.length === 0 && (
                             <div className="border rounded-xl p-8 text-center text-sm text-muted-foreground">
                                 No classes created yet.
                             </div>
                         )}
 
-                        {classList.map((cls) => (
+                        {classList.length > 0 && filteredClassList.length === 0 && (
+                            <div className="border rounded-xl p-6 text-center text-sm text-muted-foreground">
+                                No classes found for this filter.
+                            </div>
+                        )}
+
+                        {filteredClassList.map((cls) => (
                             <ClassCard
                                 key={cls.id}
                                 classItem={cls}

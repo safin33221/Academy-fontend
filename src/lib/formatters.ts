@@ -42,17 +42,17 @@ export function queryStringFormatter(searchParamsObj: { [key: string]: string | 
 export const formatRemainingTime = (milliseconds: number): string => {
     if (milliseconds <= 0) return "Starting soon";
 
-    const totalMinutes = Math.ceil(milliseconds / (1000 * 60));
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    const days = Math.floor(hours / 24);
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
 
-    if (days > 0) {
-        const remainingHours = hours % 24;
-        return `${days}d ${remainingHours}h`;
+    // মিনিট ও সেকেন্ড সবসময় দেখাবে
+    if (minutes > 0) {
+        return `${minutes}min ${seconds}sec`;
     }
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes}m`;
+
+    // ১ মিনিটের কম হলে শুধু সেকেন্ড
+    return `${seconds}sec`;
 };
 
 

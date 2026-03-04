@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Clock, Users, Star, ArrowRight } from "lucide-react";
+import { BookOpen, Users, Star, ArrowRight } from "lucide-react";
 import { IBatch } from "@/types/batch/batch.interface";
 import { cn } from "@/lib/utils";
 
@@ -64,7 +64,7 @@ export function CourseCard({
 
     // Determine if it's a batch or course
     const isBatch = "startDate" in batch;
-    const startDate = isBatch ? new Date((batch as IBatch).startDate).toLocaleDateString('en-US', {
+    const enrollmentEnd = isBatch ? new Date((batch as IBatch).enrollmentEnd).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric'
@@ -169,14 +169,14 @@ export function CourseCard({
                 {/* Course Metadata */}
                 {variant !== "compact" && (
                     <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-muted-foreground">
-                        {course.duration && (
-                            <div className="flex items-center gap-1">
-                                <Clock className="h-3.5 w-3.5" />
-                                <span>{course.duration}</span>
+                        {batch.name && (
+                            <div className="flex items-center gap-1 text-lg">
+
+                                <span>{batch.name}</span>-
                             </div>
                         )}
                         {batch.enrolledCount !== undefined && (
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1 text-lg text-green-600">
                                 <Users className="h-3.5 w-3.5" />
                                 <span>{batch.enrolledCount} + enrolled</span>
                             </div>
@@ -191,9 +191,9 @@ export function CourseCard({
                 )}
 
                 {/* Start Date for Batches */}
-                {isBatch && startDate && variant !== "compact" && (
-                    <p className="text-xs text-muted-foreground mt-2">
-                        Starts {startDate}
+                {isBatch && enrollmentEnd && variant !== "compact" && (
+                    <p className="text-lg  mt-2 text-red-600">
+                        Enrollment End Date: {enrollmentEnd}
                     </p>
                 )}
 

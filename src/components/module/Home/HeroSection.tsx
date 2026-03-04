@@ -35,11 +35,14 @@ const itemVariants: Variants = {
 
 export default function HeroSection() {
     return (
-        <section className="relative max-md:py-20 max-md:pt-52  md:min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-slate-50 via-white to-slate-100
-         dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        <section
+            className="relative flex min-h-[calc(100svh-1rem)] items-center justify-center overflow-hidden bg-linear-to-br
+            from-slate-50 via-white to-slate-100 pt-32 pb-16 sm:pt-36 sm:pb-20 md:min-h-screen md:pt-28 md:pb-16 lg:pt-32
+            dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
+        >
 
             {/* Floating Tech Badges */}
-            <div className="absolute inset-0 pointer-events-none ">
+            <div className="pointer-events-none absolute inset-0 hidden md:block">
                 {[
                     { Icon: Code2, top: "15%", left: "10%" },
                     { Icon: Cpu, top: "25%", right: "12%" },
@@ -56,7 +59,7 @@ export default function HeroSection() {
                             repeat: Infinity,
                             ease: "easeInOut",
                         }}
-                        className="absolute backdrop-blur-md bg-white/5 border border-white/10 p-4 rounded-2xl"
+                        className="absolute rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-md lg:p-4"
                         style={{
                             top: item.top,
                             left: item.left,
@@ -73,19 +76,19 @@ export default function HeroSection() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
-                className="container px-4 md:px-6 mx-auto relative z-10"
+                className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8"
             >
-                <div className="flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto">
+                <div className="mx-auto flex max-w-4xl flex-col items-center space-y-6 text-center sm:space-y-8">
 
                     <motion.div variants={itemVariants}>
-                        <Badge className="px-4 py-1 text-sm border-primary/20 bg-primary/5 text-primary rounded-full">
+                        <Badge className="rounded-full border-primary/20 bg-primary/5 px-3 py-1 text-xs text-primary sm:px-4 sm:text-sm">
                             New: Advanced React Course Available Now
                         </Badge>
                     </motion.div>
 
                     <motion.h1
                         variants={itemVariants}
-                        className="text-4xl md:text-6xl font-extrabold tracking-tight"
+                        className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
                     >
                         Upgrade Your Skills with{" "}
                         <span className="bg-linear-to-r from-primary via-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -96,7 +99,7 @@ export default function HeroSection() {
 
                     <motion.p
                         variants={itemVariants}
-                        className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
+                        className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl"
                     >
                         Master the latest technologies and advance your career with our
                         expert-led courses. Join thousands of learners worldwide.
@@ -104,12 +107,12 @@ export default function HeroSection() {
 
                     <motion.div
                         variants={itemVariants}
-                        className="flex flex-col sm:flex-row gap-4 justify-center"
+                        className="flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4"
                     >
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                             <a href="#courses"> <Button
                                 size="lg"
-                                className="h-12 px-8 text-base shadow-xl shadow-primary/30 bg-linear-to-r from-primary to-blue-600 hover:opacity-90 transition"
+                                className="h-12 w-full px-6 text-base shadow-xl shadow-primary/30 transition hover:opacity-90 sm:w-auto sm:px-8 bg-linear-to-r from-primary to-blue-600"
                             >
                                 Browse Courses
                             </Button>
@@ -120,7 +123,7 @@ export default function HeroSection() {
                             <Button
                                 variant="outline"
                                 size="lg"
-                                className="h-12 px-8 text-base border-primary/30"
+                                className="h-12 w-full border-primary/30 px-6 text-base sm:w-auto sm:px-8"
                             >
                                 View Programs
                             </Button>
@@ -139,7 +142,7 @@ export default function HeroSection() {
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
-                className="absolute -top-40 -left-40 w-175 h-175 rounded-full bg-primary/15 blur-3xl"
+                className="absolute -top-40 -left-40 h-112 w-md rounded-full bg-primary/15 blur-3xl sm:h-144 sm:w-xl"
             />
 
             <motion.div
@@ -149,7 +152,7 @@ export default function HeroSection() {
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
-                className="absolute -bottom-40 -right-40 w-175 h-175 rounded-full bg-blue-500/15 blur-3xl"
+                className="absolute -bottom-40 -right-40 h-112 w-md rounded-full bg-blue-500/15 blur-3xl sm:h-144 sm:w-xl"
             />
         </section >
     );

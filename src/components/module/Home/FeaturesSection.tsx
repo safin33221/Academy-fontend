@@ -61,12 +61,12 @@ const cardVariants: Variants = {
 
 export default function FeaturesSection() {
     return (
-        <section className="relative py-12 md:py-24 bg-linear-to-b from-white via-slate-50 to-white overflow-hidden">
+        <section className="relative overflow-hidden bg-linear-to-b from-white via-slate-50 to-white py-14 sm:py-16 md:py-24">
 
             {/* Soft Background Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-150 bg-blue-500/10 blur-[120px] rounded-full" />
+            <div className="absolute left-1/2 top-0 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-blue-500/10 blur-[120px] sm:h-[36rem] sm:w-[36rem]" />
 
-            <div className="container relative mx-auto px-4 md:px-6">
+            <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Section Heading */}
                 <motion.div
@@ -74,12 +74,12 @@ export default function FeaturesSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="mb-10 text-center sm:mb-12 md:mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                    <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
                         Why Choose Our Academy?
                     </h2>
-                    <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+                    <p className="mt-3 max-w-2xl mx-auto text-sm text-muted-foreground sm:mt-4 sm:text-base">
                         We provide career-focused training designed to make you industry-ready.
                     </p>
                 </motion.div>
@@ -90,7 +90,7 @@ export default function FeaturesSection() {
                     initial="hidden"
                     whileInView="show"
                     viewport={{ once: true }}
-                    className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8"
                 >
                     {FEATURES.map((feature, i) => (
                         <motion.div
@@ -100,7 +100,7 @@ export default function FeaturesSection() {
                             transition={{ type: "spring", stiffness: 200 }}
                         >
                             <Card className="group relative overflow-hidden border-none bg-white/80 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl">
-                                <CardContent className="p-5 md:p-8 text-center space-y-3 md:space-y-5">
+                                <CardContent className="space-y-3 p-5 text-center sm:space-y-4 md:space-y-5 md:p-8">
 
                                     {/* Icon */}
                                     <div
@@ -110,12 +110,12 @@ export default function FeaturesSection() {
                                     </div>
 
                                     {/* Title */}
-                                    <h3 className="font-semibold text-sm md:text-lg">
+                                    <h3 className="text-sm font-semibold md:text-lg">
                                         {feature.title}
                                     </h3>
 
                                     {/* Description */}
-                                    <p className="text-xs md:text-sm max-md:hidden text-muted-foreground leading-snug md:leading-relaxed">
+                                    <p className="text-xs text-muted-foreground leading-snug sm:text-sm md:leading-relaxed">
                                         {feature.desc}
                                     </p>
 

@@ -2,16 +2,17 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Star, CheckCircle, Globe, Calendar } from "lucide-react";
+import { Star, CheckCircle, Globe, Calendar, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@/components/ui/accordion";
 import { CoursePreviewCard } from "@/components/common/CoursePreviewCard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import { initiatePayment } from "@/services/payment/payment";
-import { IUser } from "@/types/user/user";
-import { useState } from "react";
+import { IUser, IUserRole } from "@/types/user/user";
+import { useCallback, useState } from "react";
 import { IBatch } from "@/types/batch/batch.interface";
 import toast from "react-hot-toast";
+
 
 interface CourseDetailsPageProps {
   batch: IBatch;
@@ -21,12 +22,113 @@ interface CourseDetailsPageProps {
 export default function CourseDetailsPageClient({
   batch, user
 }: CourseDetailsPageProps) {
-
-  const [loading, setLoading] = useState(false);
-
+  // Component-এ এই state গুলো যোগ করুন
+  const [isEnrolling, setIsEnrolling] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const handleEnroll = useCallback(async (batchId: string) => {
+    try {
+      // Check if user is logged in
+      if (!user) {
+        const currentPath = pathname + (searchParams.toString() ? `?${searchParams}` : "");
+        router.push(`/join-us?callbackUrl=${encodeURIComponent(currentPath)}`);
+        return;
+      }
+
+      // Check user role with proper type checking
+      const allowedRoles = [IUserRole.STUDENT, IUserRole.USER];
+      if (!user.role || !allowedRoles.includes(user.role)) {
+        toast.error("You are not allowed to enroll in this course", {
+          duration: 4000,
+          position: 'top-center',
+        });
+        return;
+      }
+
+      // Prevent double submission
+      if (isEnrolling) {
+        toast.loading("Processing your enrollment...", {
+          duration: 2000,
+        });
+        return;
+      }
+
+      setIsEnrolling(true);
+
+      // Show loading toast
+      const loadingToast = toast.loading("Initiating enrollment...");
+
+      // Make API call with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const res = await initiatePayment(batchId);
+
+      clearTimeout(timeoutId);
+      toast.dismiss(loadingToast);
+
+      // Validate response
+      if (!res) {
+        throw new Error("No response from server");
+      }
+
+      // Check for gateway URL
+      if (res?.gatewayUrl) {
+        // Show success message
+        toast.success("Redirecting to payment gateway...", {
+          duration: 3000,
+        });
+
+        // Add small delay for toast to be visible
+        setTimeout(() => {
+          window.location.href = res.gatewayUrl;
+        }, 500);
+      }
+      // Check for direct payment result
+      else if (res?.success && res?.data) {
+        toast.success("Enrollment successful!", {
+          duration: 4000,
+        });
+
+
+
+        // Optional: redirect to success page
+        router.push(`/enrollment-success?batchId=${batchId}`);
+      }
+      else {
+        throw new Error(res?.message || "Failed to initiate enrollment");
+      }
+
+    } catch (error: any) {
+      // Handle AbortError (timeout)
+      if (error.name === 'AbortError') {
+        toast.error("Request timeout. Please try again.", {
+          duration: 5000,
+        });
+      }
+      // Handle network errors
+      else if (error.message?.includes('network') || !navigator.onLine) {
+        toast.error("Network error. Please check your connection.", {
+          duration: 5000,
+        });
+      }
+      // Handle API errors
+      else {
+        toast.error(error.message || "Something went wrong. Please try again.", {
+          duration: 5000,
+        });
+      }
+
+      // Log error for debugging (but not in production?)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Enrollment error:", error);
+      }
+    } finally {
+      setIsEnrolling(false);
+    }
+  }, [user, pathname, searchParams, router, isEnrolling]);
 
   if (!batch) {
     return (
@@ -38,70 +140,78 @@ export default function CourseDetailsPageClient({
       </div>
     );
   }
-  const course = batch.course
-
-  const handleEnroll = async (batchId: string) => {
-    if (!user) {
-      const currentPath =
-        pathname + (searchParams.toString() ? `?${searchParams}` : "");
-
-      router.push(`/join-us?callbackUrl=${encodeURIComponent(currentPath)}`);
-      return null;
-    }
-
-    setLoading(true);
-
-    try {
-      const res = await initiatePayment(batchId);
-      console.log({ res });
-
-      if (res?.gatewayUrl) {
-        window.location.href = res.gatewayUrl;
-      }
-    } catch (error: any) {
-      toast.error(error.message)
-      console.error("Payment error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const course = batch.course;
 
   return (
     <div className="min-h-screen bg-background pt-14">
       {/* ================= HERO ================= */}
       <div className="bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-b">
-        <div className="container mx-auto px-4 md:px-6 py-14 space-y-6">
-          <Breadcrumb />
+        <div className="container mx-auto px-4 md:px-6 py-12 md:py-16 space-y-6">
 
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight max-w-3xl leading-tight">
-            {course.title} ({batch.name})
-          </h1>
+          {/* Breadcrumb */}
+          <div className="hidden md:block">
+            <Breadcrumb />
+          </div>
 
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            {course.shortDescription}
-          </p>
+          {/* Title */}
+          <div className="space-y-3">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight max-w-3xl leading-tight">
+              {course.title}
+            </h1>
 
-          <div className="flex flex-wrap items-center gap-6 text-sm">
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl">
+              {course.shortDescription}
+            </p>
+          </div>
+
+          {/* Meta Info */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+
+            {/* Rating */}
             <div className="flex items-center gap-2 text-yellow-500 font-medium">
               <Star className="h-4 w-4 fill-current" />
-              {course.rating} ({course.reviewCount} reviews)
+              <span>
+                {course.rating} ({course.reviewCount} reviews)
+              </span>
             </div>
 
+            {/* Language */}
             <div className="flex items-center gap-2 text-muted-foreground">
               <Globe className="h-4 w-4" />
-              English
+              <span>Language: English</span>
             </div>
 
+            {/* Last Updated */}
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              Updated {new Date(course.updatedAt).getFullYear()}
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Calendar className="h-4 w-4" />
-
-              Enrolled :{batch.enrolledCount}/{batch.maxStudents}
+              <span>
+                Last updated {new Date(course.updatedAt).getFullYear()}
+              </span>
             </div>
           </div>
+
+          {/* Enrollment Section */}
+          <div className="flex flex-wrap items-center gap-4 pt-4 border-t text-sm">
+
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Users className="h-4 w-4" />
+              <span>
+                {batch.enrolledCount} students enrolled
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 font-medium">
+              <span>
+                {batch.maxStudents - batch.enrolledCount} seats left
+              </span>
+            </div>
+
+            <div className="text-muted-foreground">
+              {batch.name}
+            </div>
+
+          </div>
+
         </div>
       </div>
 
@@ -238,7 +348,7 @@ export default function CourseDetailsPageClient({
             <div className="sticky top-24">
               <CoursePreviewCard
                 batch={batch}
-                loading={loading}
+                loading={isEnrolling}
                 onEnroll={() => handleEnroll(batch.id)}
               />
             </div>
@@ -248,3 +358,4 @@ export default function CourseDetailsPageClient({
     </div>
   );
 }
+

@@ -80,7 +80,7 @@ export default function MyCourseClassesView({
 
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 500);
-        const interval = setInterval(() => setNowMilliseconds(Date.now()), 30000);
+        const interval = setInterval(() => setNowMilliseconds(Date.now()), 1000);
         return () => {
             clearInterval(interval);
             clearTimeout(timer);
@@ -244,11 +244,11 @@ export default function MyCourseClassesView({
     const batchName = myAttendance?.batch?.name || batch?.name || "Course Batch";
 
     return (
-        <div className=" mx-auto p-4 md:p-6 space-y-6">
+        <div className=" mx-auto  md:p-6 space-y-6">
             <div className="sticky top-0 bg-indigo-300-300 bg-white   ">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl md:text-3xl font-bold">
+                        <h1 className="text-xl md:text-3xl font-bold">
                             {batch?.course?.title || "Course Content"}
                         </h1>
                         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
@@ -256,15 +256,6 @@ export default function MyCourseClassesView({
                                 <Users className="h-4 w-4" />
                                 {batchName}
                             </span>
-                            {myAttendance?.student && (
-                                <>
-                                    <span className="w-1 h-1 bg-muted-foreground rounded-full" />
-                                    <span className="flex items-center gap-1">
-                                        <UserCheck className="h-4 w-4" />
-                                        {myAttendance.student.name}
-                                    </span>
-                                </>
-                            )}
                             {batch?.instructors?.length > 0 && (
                                 <>
                                     <span className="w-1 h-1 bg-muted-foreground rounded-full" />
@@ -274,7 +265,7 @@ export default function MyCourseClassesView({
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 max-md:hidden">
                         <div className="text-right">
                             <p className="text-sm text-muted-foreground">Attendance Rate</p>
                             <p className="text-2xl font-bold text-green-600">
@@ -310,7 +301,7 @@ export default function MyCourseClassesView({
                 </div>
 
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-5">
+                <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 mt-5 gap-2 mb-5">
                     <StatCard
                         size="sm"
                         icon={<BookOpen />}

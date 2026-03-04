@@ -33,8 +33,7 @@ const nextConfig: NextConfig = {
     "192.168.56.1",
     "http://192.168.56.1:3000",
     "http://192.168.56.1",
-    "192.168.0.102:3000",
-
+    "192.168.0.109:3000",
   ],
 
   // Experimental (optional, production safe)

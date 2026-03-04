@@ -71,7 +71,7 @@ export const StatCard = ({
             <div className={cn("flex items-center", classes.gap)}>
                 <div className={cn(
                     classes.iconWrapper,
-                    "bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300"
+                    "bg-primary/10 max-md:hidden text-primary group-hover:scale-110 transition-transform duration-300"
                 )}>
                     {icon && typeof icon === 'object' && 'type' in icon
                         ? React.cloneElement(icon as React.ReactElement<any>, {
