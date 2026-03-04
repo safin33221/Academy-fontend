@@ -13,7 +13,7 @@ export const getCommonNavItems = (role: IUserRole): INavSection[] => {
             title: "Dashboard",
             items: [
                 {
-                    title: " Dashboard",
+                    title: " Overview",
                     href: defaultDashboard,
                     icon: "LayoutDashboard",
                     role: [
@@ -89,24 +89,19 @@ export const adminNavItems: INavSection[] = [
                 icon: "Users",
                 role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
             },
-            {
-                title: "Instructors",
-                href: "/admin/dashboard/instructors",
-                icon: "GraduationCap",
-                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
-            },
-            {
-                title: "Students",
-                href: "/admin/dashboard/students",
-                icon: "UserCheck",
-                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
-            },
+
+
         ],
     },
     {
         title: "Course Management",
         items: [
             {
+                title: "Attendance Report",
+                href: "/admin/dashboard/attendance-report",
+                icon: "GraduationCap",
+                role: [IUserRole.ADMIN, IUserRole.SUPER_ADMIN],
+            }, {
                 title: "All Courses",
                 href: "/admin/dashboard/courses",
                 icon: "BookOpen",
