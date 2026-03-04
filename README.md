@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Academy Frontend
 
-## Getting Started
+Next.js App Router project for Academy Management.
 
-First, run the development server:
+## Requirements
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js `>=20.17.0` recommended
+- npm `>=10`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm run dev`: run local development server
+- `npm run lint`: run ESLint
+- `npm run typecheck`: run TypeScript checks (`tsc --noEmit`)
+- `npm run build`: create production build
+- `npm run verify`: run `lint + typecheck + build` (main quality gate)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture Baseline
 
-## Learn More
+- `src/app`: route-level entry points (server components/pages)
+- `src/components`: UI layer and feature modules
+- `src/services`: API/data access layer
+- `src/types`: shared domain and API contracts
+- `src/lib`: utility and cross-cutting helpers
 
-To learn more about Next.js, take a look at the following resources:
+Keep domain types in `src/types`, pass typed props into components, and keep fetch/mutation logic in `src/services` instead of UI files.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Type Safety Rules
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Type all service responses with interfaces from `src/types`.
+- Avoid `any`; prefer `unknown` with narrowing when needed.
+- Keep `strict` TypeScript mode enabled.
+- Run `npm run verify` before every PR/merge.

@@ -9,7 +9,6 @@ import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
 import Btn from "../shared/Btn";
-import { ICourse } from "@/types/course/course.interface";
 import ShareModal from "./ShareModal";
 import { IBatch } from "@/types/batch/batch.interface";
 

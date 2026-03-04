@@ -34,10 +34,15 @@ export default function ShareModal({
         await navigator.clipboard.writeText(shareUrl);
     };
 
+    const shareText = encodeURIComponent(
+        description ? `${title} - ${description}` : title
+    );
+    const encodedShareUrl = encodeURIComponent(shareUrl);
+
     const socialLinks = {
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
-        twitter: `https://twitter.com/intent/tweet?url=${shareUrl}&text=${title}`,
-        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}`,
+        twitter: `https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${shareText}`,
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedShareUrl}`,
     };
 
     return (

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { ClassCard } from "@/components/shared/ClassCard";
 import { StatCard } from "@/components/ui/StatCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { calculateOverallProgress, cn, resolveLifecycleStatus } from "@/lib/utils";
+import { cn, resolveLifecycleStatus } from "@/lib/utils";
 import { IBatch } from "@/types/batch/batch.interface";
 import { ClassLifecycleStatus, StudentClass } from "@/types/class/myClasses.interface";
 import {
