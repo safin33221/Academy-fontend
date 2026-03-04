@@ -14,6 +14,7 @@ import ClassCard, {
     InstructorClass,
     resolveLifecycleStatus,
 } from "./ClassCard";
+import { formatDateTime } from "@/lib/formatters";
 
 type Enrollment = { user: IUser } | IUser;
 
@@ -33,6 +34,7 @@ export default function InstructorBatchView({
     batch,
     classes,
 }: InstructorBatchViewProps) {
+
     const router = useRouter();
     const [openCreateDialog, setOpenCreateDialog] = useState(false);
     const [nowMilliseconds, setNowMilliseconds] = useState<number>(() => Date.now());
@@ -107,10 +109,10 @@ export default function InstructorBatchView({
     }
 
     return (
-        <div className="mx-auto max-w-7xl space-y-10 p-8">
-            <div className="flex justify-between items-center">
+        <div className="mx-auto max-w-7xl space-y-10 md:p-8">
+            <div className="flex  justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold">{batch.name}</h1>
+                    <h1 className="text-xl md:3xl font-bold">{batch.name}</h1>
                     <p className="text-muted-foreground text-sm mt-1">
                         {batch.course?.title}
                     </p>
@@ -130,7 +132,7 @@ export default function InstructorBatchView({
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 <StatCard
                     icon={<Users size={18} />}
                     title="Students"
@@ -149,9 +151,7 @@ export default function InstructorBatchView({
                 <StatCard
                     icon={<CalendarDays size={18} />}
                     title="Duration"
-                    value={`${new Date(batch.startDate).toLocaleDateString()} - ${new Date(
-                        batch.endDate
-                    ).toLocaleDateString()}`}
+                    value={`${formatDateTime(batch.startDate)} - ${formatDateTime(batch.endDate)}`}
                 />
             </div>
 

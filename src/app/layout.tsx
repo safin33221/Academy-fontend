@@ -15,18 +15,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexxali.academy"),
+  metadataBase: new URL("https://nexaali.academy"),
 
   title: {
-    default: "Nexxali Academy | Modern E-Learning Platform",
-    template: "%s | Nexxali Academy",
+    default: "Nexaali Academy | Modern E-Learning Platform",
+    template: "%s | nexaali Academy",
   },
 
   description:
-    "Nexxali Academy is a modern e-learning platform offering professional courses, structured batches, and industry-ready skills development.",
+    "Nexaali Academy is a modern e-learning platform offering professional courses, structured batches, and industry-ready skills development.",
 
   keywords: [
-    "Nexxali Academy",
+    "Nexaali Academy",
     "E-learning platform",
     "Online courses",
     "Professional training",
@@ -34,21 +34,21 @@ export const metadata: Metadata = {
     "Batch based learning",
   ],
 
-  authors: [{ name: "Nexxali Academy Team" }],
+  authors: [{ name: "nexaali Academy Team" }],
 
   openGraph: {
-    title: "Nexxali Academy | Modern E-Learning Platform",
+    title: "nexaali Academy | Modern E-Learning Platform",
     description:
-      "Join Nexxali Academy to learn industry-ready skills through structured courses and guided learning.",
-    url: "https://nexxali.academy",
-    siteName: "Nexxali Academy",
+      "Join nexaali Academy to learn industry-ready skills through structured courses and guided learning.",
+    url: "https://nexaali.academy",
+    siteName: "nexaali Academy",
     locale: "en_US",
     type: "website",
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Nexxali Academy",
+    title: "nexaali Academy",
     description:
       "Professional online learning platform for modern skills.",
   },

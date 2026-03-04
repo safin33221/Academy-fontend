@@ -30,6 +30,7 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import { IUser, IUserRole } from "@/types/user/user";
 import { INavSection } from "@/types/dashboard/NavItem";
 import { cn } from "@/lib/utils";
+import Logo from "@/components/shared/Logo";
 
 interface DashboardNavbarContentProps {
     user: IUser;
@@ -108,7 +109,7 @@ export default function DashboardNavbarContent({
                 <DrawerContent className="h-screen p-0 bg-background">
                     <DrawerHeader className="border-b px-4 py-3">
                         <DrawerTitle className="text-left text-base font-semibold">
-                            Dashboard Menu
+                            Nexaali Academy
                         </DrawerTitle>
                     </DrawerHeader>
 
