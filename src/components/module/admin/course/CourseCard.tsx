@@ -226,7 +226,7 @@ export function CourseCard({
                 </div>
 
                 {/* Action Button */}
-                <Link href={courseSlug ? `/course/${courseSlug}` : "#"}
+                <Link href={courseSlug ? `/courses/${courseSlug}` : "#"}
                     className={cn(variant === "compact" && "shrink-0")}>
                     <Button
                         size={variant === "compact" ? "sm" : "default"}
