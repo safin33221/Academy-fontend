@@ -22,7 +22,7 @@ export function proxy(request: NextRequest) {
             userRole = decoded.role as IUserRole
         } catch {
             const response = NextResponse.redirect(
-                new URL("/login", request.url)
+                new URL("/join-us", request.url)
             )
             response.cookies.delete("accessToken")
             response.cookies.delete("refreshToken")

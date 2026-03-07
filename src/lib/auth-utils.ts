@@ -84,7 +84,7 @@ export const getDefaultDashboard = (role: IUserRole): string => {
         case "SUPER_ADMIN":
             return "/admin/dashboard"
         case "USER":
-            return "/course"
+            return "/courses"
         default:
             return "/login"
     }
