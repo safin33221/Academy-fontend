@@ -1,12 +1,11 @@
 "use client";
 
-import { Menu, Bell, Search } from "lucide-react";
+import { Menu, Bell } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -30,7 +29,6 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import { IUser, IUserRole } from "@/types/user/user";
 import { INavSection } from "@/types/dashboard/NavItem";
 import { cn } from "@/lib/utils";
-import Logo from "@/components/shared/Logo";
 
 interface DashboardNavbarContentProps {
     user: IUser;

@@ -22,7 +22,7 @@ interface CourseDetailsPageProps {
 export default function CourseDetailsPageClient({
   batch, user
 }: CourseDetailsPageProps) {
-  // Component-এ এই state গুলো যোগ করুন
+
   const [isEnrolling, setIsEnrolling] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
