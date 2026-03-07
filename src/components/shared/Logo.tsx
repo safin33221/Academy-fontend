@@ -22,7 +22,7 @@ export default function Logo({
 
     return (
         <div
-            className={`relative ${className}`}
+            className={`relative p-0 m-0 ${className}`}
             style={{ width: w, height: h }}
         >
             <Image
@@ -30,7 +30,7 @@ export default function Logo({
                 alt="Nexaali Logo"
                 fill
                 priority={priority}
-                className="object-contain h-fit p-0 m-0 "
+                className="object-contain relative p-0 m-0  "
             />
         </div>
     );

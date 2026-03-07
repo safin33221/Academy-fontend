@@ -18,13 +18,7 @@ export default function AuthPage() {
                 {/* ================= DESKTOP ================= */}
                 <div className="relative hidden md:block h-[80vh]">
 
-                    {/* LOGO SMOOTH MOVE */}
-                    <div
-                        className={`absolute -top-20 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-            ${active ? "left-8" : "right-8"}`}
-                    >
-                        <Logo size={180} />
-                    </div>
+
 
                     {/* SLIDER */}
                     <div

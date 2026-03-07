@@ -7,6 +7,7 @@ import Link from "next/link";
 import Btn from "@/components/shared/Btn";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
+import Logo from "@/components/shared/Logo";
 export function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [state, formAction, isPending] = useActionState(login, null);
@@ -23,8 +24,12 @@ export function LoginForm() {
     return (
         <form action={formAction} className="relative w-full max-w-md space-y-5 px-8 max-md:h-full">
 
-            <h2 className="text-3xl font-semibold text-center mb-6">
-                Sign In
+            <div className="flex flex-col items-center">
+                <Logo width={180} height={56} className="mt-6 mb-5 md:mt-8 md:mb-6" />
+            </div>
+
+            <h2 className="text-2xl font-semibold text-center mb-6">
+                Login to Your Account
             </h2>
 
             <Field>
