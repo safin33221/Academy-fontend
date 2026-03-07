@@ -18,9 +18,9 @@ export default async function layout({ children }: { children: React.ReactNode }
     const userRes = await getMe()
     const user = userRes?.data
 
-    if (!user) {
-        redirect("/")
-    }
+    // if (!user) {
+    //     redirect("/")
+    // }
 
 
 
