@@ -9,9 +9,11 @@ export default function PaymentSuccessPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
-            <div className="bg-white shadow-lg rounded-xl p-8 max-w-md w-full text-center">
-                <div className="mb-6">
-                    <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-green-100">
+            <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 text-center">
+
+                {/* Success Icon */}
+                <div className="mb-6 flex justify-center">
+                    <div className="w-16 h-16 flex items-center justify-center rounded-full bg-green-100">
                         <svg
                             className="w-8 h-8 text-green-600"
                             fill="none"
@@ -28,26 +30,36 @@ export default function PaymentSuccessPage() {
                     </div>
                 </div>
 
-                <h1 className="text-2xl font-bold text-gray-800">
+                {/* Title */}
+                <h1 className="text-2xl font-semibold text-gray-900">
                     Payment Successful
                 </h1>
 
+                {/* Description */}
                 <p className="text-gray-600 mt-2">
-                    Your enrollment has been completed successfully.
+                    Your payment has been processed successfully and your enrollment is now confirmed.
                 </p>
 
+                {/* Transaction ID */}
                 {transactionId && (
-                    <p className="text-sm text-gray-500 mt-4 break-all">
-                        Transaction ID: {transactionId}
-                    </p>
+                    <div className="mt-6 bg-gray-50 border rounded-lg p-3 text-sm text-gray-600 break-all">
+                        <span className="font-medium text-gray-700">Transaction ID:</span>
+                        <div className="mt-1">{transactionId}</div>
+                    </div>
                 )}
 
+                {/* Button */}
                 <button
                     onClick={() => router.push("/dashboard")}
-                    className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+                    className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
                 >
                     Go to Dashboard
                 </button>
+
+                {/* Footer text */}
+                <p className="text-xs text-gray-400 mt-4">
+                    If you experience any issues, please contact support.
+                </p>
             </div>
         </div>
     );

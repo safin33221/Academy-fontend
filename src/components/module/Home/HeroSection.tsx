@@ -10,6 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion, Variants } from "framer-motion";
+import Link from "next/link";
 
 const containerVariants: Variants = {
     hidden: {},
@@ -120,13 +121,15 @@ export default function HeroSection() {
                         </motion.div>
 
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="h-12 w-full border-primary/30 px-6 text-base sm:w-auto sm:px-8"
-                            >
-                                View Programs
-                            </Button>
+                            <Link href={`/join-us`}>
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="h-12 w-full border-primary/30 px-6 text-base sm:w-auto sm:px-8"
+                                >
+                                    Join Now
+                                </Button>
+                            </Link>
                         </motion.div>
                     </motion.div>
 

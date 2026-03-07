@@ -127,7 +127,7 @@ export default function Navbar({ user }: { user: IUser | null }) {
                         <>
 
                             <Link href="/join-us">
-                                <Btn title="Join Us" size="sm" />
+                                <Btn title="Login" size="sm" />
                             </Link>
                         </>
                     )}

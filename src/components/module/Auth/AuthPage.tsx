@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-
 import Btn from "@/components/shared/Btn";
 import { LoginForm } from "./LoginFrom";
 import RegisterForm from "./RegisterFrom";
@@ -59,7 +58,7 @@ export default function AuthPage() {
                     >
                         <div className="text-center px-12 transition-opacity duration-500">
                             <h1 className="text-4xl font-bold mb-4">
-                                {active ? "Welcome Back!" : "Hello, Welcome!"}
+                                {active ? "Hello  Welcome!" : "Welcome Back!"}
                             </h1>
 
                             <p className="mb-6 text-sm opacity-90">
@@ -72,7 +71,7 @@ export default function AuthPage() {
                                 onClick={() => setActive(!active)}
                                 className="border border-white px-8 py-2"
                             >
-                                {active ? "Sign In" : "Register"}
+                                {active ? "Login Now" : "Register Now"}
                             </Btn>
 
                             <Link href="/" className="block mt-6">

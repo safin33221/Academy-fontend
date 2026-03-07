@@ -36,6 +36,7 @@ export function LoginForm() {
                     name="email"
                     type="text"
                     placeholder="Email address"
+                    className="h-12 pr-12"
                 />
             </Field>
 

@@ -30,7 +30,7 @@ export default function RegisterForm() {
         <form action={formAction} className="w-full max-w-md space-y-5 px-8 max-md:h-full">
 
             <h2 className="text-3xl font-semibold text-center mb-6">
-                Sign Up
+                Create Your Account
             </h2>
 
             <Field>
@@ -42,6 +42,7 @@ export default function RegisterForm() {
                     name="name"
                     type="text"
                     placeholder="name "
+                    className="h-12 pr-12"
                 />
             </Field>
             <Field>
@@ -52,7 +53,8 @@ export default function RegisterForm() {
                     id="phone"
                     name="phone"
                     type="text"
-                    placeholder="phone Number"
+                    className="h-12 pr-12"
+                    placeholder="Whatsapp Number "
                 />
             </Field>
             <Field>
@@ -63,6 +65,7 @@ export default function RegisterForm() {
                     id="email"
                     name="email"
                     type="text"
+                    className="h-12 pr-12"
                     placeholder="Email address"
                 />
             </Field>
@@ -102,7 +105,7 @@ export default function RegisterForm() {
                 className="w-full"
                 disabled={isPending}
             >
-                {isPending ? "sign in..." : "sing in"}
+                {isPending ? "Creating..." : "Create Account"}
             </Btn>
         </form>
 
