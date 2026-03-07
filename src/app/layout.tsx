@@ -18,44 +18,84 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://nexaali.academy"),
 
   title: {
-    default: "Nexaali Academy | Modern E-Learning Platform",
-    template: "%s | nexaali Academy",
+    default: "Nexaali Academy | Learn Modern Tech Skills Online",
+    template: "%s | Nexaali Academy",
   },
 
   description:
-    "Nexaali Academy is a modern e-learning platform offering professional courses, structured batches, and industry-ready skills development.",
+    "Nexaali Academy is a modern e-learning platform providing industry-ready courses, structured batch learning, mentorship, and practical training to build real-world tech skills.",
 
   keywords: [
     "Nexaali Academy",
-    "E-learning platform",
-    "Online courses",
-    "Professional training",
-    "Skill development",
+    "Online programming courses",
+    "Web development course",
+    "Next.js course",
+    "Full stack development",
+    "Tech learning platform",
+    "Programming academy",
+    "Software development training",
+    "Professional skill development",
     "Batch based learning",
   ],
 
-  authors: [{ name: "nexaali Academy Team" }],
+  authors: [{ name: "Nexaali Academy Team" }],
+  creator: "Nexaali Academy",
+  publisher: "Nexaali Academy",
+  category: "Education",
+
+  alternates: {
+    canonical: "https://nexaali.academy",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 
   openGraph: {
-    title: "nexaali Academy | Modern E-Learning Platform",
+    title: "Nexaali Academy | Learn Modern Tech Skills Online",
     description:
-      "Join nexaali Academy to learn industry-ready skills through structured courses and guided learning.",
+      "Join Nexaali Academy to learn modern development skills through structured courses, guided batches, and real-world projects.",
     url: "https://nexaali.academy",
-    siteName: "nexaali Academy",
+    siteName: "Nexaali Academy",
+    images: [
+      {
+        url: "https://nexaali.academy/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Nexaali Academy E-learning Platform",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "nexaali Academy",
+    title: "Nexaali Academy | Learn Modern Tech Skills",
     description:
-      "Professional online learning platform for modern skills.",
+      "Professional online learning platform for developers and modern tech skills.",
+    images: ["https://nexaali.academy/og-image.png"],
+    creator: "@nexaali",
   },
 
   icons: {
     icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
+
+  // verification: {
+  //   google: "google-site-verification-code",
+  // },
 };
 
 export default function RootLayout({
@@ -70,7 +110,6 @@ export default function RootLayout({
       >
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster position="top-center" />
-
       </body>
     </html>
   );
